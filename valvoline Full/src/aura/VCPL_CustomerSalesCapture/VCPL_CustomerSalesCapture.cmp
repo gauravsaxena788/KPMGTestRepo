@@ -1,0 +1,314 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VCPL_CustomerSalesCaptureController">
+
+    <aura:attribute name="basicDetails" type="VCPL_CustomerSalesCaptureController.getDetailsWrapper" description="for Storing Basic Details" />
+
+    <aura:attribute name="lstOpportunityWrapper" type="VCPL_CustomerSalesCaptureController.detailsWrapper[]" description="for Storing opportunity wrapper Details" />
+
+    <aura:attribute name="lstOpportunityWrapper2" type="VCPL_CustomerSalesCaptureController.detailsWrapper[]" description="for Storing opportunity wrapper Details" />
+
+    <aura:attribute name="paginationOpportunityWrapper" type="VCPL_CustomerSalesCaptureController.detailsWrapper[]" description="for Storing Details paginated" />
+
+    <aura:attribute type="Integer" name="pageNumber" default="1" />
+
+    <aura:attribute type="Integer" name="maxPage" default="1" />
+
+    <aura:attribute name="showButtons" type="Boolean" default="false" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Initialization Handler" />
+
+    <aura:handler name="change" value="{!v.pageNumber}" action="{!c.renderPage}" />
+
+    <aura:attribute name="recordId" type="string" default="{!v.RecordId}" />
+
+    <aura:attribute name="searchString" type="string" default="" description="Search String" />
+
+    <aura:attribute type="Integer" name="totalSales" default="0.0" />
+
+    <aura:attribute type="Integer" name="totalPotential" default="0.0" />
+
+    <aura:method name="callDoinit" action="{!c.doInit}" />
+
+    <aura:attribute name="errormsg" type="String" default="" />
+    <aura:attribute name="title" type="String" default="" />
+    <aura:attribute name="type" type="String" default="" />
+    <aura:attribute name="icon" type="String" default="" />
+    <aura:attribute name="disableFirstButton" type="Boolean" default="false" />
+    <aura:attribute name="disablePrevButton" type="Boolean" default="false" />
+    <aura:attribute name="disableNextButton" type="Boolean" default="false" />
+    <aura:attribute name="disableLastButton" type="Boolean" default="false" />
+    <aura:attribute name="showSpinner_Sales_capture" type="boolean" default="false" />
+
+    <aura:if isTrue="{!v.showSpinner_Sales_capture}">
+        <div class="slds-spinner_container">
+            <lightning:spinner aura:id="spinner" variant="brand" size="large" />
+        </div>
+    </aura:if>
+
+    <aura:renderIf isTrue="{!v.errormsg != ''}">
+       <!-- <style>
+            .slds-notify_container {
+                top: 0%;
+            }
+            
+            .slds-text-heading_small {
+                color: white;
+            }
+        </style>-->
+        <!-- start Error POPup-->
+        <div class="slds-notify_container">
+            <div class="{!'slds-notify slds-notify_toast ' + v.type}" role="alert">
+                <span class="slds-assistive-text">{!v.title}</span>
+                <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close" onclick="{!c.closeToast}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse" variant="inverse"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <lightning:icon iconName="{!v.icon}" size="small" class="slds-m-right--small slds-col slds-no-flex" variant="inverse" />
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{!v.title}!</h2>
+                    <p class="pclass">{!v.errormsg}</p>
+                    <h2 class="slds-text-heading_small "></h2>
+                </div>
+            </div>
+        </div>
+        <!-- End Error POPup-->
+    </aura:renderIf>
+
+    <div style="overflow: auto; -webkit-overflow-scrolling: touch; width:100%">
+        <table style="background-color: white;" class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+            <tr>
+                <td colspan="4">
+                    <div class="slds-align_absolute-center" style="height: 3rem;">
+                        <div class="slds-page-header">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                    <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate" title="Monthly Sales Capture"><b>Monthly Sales Capture</b></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="slds-align_absolute-center" style="height: 0rem;">
+                        <div class="slds-page-header">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                    <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-small-text" title="User Name">{!v.basicDetails.strUsersName}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slds-align_absolute-center" style="height: 4rem;">
+                        <div class="slds-page-header">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                    <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-small-text" title="Financial Year">Financial Year: {!v.basicDetails.strFinancialYear}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slds-align_absolute-center" style="height: 4rem;">
+                        <ui:inputSelect aura:id="month" class="slds-input slds-month" labelClass="slds-form-element__label" change="{!c.onChangeofMonth}" label="">
+                            <aura:iteration items="{!v.basicDetails.lstMonthNames}" var="objMonth">
+                                <ui:inputSelectOption text="{!objMonth}" label="{!objMonth}" value="" />
+                            </aura:iteration>
+                        </ui:inputSelect>
+                    </div>
+                </td>
+                <td>
+                    <div class="slds-align_absolute-center " style="height: 4rem;">
+                        <ui:inputText class="slds-input slds-search-user" placeholder="Search Account" value="{!v.searchString}" required="false" updateOn="keyup" keyup="{!c.onSearchStringChange}" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="slds_blanktd"></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+
+        <div class="slds-coach__keys slds-size--1-of-1  slds-large-size--1-of-1 slds-box slds-theme_shade slds-theme_alert-texture slds-nomargin">
+            <div class="slds slds-resizable slds-scrollable--x sWrapTest">
+
+                <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal slds-table_striped slds-table_col-bordered">
+                    <aura:if isTrue="{!v.paginationOpportunityWrapper.length > 0}">
+                        <thead>
+                            <tr class="slds-text-heading--label">
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>ACCOUNT NAME</b>
+                                            </label>
+                                    </a>
+                                </th>
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>Engine Oil<br/>(In L)</b>
+                                            </label>
+                                    </a>
+                                </th>
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>Industrial Oil<br/>(In L)</b>
+                                            </label>
+                                    </a>
+                                </th>
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>Gear Oil<br/>(In L)</b>
+                                            </label>
+                                    </a>
+                                </th>
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>Anti-Freeze<br/>(In L)</b>
+                                            </label>
+                                    </a>
+                                </th>
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>Grease<br/>(In L)</b>
+                                            </label>
+                                    </a>
+                                </th>
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>AUS 32<br/>(In L)</b>
+                                            </label>
+                                    </a>
+                                </th>
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>Others<br/>(In L)</b>
+                                            </label>
+                                    </a>
+                                </th>
+                                <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" width="123px">
+                                    <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                        <span class="slds-assistive-text">Sort</span>
+                                        <label class="labelclass">
+                                                <b>TOTAL<br/>(In L)</b>
+                                            </label>
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.paginationOpportunityWrapper}" var="objOpportunityWrapper" indexvar="index">
+                                <tr class="slds-truncate slds-resizable">
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objOpportunityWrapper.strAccountName}" data-label="ACCOUNT NAME" scope="row">
+                                        {!objOpportunityWrapper.strAccountName}
+                                    </td>
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objOpportunityWrapper.samplePH6value1}" data-label="ENGINE OIL(IN L)" scope="row">
+                                        <p>
+                                            <ui:inputNumber value="{!objOpportunityWrapper.samplePH6value1}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisableSamplePH6value}" />
+                                        </p>
+                                        <!-- <div class="slds-p-top_small"></div>
+                                    <p><ui:inputNumber value="{!objOpportunityWrapper.potential1}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisablepotential}" /></p> -->
+                                    </td>
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objOpportunityWrapper.samplePH6value2}" data-label="INDUSTRIAL OIL(IN L)" scope="row">
+                                        <p>
+                                            <ui:inputNumber value="{!objOpportunityWrapper.samplePH6value2}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisableSamplePH6value}" />
+                                        </p>
+                                        <!--   <div class="slds-p-top_small"></div>
+                                    <p><ui:inputNumber value="{!objOpportunityWrapper.potential2}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisablepotential}" /></p> -->
+                                    </td>
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objOpportunityWrapper.samplePH6value3}" data-label="GEAR OIL(IN L)" scope="row">
+                                        <p>
+                                            <ui:inputNumber value="{!objOpportunityWrapper.samplePH6value3}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisableSamplePH6value}" />
+                                        </p>
+                                        <!--    <div class="slds-p-top_small"></div>
+                                    <p><ui:inputNumber value="{!objOpportunityWrapper.potential3}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisablepotential}" /></p> -->
+                                    </td>
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objOpportunityWrapper.samplePH6value4}" data-label="ANTI-FREEZE(IN L)" scope="row">
+                                        <p>
+                                            <ui:inputNumber value="{!objOpportunityWrapper.samplePH6value4}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisableSamplePH6value}" />
+                                        </p>
+                                        <!--        <div class="slds-p-top_small"></div>
+                                    <p><ui:inputNumber value="{!objOpportunityWrapper.potential4}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisablepotential}" /></p> -->
+                                    </td>
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objOpportunityWrapper.samplePH6value5}" data-label="GREASE(IN L)" scope="row">
+                                        <p>
+                                            <ui:inputNumber value="{!objOpportunityWrapper.samplePH6value5}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisableSamplePH6value}" />
+                                        </p>
+                                        <!--     <div class="slds-p-top_small"></div>
+                                    <p><ui:inputNumber value="{!objOpportunityWrapper.potential5}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisablepotential}" /></p> -->
+                                    </td>
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objOpportunityWrapper.samplePH6value6}" data-label="AUS 32(IN L)" scope="row">
+                                        <p>
+                                            <ui:inputNumber value="{!objOpportunityWrapper.samplePH6value6}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisableSamplePH6value}" />
+                                        </p>
+                                        <!--    <div class="slds-p-top_small"></div>
+                                    <p><ui:inputNumber value="{!objOpportunityWrapper.potential6}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisablepotential}" /></p> -->
+                                    </td>
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objOpportunityWrapper.samplePH6value7}" data-label="OTHERS(IN L)" scope="row">
+                                        <p>
+                                            <ui:inputNumber value="{!objOpportunityWrapper.samplePH6value7}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisableSamplePH6value}" />
+                                        </p>
+                                        <!-- <div class="slds-p-top_small"></div>
+                                    <p><ui:inputNumber value="{!objOpportunityWrapper.potential7}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisablepotential}" /></p> -->
+                                    </td>
+                                    <td class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!add(add(add(objOpportunityWrapper.samplePH6value1 != NULL?objOpportunityWrapper.samplePH6value1:0,objOpportunityWrapper.samplePH6value2 != NULL?objOpportunityWrapper.samplePH6value2:0),add(objOpportunityWrapper.samplePH6value3 != NULL?objOpportunityWrapper.samplePH6value3:0,objOpportunityWrapper.samplePH6value4 != NULL?objOpportunityWrapper.samplePH6value4:0)),add(add(objOpportunityWrapper.samplePH6value5 != NULL?objOpportunityWrapper.samplePH6value5:0,objOpportunityWrapper.samplePH6value6 != NULL?objOpportunityWrapper.samplePH6value6:0),add(objOpportunityWrapper.samplePH6value7 !=NULL?objOpportunityWrapper.samplePH6value7:0,0)))}">
+                                        <p>
+                                            <ui:inputNumber value="{!add(add(add(objOpportunityWrapper.samplePH6value1 != NULL?objOpportunityWrapper.samplePH6value1:0,objOpportunityWrapper.samplePH6value2 != NULL?objOpportunityWrapper.samplePH6value2:0),add(objOpportunityWrapper.samplePH6value3 != NULL?objOpportunityWrapper.samplePH6value3:0,objOpportunityWrapper.samplePH6value4 != NULL?objOpportunityWrapper.samplePH6value4:0)),add(add(objOpportunityWrapper.samplePH6value5 != NULL?objOpportunityWrapper.samplePH6value5:0,objOpportunityWrapper.samplePH6value6 != NULL?objOpportunityWrapper.samplePH6value6:0),add(objOpportunityWrapper.samplePH6value7 !=NULL?objOpportunityWrapper.samplePH6value7:0,0)))}"
+                                                format="0.0" class="slds-input" disabled="true" placeholder="" />
+                                        </p>
+                                        <!--    <div class="slds-p-top_small"></div>
+                                    <p><ui:inputNumber value="{!add(add(add(objOpportunityWrapper.potential1 != NULL?objOpportunityWrapper.potential1:0,objOpportunityWrapper.potential2 != NULL?objOpportunityWrapper.potential2:0),add(objOpportunityWrapper.potential3 != NULL?objOpportunityWrapper.potential3:0,objOpportunityWrapper.potential4 != NULL?objOpportunityWrapper.potential4:0)),add(add(objOpportunityWrapper.potential5 != NULL?objOpportunityWrapper.potential5:0,objOpportunityWrapper.potential6 != NULL?objOpportunityWrapper.potential6:0),add(objOpportunityWrapper.potential7 !=NULL?objOpportunityWrapper.potential7:0,0)))}" format="0.0" class="slds-input"  disabled="true" placeholder=""/></p> -->
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                        <aura:set attribute="else">
+                            <div class="slds-align_absolute-center slds-no-records">
+                                <b>NO RECORDS FOUND</b>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </table>
+
+            </div>
+            <div class="slds-p-top_small"></div>
+
+
+            <aura:if isTrue="{!v.showButtons}">
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_brand" onclick="{!c.onSaveButtonClick}" href="javascript:void(0);">
+                            Save
+                        </button>
+                </div>
+            </aura:if>
+
+            <div class="slds-p-top_small"></div>
+
+            <aura:if isTrue="{!v.paginationOpportunityWrapper.length > 0}">
+                <div class="slds-align_absolute-center">
+                    <c:VCPL_PaginationComponent currentPageNumber="{!v.pageNumber}" maxPageNumber="{!v.maxPage}" disableFirst="{!v.disableFirstButton}" disablePrev="{!v.disablePrevButton}" disableNext="{!v.disableNextButton}" disableLast="{!v.disableLastButton}" />
+                </div>
+            </aura:if>
+
+        </div>
+
+    </div>
+</aura:component>

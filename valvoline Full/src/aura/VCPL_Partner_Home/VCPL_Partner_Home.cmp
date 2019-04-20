@@ -1,0 +1,138 @@
+<aura:component controller="VCPL_Customer_Home_Controller" implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="caseDetails" type="list"/>	
+    
+<body>
+    
+	<div class="slds-container_medium container_align_center dash_Cards">
+		<div class="slds-grid slds-wrap slds-gutters">
+			<div class="slds-col slds-size_12-of-12 slds-medium-size_4-of-12">
+				<div class="slds-card">
+					<div class="slds-card__header slds-grid">
+					 	CCMS<br/>
+					 	
+					</div>
+					<div class="slds-media__body">
+					 	<div class="imgWrapper" style="{!'background-image: url('+ $Resource.VCPL_Customer_Resource +'/cards/img1.jpg)'}"></div>
+					 	<div class="cardContent">
+						 	<h2 class="slds-text-heading_small">You have an updated Case</h2><br/>
+							<p><strong>Case#: </strong>{!v.caseDetails[0].CaseNumber}</p>
+                            <p><strong>Date Opened: </strong><ui:outputDate value="{!v.caseDetails[0].CreatedDate}"/></p>
+						</div>
+					</div>
+
+					<div class="slds-card__footer slds-text-align_center">
+						<button class="slds-button slds-button_brand" onclick="{!c.ccmsgotoList}">View Details</button>
+					</div>
+				</div>
+			</div>
+			<div class="slds-col slds-size_12-of-12 slds-medium-size_4-of-12">
+				<div class="slds-card">
+					 <div class="slds-card__header slds-grid">
+					 	Proof of Delivery!
+					 </div>
+					 <div class="slds-media__body">
+					 	<div class="imgWrapper" style="{!'background-image: url('+ $Resource.VCPL_Customer_Resource +'/cards/img2.jpg)'}"></div>
+					 	<div class="cardContent">
+						 	<h2 class="slds-text-heading_small">Acknowledge Goods Reciept</h2>
+							<p>Upload the POD for your Invoices</p>  
+						</div>
+					</div>
+
+					<div class="slds-card__footer slds-text-align_center">
+						<button class="slds-button slds-button_brand" onclick="{!c.PODgotoList}">View Details</button>
+					</div>
+				</div>
+			</div>
+				<div class="slds-col slds-size_12-of-12 slds-medium-size_4-of-12">
+				<div class="slds-card">
+					<div class="slds-card__header slds-grid">
+					 	Trainings and Videos<br/>     
+					 
+					</div>
+					<div class="slds-media__body">
+					 	<div class="imgWrapper" style="{!'background-image: url('+ $Resource.VCPL_Customer_Resource +'/cards/img4.jpg)'}"></div>
+					 	<div class="cardContent">
+						 	<h2 class="slds-text-heading_small">Dash Overview</h2><br/>
+							<p>Easily engage with Valvoline</p>
+							
+						</div>
+					</div>
+
+					<div class="slds-card__footer slds-text-align_center">
+                        <a target="_blank" href="https://www.valvoline.com/en-india">  
+						<button class="slds-button slds-button_brand">View Details</button>
+					    </a>
+                    </div>
+				</div>
+			</div>  
+		</div>
+		
+		
+		
+        <div class="slds-grid slds-wrap slds-gutters">
+	     <div class="slds-col slds-size_12-of-12 slds-medium-size_4-of-12">    
+				<div class="slds-card">
+					<div class="slds-card__header slds-grid">
+					 	News
+					 </div>
+					 <div class="slds-media__body">
+					 	<div class="imgWrapper" style="{!'background-image: url('+ $Resource.VCPL_Customer_Resource +'/cards/img3.jpg)'}"></div>
+					 	<div class="cardContent">
+						 	<h2 class="slds-text-heading_small">DASH Highlights</h2><br/>
+							<p>Receive latest updates from Valvoline</p>
+						</div>
+					</div>
+
+					<div class="slds-card__footer slds-text-align_center">
+                        <a target="_blank" href="https://www.valvoline.com/en-india/about-us/press-room">  
+						<button class="slds-button slds-button_brand" >View Details</button>
+					</a>   
+                    </div>      
+				</div>
+			</div>
+		 
+			<div class="slds-col slds-size_12-of-12 slds-medium-size_4-of-12">
+				<div class="slds-card">
+					 <div class="slds-card__header slds-grid">
+					 	Solutions
+					 </div>
+					 <div class="slds-media__body">
+					 	<div class="imgWrapper" style="{!'background-image: url('+ $Resource.VCPL_Customer_Resource +'/cards/img5.jpg)'}"></div>
+					 	<div class="cardContent">
+						 	<h2 class="slds-text-heading_small">Solutions That Drive Your Business</h2>
+                            <p>Get access to recruiting, safety and more</p>
+						</div>
+					</div>
+
+					<div class="slds-card__footer slds-text-align_center">
+                        <a target="_blank" href="https://www.valvoline.com/en-india/partnering-with-valvoline"> 
+						<button class="slds-button slds-button_brand">View Details</button>
+                        </a>
+					</div>
+				</div>
+			</div>
+			<div class="slds-col slds-size_12-of-12 slds-medium-size_4-of-12">
+				<div class="slds-card">
+					<div class="slds-card__header slds-grid">
+					 	Promotions
+					 </div>
+					 <div class="slds-media__body">
+					 	<div class="imgWrapper" style="{!'background-image: url('+ $Resource.VCPL_Customer_Resource +'/cards/img6.jpg)'}"></div>
+					 	<div class="cardContent">
+						 	<h2 class="slds-text-heading_small">Marketing Support</h2><br/>
+							<p>Programs available to drive your business.</p>
+						</div>  
+					</div>
+
+					<div class="slds-card__footer slds-text-align_center">
+                        <a target="_blank" href="https://www.valvoline.com/en-india/about-us/business-support"> 
+						<button class="slds-button slds-button_brand">View Details</button>
+					    </a>     
+                      </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</aura:component>

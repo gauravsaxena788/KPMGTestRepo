@@ -1,0 +1,16 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VCPL_AccountAssignmentButtonController">
+
+    <aura:attribute name="show" type="boolean" default="false" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:if isTrue="{!v.show == true}">
+         <div style="border: 1px solid white;">
+        <div  role="group" style="border: 1px solid white;">
+            <button style="float:right;" class="slds-button slds-button_brand" onclick="{!c.navigate}" href="javascript:void(0);">
+                    Customer Assignment
+                </button>
+		</div>
+        </div>
+    </aura:if>
+</aura:component>

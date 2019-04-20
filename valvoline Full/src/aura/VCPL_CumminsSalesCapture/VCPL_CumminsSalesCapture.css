@@ -1,0 +1,40 @@
+.THIS .slds-search-user,
+.THIS .slds-Classify {
+    width: 50%;
+}
+
+.THIS .slds-spinner_container {
+    position: fixed;
+}
+
+@media only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-device-pixel-ratio: 3) {
+    .THIS .sWrapTest {
+        overflow: scroll;
+        max-width: 350px;
+    }
+}
+
+.THIS .slds-account {
+    background-color: transparent;
+    border: none;
+    position: relative;
+    top: -8px;
+    width: 87%;
+}
+
+.THIS .sWrapTest {
+    height: 100%;
+    width: 100%;
+}
+
+.THIS .slds-form-element__label {
+    font-weight: bold;
+}
+
+.THIS .slds-Classify {
+    background-color: transparent;
+    border: none;
+    position: relative;
+    top: -16px;
+    width: 87%;
+}

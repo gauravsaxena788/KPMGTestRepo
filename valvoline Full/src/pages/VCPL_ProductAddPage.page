@@ -1,0 +1,212 @@
+<apex:page controller="VCPL_AddDeleteProductController"  action="{!updateQuotePriceBook}" showHeader="false" sidebar="false">
+<style>
+    html{
+    padding:5px !important;
+    }
+    #spinner{
+        display: none;
+        width:200px;
+        height: 50px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        text-align:center;
+        padding:10px;
+        font:normal 16px Tahoma, Geneva, sans-serif;
+        margin-left: -100px;
+        margin-top: -100px;
+        z-index:2;
+        overflow: auto;
+        border:1px solid #CCC;
+        background-color:white;
+        z-index:100;
+        padding:5px;
+        line-height:20px;
+     }
+         #opaque {
+             position: fixed;
+             top: 0px;
+             left: 0px;
+             width: 100%;
+             height: 100%;
+             z-index: 1;
+             display: none;
+             background-color: gray;
+             filter: alpha(opacity=30);
+             opacity: 0.3;
+             -moz-opacity:0.3;
+             -khtml-opacity:0.3
+         }
+         * html #opaque {
+             position: absolute;
+         }
+        
+        input[type="text"] {
+            min-width: 5rem !important;
+        }
+        .mybtncss:hover{
+        background-color:#005fb2 !important;
+        border-color: #005fb2 !important;
+        }
+        
+        .mybtncss2:hover{
+        background-color:#870500 !important;
+        border-color: #870500 !important;
+        }
+        
+        .myaddbtncss:hover{
+        background-color:#006400 !important;
+        border-color: #006400 !important;
+        }
+        
+        .myheadercss{
+         padding-top: -30px;
+        }
+        
+        #wstatus {
+             
+         }
+
+</style>
+
+ <script>
+        (function(tableId) {
+            var table = document.getElementById(tableId);
+            if (table) {
+                var tbody = table.tBodies[0];
+                tbody.rows[tbody.rows.length - 1].className += ' last';
+            }
+        })('{!$Component.quotetable}');
+    </script>
+    
+    <script>
+    function getProductItems(myval)
+    {
+        CalculatePrice(myval);
+        //alert('called '+myval);
+    }
+    </script>
+<apex:form id="myfrm">
+
+   <apex:pageMessages />
+
+   <apex:actionFunction name="CalculatePrice" action="{!CalculatePrice}" reRender="skuid,packsize,lastquoteprice,lastinvoicedprice,segmentprice" status="wstatus">
+       <apex:param name="productname" value=""/>
+   </apex:actionFunction>
+
+<apex:pageBlock >
+    
+  <div class="myheadercss" data-aura-class="cAddProduct"><h1><center>Add Products</center></h1>
+  </div>
+  
+  <!-- Display the related quote line item for the quote -->
+  <apex:pageblocktable value="{!QuoteLineItem}" var="con" id="quotetable"> <apex:variable value="{!0}" var="cnt" id="myTable"/>
+      
+      <apex:inputHidden value="{!con.PriceBookEntryId}"/>
+      
+      <apex:column headerValue="Product">
+          <apex:inputfield value="{!con.Product2Id}" onchange="getProductItems(this.value); return false;" styleClass="slds-input slds-combobox__input mywidth" style="height:30px;"/>
+      </apex:column>
+      
+      <!--<apex:column headerValue="SKU Code">
+          <apex:inputField html-disabled="true" value="{!con.SKU_ID__c}" id="skuid" styleClass="slds-input slds-combobox__input mywidth" style="width:40px;"/>
+          <apex:outputText html-disabled="true" value="{0, number, ######}" id="skuid" styleClass="slds-input slds-combobox__input mywidth" style="width:40px;height:30px;">
+            <apex:param value="{!con.SKU_ID__c}"/>
+          </apex:outputText>
+      </apex:column>-->
+      
+      <apex:column headerValue="Pack Size">
+          <apex:inputField html-disabled="true" value="{!con.Pack_Size__c}" id="packsize" styleClass="slds-input slds-combobox__input mywidth" style="width:30px;height:30px;"/>
+      </apex:column>
+      
+      <apex:column headerValue="Last Qtd Price">
+          <apex:inputField html-Disabled="true" value="{!con.Last_Quote_Price__c}" id="lastquoteprice" styleClass="slds-input slds-combobox__input mywidth" style="width:120px;height:30px;"/> 
+      </apex:column>
+      
+      <!--<apex:column headerValue="Last Invoiced Price">
+          <apex:inputField html-Disabled="true" value="{!con.Last_Invoiced_Price__c}" id="lastinvoicedprice" styleClass="slds-input slds-combobox__input mywidth" style="width:140px;height:30px;"/>
+      </apex:column>-->
+      
+      <!--<apex:column headerValue="Segment Median Price">
+          <apex:inputField html-Disabled="true" value="{!con.Segment_Recommended_Price__c}" id="segmentprice" styleClass="slds-input slds-combobox__input mywidth" style="width:140px;height:30px;"/>
+      </apex:column>-->
+      
+      <apex:column headerValue="Sales Price/Ltr (Excl GST)">
+          <apex:inputfield value="{!con.UnitPrice}" styleClass="slds-input slds-combobox__input mywidth" style="width:140px;height:30px;"/>
+      </apex:column>
+      
+      <apex:column headerValue="Annual Qty (APPX in KL)"> <!--- In Ltr --->
+          <apex:inputfield value="{!con.Quantity}" styleClass="slds-input slds-combobox__input mywidth" style="width:140px;height:30px;"/>
+      </apex:column>
+      
+      <apex:column headervalue="Action">
+          <apex:commandlink value="Remove" action="{!removeQuoteLineItem}" immediate="true" reRender="myfrm" status="wstatus">
+              <!-- Pass the row number to the controller so that we know which row to remove -->
+              <apex:param name="index" value="{!cnt}"/>
+          </apex:commandlink> 
+          <apex:variable var="cnt" value="{!cnt+1}"/>              
+      </apex:column>
+      
+  </apex:pageblocktable>
+  
+    <br/>
+        <apex:commandbutton value="+" title="Add Row" style="font-size:30px;float:right;background-color:#228B22;border-color:#228B22;color:green;" styleClass="myaddbtncss" action="{!addQuoteLineItem}" immediate="true" reRender="myfrm" status="wstatus"/>              
+    <br/>
+    <center class="cAddProduct" data-aura-class="cAddProduct">
+        <apex:commandButton value="Save" action="{!saveChanges}" status="wstatus" reRender="myfrm" styleClass="mybtncss" style="background-color:#0070d2;border:1px solid #0070d2;color:blue;"/>
+        <!--<button class="slds-button slds-button_brand">Save</button>-->
+        <apex:commandButton value="Close" onclick="closeWin();return false;" styleClass="mybtncss2" style="background-color:#c23934;border:1px solid #c23934;color:red;"/>
+    </center>
+  
+</apex:pageBlock>
+</apex:form>
+
+<div id="opaque"/>
+<div id="spinner">
+    <p align="center" style='{font-family:"Arial", Helvetica, sans-serif; font-size:20px;}; padding-top:5px;'><apex:image value="/img/loading.gif"/>&nbsp;Please wait</p>
+</div>
+
+<apex:outputpanel id="mstatus">
+<apex:actionstatus id="wstatus">
+    <apex:facet name="start">
+        <div class="waitingSearchDiv" id="el_loading" style="width:400px;height:400px;background-color: #ECEBEA;opacity:0.65; margin-left:450px;margin-top:100px;">
+            <div class="waitingHolder">
+                <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                <span class="waitingDescription">Loading...</span>
+            </div>
+        </div>
+    </apex:facet>
+</apex:actionstatus>
+</apex:outputpanel>
+
+<script type="text/javascript">
+function closeSpinner()
+{
+    document.getElementById('opaque').style.display='none';
+    var popUp = document.getElementById('spinner');
+      
+    popUp.style.display = 'none';
+}
+function showSpinner()
+{
+   document.getElementById('opaque').style.display='block';
+   var popUp = document.getElementById('spinner');
+  
+   popUp.style.display = 'block';
+   
+   setTimeout(function () {
+      closeSpinner()
+    }, 3000);
+   
+}
+function closeWin()
+{
+    if(confirm('Are you sure want to close this page?'))
+    {
+        window.close();
+    }
+}
+
+
+</script>
+</apex:page>

@@ -1,0 +1,12 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+     <aura:attribute name="isOpen" type="boolean" default="false" />
+    <div style="width:100%;">
+        <div class="slds-m-around--xx-large">
+           <button class="slds-button slds-button--brand" onclick="{!c.openModel}">New Post Case</button> 
+            <aura:if isTrue="{!v.isOpen}">
+                <c:VA_editPostCasePage />
+                <div class="slds-backdrop slds-backdrop--open"></div>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

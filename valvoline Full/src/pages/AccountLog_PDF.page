@@ -1,0 +1,158 @@
+<apex:page Controller="AccountLog_PDF_controller" renderAs="pdf" >
+    <head>
+        <title>Account Log PDF</title>   
+          <style type="text/css">
+            table {
+            border-collapse: collapse;
+            }
+            
+            body {font-family: 'Arial';font-size:12pt;}
+            
+            .headings{
+            color: black;
+            font-size:14pt;
+            font-weight:bold!important;
+            }
+            .texts{
+            color: #999999;
+            }
+            
+            .headerRow td{
+            background-color: #F0F8E2;
+            font-size: 16px;
+            /*font-weight: bold;*/
+            }
+            .myCol{
+            border:solid 1px #000;
+            text-align:center;
+            
+            }
+            .myunderlinecss{
+            text-decoration: underline !important;
+            font-size:14px !important;
+            color:#020202 !important;
+            font-family: Arial Unicode MS;
+            }
+            
+        </style>
+        
+    </head>
+    
+<body>
+    
+    
+    <apex:form >
+        <div align="center" style="padding:0 0 0 5px;font-weight:bold;" >
+            Account Logs for {!seltype}
+        </div>&nbsp;
+       
+        <!--apex:pageBlock >
+            <center><b>Account Logs</b><br/>
+            <apex:pageBlockSection >
+                
+                <apex:outputText value="{!accountname}" label="Account Name: "  styleClass="font-weight:bold"/>
+                <apex:outputText value="{!accountcode}" label="Account Code: " styleClass="font-weight:bold"/>
+                <apex:outputText value="{!currentUserName}" label="Account Owner: " styleClass="font-weight:bold"/>
+                <apex:outputText value="{!accountcity}" label="Account City: " styleClass="font-weight:bold"/>
+                
+            </apex:pageBlockSection>
+        </apex:pageBlock-->
+        <apex:outputPanel >
+                        
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td height="25" bgcolor="#F0F8E2" style="padding:0 0 0 5px;font-weight:bold;">Account details</td>
+                            </tr>
+                           
+                            <tr>
+                                
+                                <td align="left" valign="top"><table border="0" cellspacing="0" cellpadding="5">
+                                    <tr>
+                                        <th width="20%" align="left" valign="middle">Account Name:</th>
+                                        <td width="30%" align="left" valign="middle"> <apex:outputText value="{!accountname}"/></td>
+                                        <th width="20%" align="left" valign="middle">Account Code:</th>
+                                        <td width="30%" align="left" valign="middle"> <apex:outputText value="{!accountcode}"/></td>
+                                    </tr>   
+                                    
+                                    
+                                    
+                                    <tr>
+                                        <th width="20%" align="left" valign="middle">Account Owner:</th>
+                                        <td width="30%" align="left" valign="middle"> <apex:outputText value="{!currentUserName}"/></td>
+                                        <th width="20%" align="left" valign="middle">Account City:</th>
+                                        <td width="30%" align="left" valign="middle"> <apex:outputText value="{!accountcity}"/></td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                    </tr>                     
+                                    
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                        </table>                                         
+                    </apex:outputPanel> 
+        
+        <apex:outputPanel > 
+            <!--table style="border:collapsible" cellpadding="4" cellspacing="0" width="100%"-->
+               <table border="1" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">                  
+          
+                <tr class="headerRow" style="font-size: 15px;">
+                    <td class="myCol" bgcolor="#F0F8E2" width="5%" align="center">Sr No.</td>
+                    <td class="myCol" bgcolor="#F0F8E2" align="center">Date</td>
+                    <td class="myCol" bgcolor="#F0F8E2" align="center">Subject</td>
+                    <td class="myCol" bgcolor="#F0F8E2" align="center">Details</td>
+                    <td class="myCol" bgcolor="#F0F8E2" align="center">Activity Type</td>
+                    <td class="myCol" bgcolor="#F0F8E2" align="center">Activity Created By</td>
+                    <td class="myCol" bgcolor="#F0F8E2" align="center">Opportunity Name</td>
+                    <td class="myCol" bgcolor="#F0F8E2" align="center">Opportunity stage</td>                   
+                </tr>             
+                
+                <apex:repeat value="{!opplist}" var="opp" >
+                    <apex:variable value="{!1}" var="srNo"/>
+                    <apex:repeat value="{!opp.tasks}" var="t" >
+                        
+                        <tr style="font-size: 15px;">
+                            <td class="myCol" width="5%" align="center">{!srNo}</td>
+                            <td class="myCol" align="center">
+                            <apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}">
+                                        <apex:param value="{!t.createddate}" /> 
+                                    </apex:outputText>
+                            
+                            </td>                                
+                            <td class="myCol" align="center">{!t.subject}</td>                       
+                            <td class="myCol" align="center">{!t.Description}</td>                       
+                            <td class="myCol" align="center">{!t.TaskSubtype}</td>                        
+                            <td class="myCol" align="center">{!t.CreatedBy.name}</td>                           
+                            <td class="myCol" align="center">{!opp.Name}</td>                     
+                            <td class="myCol" align="center">{!opp.StageName}</td>                        
+                        </tr>
+                        <apex:variable var="srNo" value="{!srNo+1}"/>
+                    </apex:repeat>
+                    
+                    <apex:repeat value="{!opp.Events}" var="t" >
+                        
+                        <tr style="font-size: 15px;">
+                            <td class="myCol" width="5%" align="center">{!srNo}</td>
+                            <td class="myCol" align="center">
+                            <apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}">
+                                        <apex:param value="{!t.createddate}" /> 
+                                    </apex:outputText></td>                                
+                            <td class="myCol" align="center">{!t.subject}</td>                       
+                            <td class="myCol" align="center">{!t.Description}</td>                       
+                            <td class="myCol" align="center"> {!t.EventSubtype} </td>                        
+                            <td class="myCol" align="center"> {!t.CreatedBy.name} </td>                           
+                            <td class="myCol" align="center">{!opp.Name}</td>                     
+                            <td class="myCol" align="center">{!opp.StageName} </td>                         
+                        </tr>
+                        <apex:variable var="srNo" value="{!srNo+1}"/>
+                    </apex:repeat>
+                </apex:repeat>
+                
+            </table>
+        </apex:outputPanel>
+        
+    </apex:form>   
+     </body>   
+</apex:page>

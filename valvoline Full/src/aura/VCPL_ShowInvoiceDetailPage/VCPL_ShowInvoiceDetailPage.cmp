@@ -1,0 +1,123 @@
+<aura:component controller = "DynamicObjectDetail" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<aura:attribute name="sobj" type="sobject"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />   
+    <aura:attribute name="objInvoice" type="VA_Invoice__c" />  
+   
+   <div class="slds-p-around--none slds-panel__section">  
+ 
+     <div class="slds-section slds-is-open">  
+          
+         <h3 class="slds-section__title">
+             
+                    <button class="slds-button slds-section__title-action"> Information </button>
+                </h3>     
+           
+                
+              <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded"> 
+ 
+                <div class="slds-p-horizontal--small slds-size--1-of-2">  
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> SAP Invoice Number </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                              <ui:outputText class="slds-output" value="{!v.objInvoice.VA_Invoice_Number__c}" />
+                        </div>  
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Order </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objInvoice.VA_Order__r.OrderNumber}" />             
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Total Invoice Quantity </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputNumber class="slds-output" value="{!v.objInvoice.VA_Total_Invoice_Quantity__c}" format="0.00"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Month </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objInvoice.VA_Month__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Total Invoice Amount </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputNumber class="slds-output" value="{!v.objInvoice.VA_Total_Invoice_Amount__c}" format="0.00"/>
+                        </div>
+                    </div>
+                </div>
+                  
+                  <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Calendar Year </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objInvoice.VA_Calender_Year__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Invoice Status </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objInvoice.VA_Invoice_Status__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                  <div class="slds-p-horizontal--small slds-size--1-of-2">
+                  </div>
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> POD Upload Date </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                            <lightning:formattedDateTime day="numeric"
+                                                         hour12="true"
+                                                         month="2-digit"
+                                                         value="{!v.objInvoice.VA_POD_Upload_Date__c}"
+                                                         year="numeric"
+                                                         minute="2-digit"
+                                                         hour="2-digit"
+                                                         />
+                            <!-- <ui:outputDateTime class="slds-output" value="{!v.objInvoice.VA_POD_Upload_Date__c}" />-->
+                        </div>
+                    </div>
+                </div>
+                  
+                  <div class="slds-p-horizontal--small slds-size--1-of-2">
+                  </div>
+             <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Invoice Date </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                            <lightning:formattedDateTime day="numeric"
+                                                         hour12="true"
+                                                         month="2-digit"
+                                                         value="{!v.objInvoice.VA_Invoice_Date__c}"
+                                                         year="numeric"
+                                                         />
+                            <!-- <ui:outputDate class="slds-output" value="{!v.objInvoice.VA_Invoice_Date__c}" />-->
+                            
+                        </div>    
+                    </div>
+                </div>
+              
+            </div>   
+         
+         </div> 
+
+       </div> 
+</aura:component>

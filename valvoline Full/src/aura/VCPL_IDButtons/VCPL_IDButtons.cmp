@@ -1,0 +1,26 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access="global" 
+                controller="VCPL_IDButtonController">
+                
+    <aura:attribute name="show" type="boolean" default="false" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:if isTrue="{!v.show == true}">
+    <div class="slds-button-group" role="group">
+        <button class="slds-button slds-button_brand" onclick="{!c.navigatetoSalesPlan}" href="javascript:void(0);" style="width: 157px;">
+                    Sales Plan
+                </button>
+        <div class="slds-m-bottom--medium"></div>
+        
+        <button class="slds-button slds-button_brand" onclick="{!c.navigatetoSalescapture}" href="javascript:void(0);" style="width: 157px;">
+                    Sales Capture
+                </button>
+         <div class="slds-m-bottom--medium"></div>
+         
+         <button class="slds-button slds-button_brand" onclick="{!c.navigatetoPotentialCapture}" href="javascript:void(0);" style="width: 157px;">
+                    Potential Capture
+                </button>
+                </div>
+    </aura:if>
+</aura:component>

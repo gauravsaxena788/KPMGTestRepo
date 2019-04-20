@@ -1,0 +1,30 @@
+.THIS th {
+    border-style: none;
+    border-width : thin;
+    background-color:#eff4f7;
+   
+    
+}
+.THIS table{
+   border-width : thin;
+    
+}
+.THIS td {
+  	
+    
+    border-width : thin;
+}
+.THIS .frame {
+   
+   
+    border-width : thin;
+   
+      border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
+}
+
+.THIS h3 {
+    font: bold 20px/1.5 Arial;
+}

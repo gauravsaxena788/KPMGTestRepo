@@ -1,0 +1,8 @@
+<aura:event type="COMPONENT" description="Event template" access="public">
+    <aura:attribute name="ObjectLabel"
+                    type="String"
+                    description="Store name of object written in lable text"/>
+    <aura:attribute name="externalParameter"
+                    type="String"
+                    description="Store name of object written in lable text"/>
+</aura:event>

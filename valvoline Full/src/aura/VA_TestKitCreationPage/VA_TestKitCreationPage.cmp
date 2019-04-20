@@ -1,0 +1,40 @@
+<aura:component controller = "TestCreationController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name ="showMyComp" type = "boolean" default = "false"/>
+    <aura:attribute name ="showTestPage" type = "boolean" default = "false"/>
+    <aura:attribute name ="showCCMSComp" type = "boolean" default = "false"/>
+    <aura:attribute name ="userId" type = "boolean" default = "false" />
+    <aura:attribute name="passAccRecordId" type="String" />
+    <aura:attribute name="passConRecord" type="Contact" />
+    <aura:attribute name="passCaseType" type="String" default=""/>
+    <aura:attribute name="usedCompContext" type="String" />
+    <aura:handler event = "c:ClosePostKitEvent" action = "{!c.closePostKit}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:if isTrue="{!v.showCCMSComp}">
+        <!-- Imp to set cmpContext attribute for viewing CCMS Comp in child Account Context-->
+        <c:VA_CCMSButton passAccId="{! v.passAccRecordId }" cmpContext = "child" ></c:VA_CCMSButton>
+    </aura:if>
+    <div aura:id = "desktopDiv">
+        <div  class="slds-button-group" role="group">
+            <ui:button  class="slds-button slds-button_neutral" aura:id="show" label="New POST Kits" press="{!c.navigateToMyPage}"/>&nbsp;
+            <ui:button  class="slds-button slds-button_neutral" aura:id="showRequest" label="New POST Request" press="{!c.navigateToTestPage}"/>
+        </div>
+        
+        <aura:if isTrue = "{!v.showMyComp}">
+          <!-- <c:VA_EditPostKitCasePage selectedLookUpRecord="{!v.passAccRecord}"  selectedLookUpContact="{!v.passConRecord}" ></c:VA_EditPostKitCasePage>-->     
+                <c:VA_EditPostKitCasePage  ifAccIdExist="{!v.passAccRecordId}"  ></c:VA_EditPostKitCasePage>
+        </aura:if>
+         <aura:if isTrue = "{!v.showTestPage}">
+                <c:VA_editPostCasePage ifAccIdExist="{!v.passAccRecordId}" showTestPage="{!v.showTestPage}"></c:VA_editPostCasePage>
+        </aura:if>
+
+     
+    </div>
+    
+    <div aura:id = "phoneDiv">
+        <div class="slds-button-group" role="group">
+            <ui:button  class="slds-button slds-button_neutral" aura:id="show" label="New Post Kit" press="{!c.navigateToPhonePage}"/>&nbsp;
+            <ui:button  class="slds-button slds-button_neutral" aura:id="show" label="New Post Test" press="{!c.navigateToPhoneTestPage}"/>&nbsp;
+        </div>
+    </div>
+</aura:component>

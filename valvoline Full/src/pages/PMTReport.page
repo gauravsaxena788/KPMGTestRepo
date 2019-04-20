@@ -1,0 +1,5 @@
+<apex:page lightningStylesheets="true">
+<script>
+window.open('/apex/PMTreport_Page');
+</script>
+</apex:page>

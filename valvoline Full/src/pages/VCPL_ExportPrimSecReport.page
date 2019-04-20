@@ -1,0 +1,24 @@
+<apex:page controller="VCPL_Primary_Sec_ReportController" contentType="application/vnd.ms-excel#Primary v Secondary.xls" >
+  <table>
+      <tr>
+          <td>MONTH</td>
+          <td>DEALER</td>
+          <td>PRIMARY LY SALES</td>
+          <td>PRIMARY CY SALES</td>
+          <td>SEC LY SALES</td>
+          <td>SEC CY SALES</td>
+      </tr>
+      <apex:repeat value="{!listPrimSecData}" var="looper">
+      <apex:repeat value="{!looper}" var="varData" >
+          <tr>
+              <td>{!varData.month}</td>
+              <td>{!varData.dealerName}</td>
+              <td>{!varData.primSaleslY}</td>
+              <td>{!varData.primSalesCY}</td>
+              <td>{!varData.secSaleslY}</td>
+              <td>{!varData.secSalesCY}</td>
+          </tr>
+      </apex:repeat>
+      </apex:repeat>
+  </table>
+</apex:page>

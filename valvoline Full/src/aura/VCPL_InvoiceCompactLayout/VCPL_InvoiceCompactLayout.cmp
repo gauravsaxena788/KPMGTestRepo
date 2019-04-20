@@ -1,0 +1,21 @@
+<aura:component controller = "DynamicObjectDetail" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+
+    <aura:attribute name="sobj" type="sobject"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />   
+    <aura:attribute name="objInvoice" type="VA_Invoice__c" /> 
+    
+  <a onclick="{!c.goBack}" href="javascript:void(0);">Back</a>
+    <div class="slds-m-bottom--medium"></div>
+     <!--Detail panel-->  
+     <lightning:icon
+    iconName="standard:event"
+    size="medium"
+    variant="error"
+    title="Invoice" />
+    Invoice
+
+    <!--Detail panel--> 
+    
+    
+    	
+</aura:component>

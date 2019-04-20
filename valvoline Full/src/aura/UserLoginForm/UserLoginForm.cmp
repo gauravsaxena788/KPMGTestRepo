@@ -1,0 +1,111 @@
+<!-- add implements="forceCommunity:availableForAllPageTypes" to surface the component in community builder -->
+<aura:component controller="LightningLoginFormController" 
+                implements="forceCommunity:availableForAllPageTypes"
+                access="global">
+    <ltng:require 
+        styles="{!$Resource.Valvoline +
+            'css/salesforce-lightning-design-system.css'}" />
+    <ltng:require 
+        styles="{!$Resource.Valvoline +
+            '/css/valvoline.css'}" />
+    <aura:attribute name="showError" type="Boolean" required="true" description="" default="false" access="private"/>
+    <aura:attribute name="errorMessage" type="String" required="false" description="" access="private"/>
+    <aura:attribute name="startUrl" type="String" required="false" description="The url you go to after a successful login" />
+    <aura:attribute name="usernameLabel" type="String" required="false" default="Username"/>
+    <aura:attribute name="passwordLabel" type="String" required="false" default="Password"/>
+    <aura:attribute name="loginButtonLabel" type="String" required="false" default="Log in"/>
+    <aura:attribute name="expid" type="String" required="false" description="The branding experience ID" />        
+    
+    <aura:attribute name="forgotPasswordLabel" type="String" required="false" default="Forgot your password?"/>
+    <aura:attribute name="selfRegisterLabel" type="String" required="false" default="Not a member?"/>
+    <aura:attribute name="forgotPasswordUrl" type="String" required="false" default="/ForgotPassword"/>
+    <aura:attribute name="selfRegisterUrl" type="String" required="false" default="/SelfRegister"/>
+    
+    <aura:attribute name="isUsernamePasswordEnabled" type="Boolean" access="private"/>
+    <aura:attribute name="isSelfRegistrationEnabled" type="Boolean" access="private"/>
+    <aura:attribute name="communityForgotPasswordUrl" type="String" access="private"/>
+    <aura:attribute name="communitySelfRegisterUrl" type="String" access="private"/>
+    
+    <aura:registerevent name="sitePropagatedStartUrl" type="c:setStartUrl"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initialize}"/>
+    <aura:dependency resource="c:setStartUrl" type="EVENT"/>
+
+    <aura:dependency resource="siteforce:registerQueryEventMap" type="EVENT"/>
+
+    <aura:handler event="c:setStartUrl" action="{!c.setStartUrl}"/>
+    <aura:handler event="c:setExpId" action="{!c.setExpId}"/>    
+    <aura:dependency resource="c:setExpId" type="EVENT"/>  
+    
+    <section id="wrapper" style="padding-top:0px;">
+	<div class="iner-container">
+		<header class="header slds-align_absolute-center">
+			<img src="{!$Resource.Valvoline + '/images/Valvoline_logo.png'}" style="height: 130px;"/>
+		</header>
+        <aura:renderIf isTrue="{!v.isUsernamePasswordEnabled}">
+            <br/><br/>
+			<span>
+                <aura:renderIf isTrue="{!v.showError}">
+                    <div id="error" class="slds-text-color_error customError">
+                        <ui:outputRichText value="{!v.errorMessage}" />
+                    </div>
+                </aura:renderIf>
+            </span>
+			<article class="mdle-content" style="padding-top:0px;">
+				<h4 class="heading" style="padding-top:0px; font-size:2rem;">Account Login</h4>
+					<form method="get" action="#" class="cstm-form">
+									<div class="slds-grid slds-wrap">
+										  <div class="slds-col slds-size_1-of-1">
+									  		<div class="slds-form-element"
+                                                 id="username">
+									  			<ui:inputText value="" 
+                                                              aura:id="username" 
+                                                              placeholder="User Name" 
+                                                              keyup="{!c.onKeyUp}" 
+                                                              class="slds-input" 
+                                                              label="{!v.usernameLabel}" 
+                                                              labelClass="assistiveText"/>
+                                               <!-- <input type="text" 
+                                                       aura:id="username" 
+                                                       class="slds-input input"
+                                                       placeholder="{!v.usernameLabel}" 
+                                                       keyup="{!c.onKeyUp}"
+                                                       value="" 
+                                                       autofocus="true"/>-->
+									  		</div>
+										  </div>
+									  </div>
+									  <div class="slds-grid slds-wrap">
+										  <div class="slds-col slds-size_1-of-1">
+									  		<div class="slds-form-element">
+									  			<ui:inputSecret value="" aura:id="password" placeholder="{!v.passwordLabel}" keyup="{!c.onKeyUp}" class="slds-input" label="{!v.passwordLabel}" labelClass="assistiveText"/>
+									  		</div>
+										  </div>
+									  </div>
+									  <div class="slds-grid slds-wrap">
+										<div class="slds-form-element slds-size_1-of-1">
+										    <lightning:input type="checkbox" label="Remember my user name" name="Remember my user name" onchange= "{!c.remember}"/>
+										</div>
+									</div>
+						<div class="slds-grid slds-m-top_x-small">
+                            <lightning:button aura:id="submitButton" 
+                                              label="{!v.loginButtonLabel}" 
+                                              onclick="{!c.handleLogin}" 
+                                              variant="brand" 
+                                              class="slds-col customLogin"/>
+						</div>
+							
+						<div class="caption">
+						Forgot Password? <a href="{!if(v.communityForgotPasswordUrl == null, v.forgotPasswordUrl, v.communityForgotPasswordUrl)}">Click Here</a> to have a reset link sent to your email address.
+						<!--Valvoline partners needing additional assistance, please contact Technical Support by clicking 
+						<a href="#">Live Chat</a>-->
+						</div>	  
+					</form>
+		</article>
+			
+		</aura:renderIf>
+	</div>
+ 		<footer class="footer">
+			™ Trademark, Valvoline or its subsidiaries registered in various countries. © Valvoline 2018
+		</footer>       
+</section>
+</aura:component>

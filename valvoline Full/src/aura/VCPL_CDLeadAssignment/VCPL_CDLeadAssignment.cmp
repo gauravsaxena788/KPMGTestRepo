@@ -1,0 +1,144 @@
+<aura:component controller="VCPLCmpServiceLeadAssignment"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,force:lightningQuickActionWithoutHeader"
+                extends="c:VCPLBaseUtility"
+                description="Component for Lead Assignment.">
+    
+    <aura:attribute name="leadRecord"
+                    type="Object"
+                    access="public"/>
+    
+    <aura:attribute name="loggedInUser"
+                    type="Object"
+                    access="public"/>
+    
+    <aura:attribute name="mapOfRelatedInputPicklists"
+                    type="Object"
+                    access="public"/>
+    
+    <aura:attribute name="lstOfBranchHeads"
+                    type="String[]"
+                    access="public"/>
+    
+    <aura:attribute name="lstOfBranches"
+                    type="String[]"
+                    access="public"/>
+    
+    <aura:attribute name="lstOfELPAssignments"
+                    type="String[]"
+                    access="public"/>
+    
+    <aura:attribute name="isError"
+                    type="Boolean"
+                    access="public"
+                    default = "false"/>
+    
+   <aura:attribute name="branchProfileName"
+                    type="String"
+                    access="public"
+                   default="CD BH Partner User"/>
+    
+    <!-- Handler -->
+    <aura:handler name="init"
+                  value="{!this}"
+                  action="{!c.doInit}"
+                  description="Event handler during component initialization."/>
+    
+    <div>
+        <table>
+            <tr>
+                <td>
+                    Dealer : 
+                </td>
+                <td>
+                    <ui:inputText placeholder="Dealer"
+                                  value="{!v.leadRecord.VCPL_Partner_Account__r.Name}"
+                                  disabled="true"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Branch : 
+                </td>
+                <td>
+                    <lightning:select aura:id="branch" name="Branch" label="Branch" 
+                                      value="{!v.leadRecord.VCPL_Branch__c}"
+                                      disabled="{!v.loggedInUser.Profile.Name == v.branchProfileName}"
+                                      variant="label-hidden"
+                                      onchange="{!c.branchChangeHandler}">
+                        <option value="">None</option>
+                        <aura:iteration items="{!v.lstOfBranches}" 
+                                        var="branch">
+                            <option value="{!branch.text}"
+                                    selected="{!v.leadRecord.VCPL_Branch__c == branch.text}">
+                                {!branch.label}
+                            </option>
+                        </aura:iteration>
+                    </lightning:select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Branch Head : 
+                </td>
+                <td>
+                    <lightning:select aura:id="branchHead" name="Branch Head" label="Branch Head" 
+                                      value="{!v.leadRecord.VCPL_Branch_Head__c}"
+                                      disabled="{!v.leadRecord.VCPL_ELP__c}"
+                                      variant="label-hidden">
+                        <aura:iteration items="{!v.lstOfBranchHeads}" 
+                                        var="branchHead">
+                            <option value="{!branchHead.text}"
+                                    selected="{!v.leadRecord.VCPL_Branch_Head__c == branchHead.text}">
+                                {!branchHead.label}
+                            </option>
+                        </aura:iteration>
+                    </lightning:select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ELP : 
+                </td>
+                <td>
+                    <lightning:select aura:id="elp" name="ELP" label="ELP" 
+                                      value="{!v.leadRecord.VCPL_ELP__c}"
+                                      disabled="{!v.leadRecord.VCPL_Branch_Head__c}"
+                                      variant="label-hidden">
+                        <aura:iteration items="{!v.lstOfELPAssignments}" 
+                                        var="elpAssignment">
+                            <option value="{!elpAssignment.text}"
+                                    selected="{!v.leadRecord.VCPL_ELP__c == elpAssignment.text}">
+                                {!elpAssignment.label}
+                            </option>
+                        </aura:iteration>
+                    </lightning:select>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <br/>
+    <div style="color:red">
+        <aura:if isTrue="{!v.isError}">
+        Please select a Branch Head or ELP.
+            <br/>
+        </aura:if>
+        </div>
+    <center>
+        
+    <lightning:buttonGroup class="{!if(v.leadRecord.VCPL_Sync_to_CDOS__c == 'True' , 'slds-hide','')}">
+        <lightning:button label="Save"
+                          variant="brand"
+                          iconPosition="right"
+                          disabled="{!and(!v.leadRecord.VCPL_ELP__c ,!v.leadRecord.VCPL_Branch_Head__c)}"
+                          onclick="{!c.saveLeadAssignment}"
+                          class="slds-button slds-button--neutral cstm-btn"/>
+        
+    </lightning:buttonGroup>
+        <lightning:button label="Close"
+                          variant="brand"
+                          iconPosition="right"
+                          onclick="{!c.closeLeadAssignment}"
+                          class="slds-button slds-button--neutral cstm-btn"/>
+        </center>
+</aura:component>

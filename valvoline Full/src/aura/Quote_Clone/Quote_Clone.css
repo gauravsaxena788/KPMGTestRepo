@@ -1,0 +1,16 @@
+.THIS H1{
+    font-size:20px;
+}
+.THIS.slds-spinner_container {  
+  z-index: 10000;
+  position: fixed;
+  height: 300px;
+  width: 520px;
+  margin-left: 60px;
+  margin-top: 180px;
+}
+
+.THIS .slds-modal_medium{
+    height:500px !important;
+    max-height:500px !important;
+}

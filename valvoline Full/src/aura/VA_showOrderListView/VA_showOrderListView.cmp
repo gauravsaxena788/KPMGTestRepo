@@ -1,0 +1,120 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VA_ShowListViewController">
+    <aura:attribute name="objectName" 
+                    type="string" 
+                    default="Order"/>
+    
+    <aura:attribute name="filterName" 
+                    type="string" 
+                    default="Order"/>
+    
+    <aura:attribute name="fieldNames" 
+                    type="String" 
+                    default = "OrderNumber,Account.Name,EffectiveDate,Status,VA_Order_Quantity_Requested_Line__c,VA_Order_Quantity__c,VA_Total_Invoice_Quantity__c"/>    
+    
+    <aura:attribute name="accountId" 
+                    type="String" 
+                    default="" />  
+    
+    <aura:attribute name="orders" 
+                    type="Order[]"/> 
+    
+    <aura:attribute type="Boolean" 
+                    name="sortAsc" />   
+    
+    <aura:attribute type="String" 
+                    name="sortField" />
+    
+    <aura:attribute name="PageNumber" 
+                    type="integer" 
+                    default="1"/>
+    
+    <aura:attribute name="TotalPages" 
+                    type="integer" 
+                    default="0"/>
+    
+    <aura:attribute name="TotalRecords" 
+                    type="integer" 
+                    default="0"/>
+    
+    <aura:attribute name="RecordStart" 
+                    type="integer" 
+                    default="0"/>
+    
+    <aura:attribute name="RecordEnd" 
+                    type="integer" 
+                    default="0"/>
+    <aura:attribute name="childAccIdFromUrl" type="String" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />  
+     <div class="slds-p-top_xx-large ">
+        <c:VA_orderCreationButton passRecIdToOrderCmp="{! v.childAccIdFromUrl }"/>
+     </div>
+    
+        <div class="slds-float_right">
+            <ui:inputSelect aura:id="pageSize" label="Display Records Per Page: " 
+                            change="{!c.onSelectChange}">
+                <ui:inputSelectOption text="10" label="10" value="true"/>
+                <ui:inputSelectOption text="15" label="15"/>
+                <ui:inputSelectOption text="3" label="3"/>
+                <ui:inputSelectOption text="4" label="4"/>
+                <ui:inputSelectOption text="5" label="5"/>
+                <ui:inputSelectOption text="20" label="20"/>
+            </ui:inputSelect>
+            <br/>
+        </div>
+        
+        	<div class="slds-scrollable">
+            <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal overflowAuto" sortdir="asc">
+                <thead>
+                    <tr class="slds-text-heading--label ">
+                        <th onclick="{!c.sortByOrderNumber}"><center>Order Number</center></th>
+                        <th onclick="{!c.sortByAccountName}"><center>Account</center></th>
+                        <th onclick="{!c.sortByEffectiveDate}"><center>Order Start Date</center></th> 
+                        <th onclick="{!c.sortByStatus}">Status</th>
+                        <th onclick="{!c.sortByRequestedOrderQuantity}"><center>Requested Order Quantity</center></th>
+                        <th onclick="{!c.sortByRegisteredorderQuantity}"><center>Registered Order Quantity</center></th>   
+                        <th onclick="{!c.sortByDeliveredQuantity}"><center>Delivered Quantity</center></th>
+                        
+                    </tr>  
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.orders}" var="objOrder">
+                        <tr class="slds-hint-parent">
+                            <td class="" data-label="Order Number" >  
+                                <a id="{!objOrder.Id}" onclick="{!c.openRecord}" 
+                                   href="javascript:void(0);" ><center>{!objOrder.OrderNumber}</center></a>  
+                            </td>    
+                            <td class="" data-label="Account Name" >  
+                                <center>{!objOrder.Account.Name}</center>
+                            </td>
+                            <td data-label="Effective Date" style="padding-left:0;">
+                                <center><ui:outputDate value="{!objOrder.EffectiveDate}" /></center>
+                            </td>
+                            <td data-label="Status" style="padding-left:0;">
+                               <center> {!objOrder.Status}</center>
+                            </td>  
+                            <td class="" data-label="Contract Name" >  
+                              <center>  <ui:outputNumber value="{!objOrder.VA_Order_Quantity_Requested_Line__c}" format="0.00"/></center>
+                            </td>
+                            <td class="" data-label="Contract Name" >  
+                              <center>  <ui:outputNumber value="{!objOrder.VA_Order_Quantity__c}" format="0.00" /></center>
+                            </td>
+                            <td class="" data-label="Contract Name" >  
+                               <center> {!objOrder.VA_Total_Invoice_Quantity__c	}</center>
+                            </td> 
+                        </tr> 
+                    </aura:iteration>   
+                </tbody>  
+            </table> 
+			</div>
+        <div class="slds-clearfix">
+            <div class="slds-page-header" role="banner">
+                <div class="slds-float_right">            
+                    <lightning:button disabled="{!v.PageNumber == 1}" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.handlePrev}" />            
+                    <lightning:button disabled="{!(v.PageNumber == v.TotalPages || v.TotalPages == 0)}" aura:id="nextPage" variant="brand" label="Next" onclick="{!c.handleNext}"/>
+                </div>
+                <p class="slds-page-header__title">{!v.RecordStart}-{!v.RecordEnd} of {!v.TotalRecords} | Page {!v.PageNumber} of {!v.TotalPages}</p>
+            </div>
+        </div>
+
+</aura:component>

@@ -1,0 +1,13 @@
+.THIS .salesforceIdentityLoginBody2 {
+    background:none;
+}
+.THIS .customLogin {
+    height: 3rem;
+    font-size: 1.2rem;
+    color: #fff;
+}
+.THIS .customError {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}

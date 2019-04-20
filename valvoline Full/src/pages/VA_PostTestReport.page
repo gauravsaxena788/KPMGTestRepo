@@ -1,0 +1,13 @@
+<apex:page standardController="Case" extensions="PostReportTemplateController" action="{!PostReportTemplateRedirectPage}"  sidebar="false" showHeader="false">
+<!--<apex:repeat value="{!lstTestResults }" var="objtestResult">-->
+    
+    
+    
+ <!--<apex:outputText rendered="{!flag}" >opening pdf</apex:outputText>-->
+ <apex:pageMessages />
+  <!--<apex:outputText rendered="{!objtestResult.Case__r.Status!='Final Report Released'}">error</apex:outputText>-->
+  
+  
+ 
+  <!--</apex:repeat>-->
+</apex:page>

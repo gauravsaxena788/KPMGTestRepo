@@ -1,0 +1,238 @@
+<aura:component controller = "DynamicObjectDetail" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="sobj" type="sobject"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />    
+    <aura:attribute name="objOrder" type="Order" />  
+    
+   
+    
+   <div class="slds-p-around--none slds-panel__section">  
+ 
+     <div class="slds-section slds-is-open">
+         
+						   
+         <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Order Information </button>
+                </h3>   
+           
+                
+              <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded"> 
+ 
+                <div class="slds-p-horizontal--small slds-size--1-of-2">  
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> PO Date </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                              <!--<ui:outputDate class="slds-output" value="{!v.objOrder.PoDate}" />-->
+                            <lightning:formattedDateTime day="numeric"
+                                                         hour12="true"
+                                                         month="2-digit"
+                                                         value="{!v.objOrder.PoDate}"
+                                                         year="numeric"
+                                                         />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> PO Number </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.PoNumber}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Order Start Date </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                            <lightning:formattedDateTime day="numeric"
+                                                         hour12="true"
+                                                         month="2-digit"
+                                                         value="{!v.objOrder.EffectiveDate}"
+                                                         year="numeric"
+                                                         />
+                            <!--ui:outputDate class="slds-output" value="{!v.objOrder.EffectiveDate}" /-->
+                        </div>  
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Expected Price (INR) </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputNumber class="slds-output" 
+                                              value="{!v.objOrder.VA_Requested_Order_Amount__c}" 
+                                              format="0.00"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Requested Order Quantity </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputNumber class="slds-output" 
+                                              value="{!v.objOrder.VA_Order_Quantity_Requested_Line__c}" 
+                                              format="0.00"/>
+                        </div>
+                    </div>
+                </div>
+                  
+                  <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Registered Order Quantity </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                            <ui:outputNumber class="slds-output"
+                                             value="{!v.objOrder.VA_Order_Quantity__c}"  
+                                             format="0.00"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Order Number </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" 
+                                            value="{!v.objOrder.OrderNumber}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Delivered Quantity </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.VA_Total_Invoice_Quantity__c}" />
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+         
+         </div>  
+            
+            <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Customer Information </button>
+                </h3>
+                
+                <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded"> 
+                                     
+               <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Account Name </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                              <ui:outputText class="slds-output" value="{!v.objOrder.Account.Name}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Delivery Address </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.VA_Delivery_Address__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> GST Number </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.VA_GST_Number__c}" />
+                        </div>  
+                    </div>
+                </div>
+                    
+               <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Depot Code </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                                <ui:outputText class="slds-output" value="{!v.objOrder.VA_Depot_CodeNew__c}" />
+                        </div>  
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Payment Terms </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.VA_Payment_Terms__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Business Vertical </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.VA_Business_Vertical__c}" />
+                        </div>  
+                    </div>
+                </div>
+                    
+              <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Ship To Code </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.VA_Ship_To_Code__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Sold To Code </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.Sold_To_Code__c}" />
+                        </div>  
+                    </div>
+                </div>
+                
+            </div>
+                </div>  
+         
+                     <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> VCPL Use Only </button>
+                </h3>
+                         
+                 <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded"> 
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Status</label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.Status}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> SFDC Order Number</label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.VA_SFDC_Order_Number__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> SAP Order Id </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objOrder.VA_SAP_Order_Id__c}" />  
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+                           
+                </div>     
+   
+        </div>
+</aura:component>

@@ -1,0 +1,150 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller = "VA_CCMSCase">
+	<!--<ltng:require styles="/resource/SLDS_Stylesheet/assets/styles/salesforce-lightning-design-system-ltng.css" />-->
+	<aura:registerEvent name="ModalCloseEvent" type="c:CloseCaseBox"/>
+	<ltng:require styles="{!$Resource.CaseCSS}" />
+	<aura:attribute name="objCase" type="Case" default="{ 'sobjectType': 'Case',
+	'Subject': '' }"/>
+	<!-- <aura:attribute name="mymap" type ="Map"></aura:attribute>-->
+	<aura:handler name="init" value="{!this}" action="{!c.init}"/>
+	<aura:attribute name="selectedLookUpRecord" type="Account" default="{}"/>
+	<aura:attribute name="selectedLookUpRecordcon" type="Contact" default="{}"/>
+	<aura:attribute name="selectedLookUpRecordpro" type="Product2" default="{}"/>
+	<aura:attribute name="recordID" type="ID" ></aura:attribute>
+	<aura:attribute name="errorMessage" type="String"></aura:attribute>
+    <div aura:id="EDIT_CASE_PAGE" id="EDIT_CASE_PAGE" style="display:none;" >
+        <lightning:spinner variant="brand" size="large"/>
+    </div>
+	<div class="mainWrap" style="overflow: hidden;">
+		<ui:scrollerWrapper class="sWrapTest">
+			<div class="container" >
+				<fieldset class="slds-form--compound">
+					<div class="slds-m-bottom--medium"></div>
+					<div class="slds-form-element__group">
+						<div class="slds-grid slds-wrap slds-gutters formelem-pdng">
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<div class= "slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+									<legend class="slds-form-element__label slds-text-title--caps">Contact Information</legend>
+								</div>
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<c:VA_CustomLookupParent aura:id = "lookupAccount" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.selectedLookUpRecord}" label="Account"/>
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<c:VA_CustomLookupParent aura:id = "lookupContact"  objectAPIName="contact" IconName="standard:contact" selectedRecord="{!v.selectedLookUpRecordcon}" label="Contact"  />
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputTextarea aura:id = "ComplaintDescription" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Complaint_Description__c}" label="Complaint Description" keypress ="{!c.KeyPressHideError}"></ui:inputTextarea>
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<div class= "slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+									<legend class="slds-form-element__label slds-text-title--caps">Complaint Information</legend>
+								</div>
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id="ComplaintCategory" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Complaint_Category__c}" label="Complaint Category" change="{!c.picklistchange}" ></ui:inputSelect>
+							</div>
+							<div aura:id="divOtherComplaints" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id="OtherComplaints" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Other_Complaints__c}" label="Other Complaints" disabled="true" change="{!c.CompaintPicklistchange}"></ui:inputSelect>
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<div aura:id= "divAdditionalInformation" class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+									<legend class="slds-form-element__label slds-text-title--caps">Additional Information</legend>
+								</div>
+							</div>
+							<div aura:id = "divStackingpattern" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputText aura:id = "Stackingpattern" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Stacking_pattern__c}" label="Stacking Pattern" keypress ="{!c.KeyPressHideError}"></ui:inputText>
+							</div>
+							<div aura:id = "divQuantityAffected" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputNumber aura:id = "QuantityAffected" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Quantity_Affected__c}" label="Quantity Affected" keypress ="{!c.KeyPressHideError}"  ></ui:inputNumber>
+							</div>
+							<div aura:id="divPhysicalSample" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id="PhysicalSample" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Physical_Sample__c}" label="Physical Sample" change="{!c.KeyPressHideError}"></ui:inputSelect>
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<div aura:id = "divCommonInformation" class= "slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+									<legend  class="slds-form-element__label slds-text-title--caps">Common Information</legend>
+								</div>
+							</div>
+							<div aura:id = "divProduct" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<c:VA_CustomLookupParent aura:id = "Product"  objectAPIName="Product2" IconName="standard:product" selectedRecord="{!v.selectedLookUpRecordpro}" label="Product"  />
+							</div>
+							<div aura:id = "divBatchNumber" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputText aura:id = "BatchNumber" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.Batch_No__c}" label="Batch Number" keypress ="{!c.KeyPressHideError}" ></ui:inputText>
+							</div>
+							<div aura:id = "divPackSize" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputNumber aura:id = "PackSize" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Pack_Size__c}" label="Pack Size" keypress ="{!c.KeyPressHideError}"></ui:inputNumber>
+							</div>
+							<div aura:id = "divPackSizeUnit" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id="PackSizeUnit" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Pack_Size_Unit__c}" label="Pack Size Unit" change="{!c.KeyPressHideError}"></ui:inputSelect>
+							</div>
+                            <div aura:id = "divManufacturingDate" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputdate aura:id = "ManufacturingDate"  labelClass="slds-form-element__label" value="{!v.objCase.VA_Manufacturing_Date__c}" label="Manufacturing Date" displayDatePicker="true" required="true" format="dd/MM/yyyy" change ="{!c.KeyPressHideError}"  >    
+                                </ui:inputdate>
+                            </div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<div aura:id= "divPackDamageInformation" class= "slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+									<legend class="slds-form-element__label slds-text-title--caps">Pack Damage Information</legend>
+								</div>
+							</div>
+							<div aura:id="divLeakageDamageobservedat" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id="LeakageDamageobservedat" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Leakage_Damage_observed_at__c}" label="Leakage / Damage observed at" change="{!c.KeyPressHideError}"></ui:inputSelect>
+							</div>
+							<div aura:id ="divIsitacaseofpartloadtoRetailor" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputCheckbox aura:id ="IsitacaseofpartloadtoRetailor" class="slds-checkbox" labelClass="slds-form-element__label" value="{!v.objCase.VA_Is_it_a_case_of_part_load_to_Retailor__c}" label="Is it a case of part load to Retailor" ></ui:inputCheckbox>
+							</div>
+							<div aura:id="divLeakageDamagehappenedat" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id="LeakageDamagehappenedat" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Leakage_Damage_happened_at__c}" label="Leakage / Damage happened at" change="{!c.KeyPressHideError}" ></ui:inputSelect>
+							</div>
+							<div aura:id="divPhysicalPackSample" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id="PhysicalPackSample" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Physical_Pack_Sample__c}" label="Physical Pack Sample" change="{!c.KeyPressHideError}"></ui:inputSelect>
+							</div>
+							<div aura:id = "divMouldNumber" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputtext aura:id = "MouldNumber" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Mould_Number__c}" label="Mould Number" keypress ="{!c.KeyPressHideError}"></ui:inputtext>
+							</div>
+							<div aura:id = "divShortPackInformation" class= "slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+								<legend class="slds-form-element__label slds-text-title--caps">Short Pack Information</legend>
+							</div>
+							<div aura:id = "divShortageduringreceiptfrom" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id = "Shortageduringreceiptfrom" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Shortage_during_receipt_from__c}" label="Shortage during receipt from" change="{!c.KeyPressHideError}"></ui:inputSelect>
+							</div>
+							<div aura:id ="divComplaintLocation"  class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputText aura:id="ComplaintLocation" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Complaint_Location__c}" label="Complaint Location" keypress ="{!c.KeyPressHideError}"></ui:inputText>
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<div aura:id = "divShortProductQuantityInformation" class= "slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+									<legend class="slds-form-element__label slds-text-title--caps">Short Product Quantity Information</legend>
+								</div>
+							</div>
+							<div aura:id ="divWeightofPack" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputNumber aura:id = "WeightofPack" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Weight_of_Pack__c}" label="Weight of Pack" keypress ="{!c.KeyPressHideError}"></ui:inputNumber>
+							</div>
+							<div aura:id= "divWeightofPackUnit" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputSelect aura:id="WeightofPackUnit" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Weight_of_Pack_Unit__c}" label="Weight of Pack Unit" change="{!c.KeyPressHideError}"></ui:inputSelect>
+							</div>
+							<div aura:id = "divIsthesealingintactwithimage" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputcheckbox aura:id = "Isthesealingintactwithimage" class="slds-checkbox"  labelClass="slds-form-element__label" value="{!v.objCase.VA_Is_the_sealing_intact_with_image__c}" label="Is the sealing intact with image" ></ui:inputcheckbox>
+							</div>
+							<div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<div aura:id="divTransitDamage" class= "slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+									<legend class="slds-form-element__label slds-text-title--caps">Transit Damage</legend>
+								</div>
+							</div>
+							<div aura:id="divDamageobservedduringDeliveryto" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputselect aura:id="DamageobservedduringDeliveryto" class="slds-input" labelClass="slds-form-element__label" value="{!v.objCase.VA_Damage_observed_during_Delivery_to__c}" label="Damage observed during Delivery to" change="{!c.KeyPressHideError}"></ui:inputselect>
+							</div>
+							<div aura:id = "divIsitacaseofpartload" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+								<ui:inputcheckbox aura:id = "Isitacaseofpartload" class="slds-checkbox" labelClass="slds-form-element__label" value="{!v.objCase.VA_Is_it_a_case_of_part_load__c}" label="Is it a case of part load"  ></ui:inputcheckbox>
+							</div> 
+                            
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</ui:scrollerWrapper>
+		<div style="height:80px;">
+			<div class="slds-docked-form-footer">
+				<ui:button  class="slds-button slds-button_brand" aura:id="save2Button" label="Save" press="{!c.createCase}"/>
+			</div>
+		</div>
+	</div>
+</aura:component>

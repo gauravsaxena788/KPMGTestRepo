@@ -1,0 +1,256 @@
+<apex:page showHeader="false" standardcontroller="Case" extensions="PostReportTemplateController" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" renderAs="pdf"  >
+    <html lang="en">
+        <head>
+            <title>Valvoline PDF</title>
+            <style>
+                @page{
+                margin: 140px 25px 100px;
+                size: letter portrait;
+                @top-left {
+                content: element(pageHeader);
+                opacity: .5;
+                }
+                
+                @bottom-center {
+                content: element(pageFooter);
+                }
+                }
+                
+                input[type="checkbox"]{
+                border: 1px solid #000;
+                display: inline-block;
+                width: 5px;
+                height: 5px;
+                vertical-align: middle;
+                margin-top: 3px;
+                }
+                body{
+                margin: 0;
+                margin-top:30px;
+                padding: 0;
+                font-family: SansSerif;
+                }
+                table.table, table.table td, table.table th {
+                border: solid black;
+                }
+                table.table {
+                border-width: 1px 1px 0 0;
+                }
+                table.table td, table.table th {
+                border-width: 0 0 1px 1px;
+                }
+                #pageHeader{
+                position: running(pageHeader);
+                opacity: 0.5;
+                }
+                
+                #pageFooter{
+                position: running(pageFooter);
+                }         
+            </style>
+        </head>
+        <body>
+            <div style="width: 90%; margin: 0 auto;">
+                <div id="pageHeader">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border: 0; opacity: .5; table-layout: fixed">
+                        <tr>
+                            <td width="20%">
+                            
+                            </td>
+                            
+                            <td width="60%" align="center" style="color: rgb(22,0,133)">
+                                <h1 style="font-size: 12pt; margin: 0">VALVOLINE CUMMINS PRIVATE LIMITED</h1><br/>
+                                <p style="margin: 0; font-size: 9px">
+                                    (Formerly known as Valvoline Cummins Limited)<br/>
+                                    Company Identification No.: U74899DL1994PTC062425
+                                </p>
+                            </td>
+                            <td width="20%" align="right"><apex:image url="{!URLFOR($Resource.ValvolinePOSTTestLogo)}" width="200" /></td>
+                        </tr>
+                         <tr>        
+                 <td colspan="3" height="2px"></td>     
+            </tr>
+                    </table>
+                    <hr style="border: 0; background:red; margin:0; height: 3px"/>
+                    <hr style="border: 0; background:rgb(0,97,186); margin:0; height: 5px; margin-top: 3px;"/>
+                </div>
+                <br/>
+                
+                <div id="pageFooter">
+                <table  width="100%" border="0" cellpadding="0" cellspacing="0" style="border: 0; font-size: 8pt; color: rgb(22,0,133); line-height: 12pt">
+                    <tr>
+                        <td width="75%" valign="top">
+                        <h3 style="font-size: 9pt; margin-bottom:-10px">Laboratory Address</h3><br/>
+                            Ambernath Plant, India<br/>
+                            Valvoline Cummins Private Limited,<br/>
+                            Plot No G:3, Additional MIDC, Anand Nagar,<br/>
+                            Ambernath (E), Thane 421506
+                        </td>
+                        <td width="25%" valign="top">
+                        <h3 style="font-size: 9pt; margin-bottom:-10px">Head Office Address</h3><br/>
+                            3rd Floor Vipul Plaza, Suncity,<br/> 
+                            Sector 54,Gurgaon - 122003<br/>
+                            Phone: 0124 - 4721200, 4721300<br/>
+                            Fax: 0124 - 4721299<br/>
+                            Visit us at <a href="http://www.vavlvolinecummins.com">www.vavlvolinecummins.com</a>
+                        </td>
+                    </tr>
+                </table> 
+                </div>    
+                
+                
+                <apex:repeat value="{!lstTestResults }" var="objtestResult">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border: 0;">
+                    <tr>
+                        <td align="center" style="font-size: 8pt; font-weight: bold; line-height: 11pt">
+                             Report Release Date:<apex:outputText value="{0,date,dd/MMM/yy}"> 
+                                                <apex:param value="{!objtestResult.Case__r.VA_Report_Release_Date__c}"/>
+                                                </apex:outputText>  <br/>
+                            Report No. : {!objtestResult.Name}<br/>
+                            Customer Name: {!objtestResult.Case__r.Contact.Name}<br/>
+                            Project Name: {!objtestResult.Case__r.VA_Project__r.Name}
+                            
+                        </td>
+                    </tr>
+                </table>
+                </apex:repeat>
+                <h2 style="margin: 0; font-size: 10pt">SAMPLE DETAILS</h2>
+                <apex:repeat value="{!lstTestResults }" var="objtestResult">
+                <table width="100%" autosize="1" border="1" cellpadding="3" cellspacing="0" style="border: 1px solid grey; font-size: 7pt; overflow: wrap; border-collapse: collapse; font-weight: bold">
+                    <tr>
+                        <td width="25%">Sample ID :</td>
+                        <td width="25%">{!objtestResult.Case__r.VA_POST_Number__c}</td>
+                        <td width="25%">Product Name :</td>
+                        <td width="25%">{!objtestResult.Case__r.VA_Product__r.name}</td>
+                    </tr>
+                    <tr>
+                        <td width="25%">Engine Make / Model :</td>
+                        <td width="25%">{!objtestResult.Case__r.VA_Engine_Make_Model__c}</td>
+                        <td width="25%">Eng. Serial No. :</td>
+                        <td width="25%">{!objtestResult.Case__r.Va_Engine_Serial_No__c}</td>
+                    </tr>
+                    <tr>
+                        <td width="25%">Veh. Reg. No. :</td>
+                        <td width="25%">{!objtestResult.Case__r.VA_Veh_Reg_No__c}</td>
+                        <td width="25%">Equipment ID :</td>
+                        <td width="25%">{!objtestResult.Case__r.VA_Equipment_ID__c}</td>
+                    </tr>
+                    <tr>
+                        <td width="25%">Date of Sample Drawn :</td>
+                        <td width="25%"><apex:outputText value="{0,date,dd/MM/yy}"> 
+                                                <apex:param value="{!objtestResult.Case__r.VA_Date_of_Sample_Drawn__c}"/>
+                                                </apex:outputText></td>
+                        <td width="25%">Hours/Km seen by oil :</td>
+                        <td width="25%">{!objtestResult.Case__r.VA_Hours_Km_seen_by_Oil__c}</td>
+                    </tr>
+                    <tr>
+                        <td width="25%">Total Equipment Life :</td>
+                        <td width="75%" colspan="3">{!objtestResult.Case__r.VA_Total_Engine_Hours__c} </td>
+                    </tr>
+                </table>
+                </apex:repeat>
+                <br/>
+                <h2 style="margin: 0; font-size: 10pt">SAMPLE RESULT</h2>
+                
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border: 0; margin-bottom: 5px">
+                    <tr>
+                        <td width="50%">
+                            <div style="background: rgb(120,173,255); border: 1px solid rgb(22,78,255); font-size: 8pt; font-weight: bold; padding:10px; border-radius: 5px" >
+                                Grease Parameters
+                            </div>
+                        </td>
+                        <td width="50%">
+                            
+                        </td>
+                    </tr>
+                </table>
+                
+                <apex:repeat value="{!lstTestResults }" var="objtestResult">
+                <table width="100%" border="0" cellpadding="5" cellspacing="0" style="border: 1px solid black; font-size: 9pt">
+                    
+                    <tr>
+                        <td width="50%">1. Appeareance &amp; Texture:</td>
+                        
+                        <td width="50%">{!objtestResult.VA_Appearance_Texture__c}</td>
+                        
+                    </tr>
+                    <tr>
+                        <td width="50%">2. Colour:</td>
+                        
+                        <td width="50%">{!objtestResult.VA_Colour__c}</td>
+                        
+                    </tr>
+                    <tr>
+                        <td width="50%">3. Free Organic Acidity (as oleic acid) % Wt.:</td>
+                        
+                        <td width="50%">{!objtestResult.VA_Free_Organic_Acidity_oleic_acid_Wt__c}</td>
+                        
+                    </tr>
+                    <tr>
+                        <td width="50%">4. Free Alkalinity (as LiOH) % Wt.:</td>
+                        
+                        <td width="50%">{!objtestResult.VA_Free_Alkalinity_as_LiOH_Wt__c}</td>
+                        
+                    </tr>
+                     <tr>
+                        <td width="50%">5. UnWork Pentration:</td>
+                        
+                        <td width="50%">{!objtestResult.VA_UnWork_Pentration__c}</td>
+                        
+                    </tr>
+                     <tr>
+                        <td width="50%">6. Worked Pentration, 60 Strokes :</td>
+                        
+                        <td width="50%">{!objtestResult.VA_Worked_Pentration_60_Strokes__c}</td>
+                        
+                    </tr>
+                     <tr>
+                        <td width="50%">7. Worked Pentration, 100000 Strokes :</td>
+                        
+                        <td width="50%">{!objtestResult.VA_Worked_Pentration_100000_Strokes__c}</td>
+                          
+                    </tr>
+                     <tr>
+                        <td width="50%">8. Droping Point, ˚C:</td>
+                        
+                        <td width="50%">{!objtestResult.VA_Droping_Point_C__c}</td>
+                         
+                    </tr>
+                     
+                     
+                </table>
+                </apex:repeat>
+                <br/>
+
+                <h2 style="margin: 0; font-size: 10pt">Comments/Remarks:</h2>
+                <apex:repeat value="{!Case.CaseComments}" var="c">
+                    {!c.CommentBody}<br/>
+                </apex:repeat>
+                <br/>
+                <h2 style="margin: 0; font-size: 10pt">AUTHORISED SIGNATORY</h2>
+                <p style="color: rgb(22,78,255); font-size: 8pt; margin: 0;"><span style="color: red">*</span>It is a computer generated report and needs no signature</p>
+                
+                <br/>
+                <!--<div id="pageFooter">
+                <table  width="100%" border="0" cellpadding="0" cellspacing="0" style="border: 0; font-size: 8pt; color: rgb(22,0,133); line-height: 12pt">
+                    <tr>
+                        <td width="75%" valign="top">
+                            Ambernath Plant, India<br/>
+                            Valvoline Cummins Private Limited,<br/>
+                            Plot No G:3, Additional MIDC, Anand Nagar,<br/>
+                            Ambernath (E), Thane 421506
+                        </td>
+                        <td width="25%" valign="top">
+                            3rd Floor Vipul Plaza, Suncity,<br/> 
+                            Sector 54,Gurgaon - 122003<br/>
+                            Phone: 0124 - 4721200, 4721300<br/>
+                            Fax: 0124 - 4721299<br/>
+                            Visit us at <a href="http://www.vavlvolinecummins.com">www.vavlvolinecummins.com</a>
+                        </td>
+                    </tr>
+                </table> 
+            </div>-->              
+            </div>
+        </body>
+    </html>
+</apex:page>

@@ -1,0 +1,32 @@
+<aura:component controller="VA_ShowDataController" access="global" >
+    <!-- call the doInit method to load the list of All the Available Objects into the Org -->
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
+    <aura:attribute name='AccountsList' type='account[]' />     
+    <aura:attribute name="isSending" type="boolean" />
+    <aura:attribute name="Idaccount" type="String" default=""/>
+    
+    
+    <aura:handler event="c:VA_RefreshComponent" 
+                  action="{!c.eventHandler}"/>
+    
+    <div class="slds-container_large container_align_center">	
+        Showing results for:
+        <aura:if isTrue="{!v.Idaccount}">
+            
+            <ui:inputSelect aura:id="inputSelectVal"
+                            change="{!c.dogoToUrl}" 
+                            value = "{!v.Idaccount}" 
+                            class="dropDownWidth">        
+                <option value="ReturnToHome" 
+                        text="My Account"
+                        selected="{!'ReturnToHome' == v.Idaccount}"  />            
+                <aura:iteration items='{!v.AccountsList}' var='obj'>         
+                    <option aura:id='optionget' 
+                            value="{!obj.Id}" 
+                            text="{!obj.Name}" 
+                            selected="{!obj.Id == v.Idaccount}" />
+                </aura:iteration>     	  
+            </ui:inputSelect> 
+        </aura:if>       
+    </div>
+</aura:component>

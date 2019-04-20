@@ -1,0 +1,65 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" 
+                controller="VA_OrderProductController">
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="lstOrderProducts" type="OrderItem[]" />
+    
+	<lightning:card variant="base" iconName="standard:product_item">
+		<aura:set attribute="title">
+            Order Products
+        </aura:set>
+		<aura:if isTrue="{!v.lstOrderProducts.length > 0}">
+			<table class="slds-table slds-table--bordered slds-table_col-bordered">
+				<thead>
+					<tr class="slds-text-heading--label">
+						<th class="slds-is-sortable slds-is-resizable slds-is-sorted  slds-cell-shrink" scope="col" aria-sort="descending">
+							<div class="slds-truncate" title="Attachment Name">Product Name</div>
+						</th>
+						<th class="slds-is-sortable slds-is-resizable slds-is-sorted  slds-cell-shrink" scope="col" aria-sort="descending">
+							<div class="slds-truncate" title="Action">Quantity</div>
+						</th>
+						<th class="slds-is-sortable slds-is-resizable slds-is-sorted  slds-cell-shrink" scope="col" aria-sort="descending">
+							<div class="slds-truncate" title="Action">Unit Price</div>
+						</th>
+                        <th class="slds-is-sortable slds-is-resizable slds-is-sorted  slds-cell-shrink" scope="col" aria-sort="descending">
+							<div class="slds-truncate" title="Action">Line Item Type</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<aura:iteration items="{!v.lstOrderProducts}" var="objorderProducts">
+						<tr class="slds-truncate slds-resizable">
+							<td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+								<div class="slds-truncate">
+									{!objorderProducts.Product2.Name}
+								</div>
+							</td>
+							<td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+								<div class="slds-truncate">
+									{!objorderProducts.Quantity}
+								</div>
+							</td>
+							<td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+								<div class="slds-truncate">
+									{!objorderProducts.UnitPrice}
+								</div>
+							</td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+								<div class="slds-truncate">
+									{!objorderProducts.VA_Type__c}
+								</div>
+							</td>
+						</tr>
+					</aura:iteration>
+				</tbody>
+			</table>
+		</aura:if>
+		
+        <aura:if isTrue="{!v.lstOrderProducts.length == 0}">
+                    <tr class="slds-truncate slds-resizable" >
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <span class="slds-pill__label"> <b>No Record Found.</b></span>
+                        </td>
+                    </tr>
+                </aura:if>
+	</lightning:card>
+</aura:component>

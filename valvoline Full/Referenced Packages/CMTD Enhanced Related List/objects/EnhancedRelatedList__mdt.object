@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Custom Metadata Type object to manage the fields used in CMTD Enhanced Related List lightning component</description>
+    <fields>
+        <fullName>Colour__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Colour for Badge UI Type Override - only accept HEX</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Colour for Badge UI Type Override - only accept HEX</inlineHelpText>
+        <label>Colour</label>
+        <length>6</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Field_API_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Field API Name of the object as specified in &quot;Object API Name&quot; attribute of the CMTD Enhanced Related List component</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Field API Name of the object as specified in &quot;Object API Name&quot; attribute of the CMTD Enhanced Related List component</inlineHelpText>
+        <label>Field API Name</label>
+        <length>50</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Header__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Used to display fields in the header section when using Tile display mode.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Used to display fields in the header section when using Tile display mode.</inlineHelpText>
+        <label>Header</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Order__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Sequence to display the fields in the component</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Sequence to display the fields in the component</inlineHelpText>
+        <label>Order</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Related_List_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Related List Name as specified in &quot;Related List Name&quot; attribute of the CMTD Enhanced Related List component</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Related List Name as specified in &quot;Related List Name&quot; attribute of the CMTD Enhanced Related List component</inlineHelpText>
+        <label>Related List Name</label>
+        <length>50</length>
+        <required>true</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Target_API_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>When populated, the field value will have a hyperlink (only support Salesforce record id). 
+Provide field API Name of the Id of the target record.</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>To enable hyperlink, provide field API Name that contains the Id of the target record. (only support Salesforce record id)</inlineHelpText>
+        <label>Target API Name</label>
+        <length>50</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>UI_Type_Override__c</fullName>
+        <deprecated>false</deprecated>
+        <description>To override the UI display of the field.
+Values: Checkbox, Badge</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>To override the UI display of the field.</inlineHelpText>
+        <label>UI Type Override</label>
+        <required>false</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Checkbox</fullName>
+                    <default>false</default>
+                </value>
+                <value>
+                    <fullName>Badge</fullName>
+                    <default>false</default>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <label>Enhanced Related List</label>
+    <listViews>
+        <fullName>All_Fields</fullName>
+        <columns>DeveloperName</columns>
+        <columns>MasterLabel</columns>
+        <columns>Related_List_Name__c</columns>
+        <columns>Field_API_Name__c</columns>
+        <columns>Header__c</columns>
+        <columns>Order__c</columns>
+        <columns>UI_Type_Override__c</columns>
+        <columns>Colour__c</columns>
+        <columns>Target_API_Name__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Fields</label>
+    </listViews>
+    <pluralLabel>Enhanced Related List</pluralLabel>
+    <validationRules>
+        <fullName>Colour_Populated_For_Badge</fullName>
+        <active>true</active>
+        <errorConditionFormula>NOT(ISBLANK( Colour__c )) &amp;&amp; NOT(ISPICKVAL( UI_Type_Override__c ,&apos;Badge&apos;))</errorConditionFormula>
+        <errorMessage>Colour can only be populated for Checkbox Badge UI Type</errorMessage>
+    </validationRules>
+    <visibility>Public</visibility>
+</CustomObject>

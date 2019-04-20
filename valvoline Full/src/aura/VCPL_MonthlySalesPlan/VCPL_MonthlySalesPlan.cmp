@@ -1,0 +1,240 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VCPL_MonthlySalesPlanController">
+
+    <aura:attribute name="lstOpportunityWrapper" type="VCPL_MonthlySalesPlanController.OpportunityWrapper[]" description="for Storing Opportunities" />
+
+    <aura:attribute name="lstOpportunityReferenceWrapper" type="VCPL_MonthlySalesPlanController.OpportunityWrapper[]" description="for Storing Opportunities" />
+
+    <aura:attribute name="paginationOpportunityWrapper" type="VCPL_MonthlySalesPlanController.OpportunityWrapper[]" description="for Storing Opportunities paginated" />
+
+    <aura:attribute name="basicDetails" type="VCPL_MonthlySalesPlanController.getDetailsWrapper" description="for Storing basic Detais like month Names,User's Name and current Financial Year" />
+
+    <aura:attribute name="showButtons" type="Boolean" default="false" />
+    <aura:handler name="change" value="{!v.pageNumber}" action="{!c.renderPage}" />
+
+    <aura:attribute name="recordId" type="string" default="{!v.RecordId}" />
+
+    <aura:attribute name="sameComponent" type="Boolean" default="true" />
+
+    <aura:attribute type="Integer" name="pageNumber" default="1" />
+    <aura:attribute type="Integer" name="maxPage" default="1" />
+    <aura:attribute name="errormsg" type="String" default="" />
+    <aura:attribute name="title" type="String" default="" />
+    <aura:attribute name="type" type="String" default="" />
+    <aura:attribute name="icon" type="String" default="" />
+    <aura:attribute name="disableFirstButton" type="Boolean" default="false" />
+    <aura:attribute name="disablePrevButton" type="Boolean" default="false" />
+    <aura:attribute name="disableNextButton" type="Boolean" default="false" />
+    <aura:attribute name="disableLastButton" type="Boolean" default="false" />
+    <aura:method name="callDoinit" action="{!c.doInit}" />
+    <aura:attribute name="showSpinner" type="boolean" default="false" />
+
+    <aura:if isTrue="{!v.showSpinner}">
+        <div class="slds-spinner_container">
+            <lightning:spinner aura:id="spinner" variant="brand" size="large" />
+        </div>
+    </aura:if>
+
+    <aura:handler event="force:showToast" action="{!c.doInitonSaveButtonClickController}" />
+    <aura:attribute name="searchString" type="string" default="" description="Search String" />
+    <aura:renderIf isTrue="{!v.errormsg != ''}">
+        <!--<style>
+            .slds-notify_container {
+                top: 0%;
+            }
+            
+            .slds-text-heading_small {
+                color: white;
+            }
+        </style>-->
+        <!-- start Error POPup-->
+        <div class="slds-notify_container">
+            <div class="{!'slds-notify slds-notify_toast ' + v.type}" role="alert">
+                <span class="slds-assistive-text">{!v.title}</span>
+                <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close" onclick="{!c.closeToast}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse" variant="inverse"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <lightning:icon iconName="{!v.icon}" size="small" class="slds-m-right--small slds-col slds-no-flex" variant="inverse" />
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{!v.title}!</h2>
+                    <p class="pclass">{!v.errormsg}</p>
+                    <h2 class="slds-text-heading_small "></h2>
+                </div>
+            </div>
+        </div>
+        <!-- End Error POPup-->
+    </aura:renderIf>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Initialization Handler" />
+
+    <div style="overflow: auto; -webkit-overflow-scrolling: touch; width:100%">
+        <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+            <tr>
+                <td colspan="4">
+                    <div class="slds-align_absolute-center" style="height: 3rem;">
+                        <div class="slds-page-header">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                    <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate" title="Monthly Sales Estimate"><b>Monthly Sales Estimate</b></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+
+
+                <td>
+                    <div class="slds-align_absolute-center" style="height: 0rem;">
+                        <div class="slds-page-header">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                    <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-small-text" title="User Name">{!v.basicDetails.strUsersName}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slds-align_absolute-center" style="height: 4rem;">
+                        <div class="slds-page-header">
+                            <div class="slds-grid">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                    <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-small-text" title="Financial Year">Financial Year: {!v.basicDetails.strFinancialYear}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="slds-align_absolute-center" style="height: 4rem;">
+                        <ui:inputSelect aura:id="month" class="slds-input slds-month" labelClass="slds-form-element__label" change="{!c.onChangeofMonth}" label="">
+                            <aura:iteration items="{!v.basicDetails.lstMonthNames}" var="objMonth">
+                                <ui:inputSelectOption text="{!objMonth}" label="{!objMonth}" value="" />
+                            </aura:iteration>
+                        </ui:inputSelect>
+                    </div>
+                </td>
+                <td>
+                    <div class="slds-align_absolute-center" style="height: 4rem;">
+                        <ui:inputText class="slds-input slds-search-user" placeholder="Search Account" value="{!v.searchString}" required="false" updateOn="keyup" keyup="{!c.onSearchStringChange}" />
+                    </div>
+                </td>
+
+
+            </tr>
+        </table>
+    </div>
+
+
+
+    <div class="slds-coach__keys slds-size--1-of-1  slds-large-size--1-of-1 slds-box slds-theme_shade slds-theme_alert-texture">
+        <div class="slds slds-resizable slds-scrollable--x sWrapTest">
+            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal slds-table_striped slds-table_col-bordered">
+                <aura:if isTrue="{!v.paginationOpportunityWrapper.length > 0}">
+                    <thead>
+                        <tr class="slds-text-heading--label">
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>ACCOUNT NAME</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>OPPORTUNITY NAME</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>PLANNED SALES <br/>(IN L)</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass"> 
+                                        <b>LATEST EST. SALES <br/>(IN L)</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>ACTUAL SALES VOL.<br/>(IN L)</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>LAST YEAR SALES VOL. <br/>(IN L)</b>
+                                    </label>
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.paginationOpportunityWrapper}" var="objOpportunityWrapper" indexvar="index">
+                            <tr class="slds-truncate slds-resizable">
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="ACCOUNT NAME" scope="row">
+                                    {!objOpportunityWrapper.strAccountName}
+                                </td>
+
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="OPPORTUNITY NAME" scope="row">
+                                    {!objOpportunityWrapper.objOpportunity.Name}
+                                </td>
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="PLANNED SALES (IN L)" scope="row">
+                                    <ui:inputNumber value="{!objOpportunityWrapper.plannedSales}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisablePlannedSales}" />
+                                </td>
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="LATEST EST. SALES (IN L)" scope="row">
+                                    <ui:inputNumber value="{!objOpportunityWrapper.latestEstimatedSales}" format="0.0" class="slds-input" disabled="{!objOpportunityWrapper.isDisable}" />
+                                </td>
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="ACTUAL SALES VOL. (IN L)" scope="row">
+                                    <ui:inputNumber value="{!objOpportunityWrapper.actualSales}" format="0.0" class="slds-input" disabled="true" />
+                                </td>
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="LAST YEAR SALES VOL. (IN L)" scope="row">
+                                    <ui:inputNumber value="{!objOpportunityWrapper.lastYearSalesVolume}" format="0.0" class="slds-input" disabled="true" />
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                    <aura:set attribute="else">
+                        <div class="slds-align_absolute-center slds-no-records">
+                            <b>NO RECORDS FOUND</b>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </table>
+        </div>
+
+        <div class="slds-p-top_small"></div>
+        <aura:if isTrue="{!v.showButtons}">
+            <div class="slds-align_absolute-center">
+                <button class="slds-button slds-button_brand" onclick="{!c.onSaveButtonClick}" href="javascript:void(0);">
+                    Save
+                </button>
+            </div>
+        </aura:if>
+        <div class="slds-p-top_small"></div>
+        <aura:if isTrue="{!v.paginationOpportunityWrapper.length > 0}">
+            <div class="slds-align_absolute-center">
+                <c:VCPL_PaginationComponent currentPageNumber="{!v.pageNumber}" maxPageNumber="{!v.maxPage}" disableFirst="{!v.disableFirstButton}" disablePrev="{!v.disablePrevButton}" disableNext="{!v.disableNextButton}" disableLast="{!v.disableLastButton}" />
+            </div>
+        </aura:if>
+
+    </div>
+
+</aura:component>

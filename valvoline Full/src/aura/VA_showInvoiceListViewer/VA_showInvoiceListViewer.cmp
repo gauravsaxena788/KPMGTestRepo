@@ -1,0 +1,110 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VA_ShowListViewController">
+	<aura:attribute name="objectName" 
+                    type="string" 
+                    default="VA_Invoice__c"/>
+    
+    <aura:attribute name="filterName" 
+                    type="string" 
+                    default="Invoice"/>
+    
+    <aura:attribute name="fieldNames" 
+                    type="String" 
+                    default = "Name,VA_Invoice_Status__c,VA_Order__r.OrderNumber,VA_Invoice_Number__c,VA_POD_Upload_Date__c,VA_Total_Invoice_Quantity__c,VA_Invoice_Date__c"/>    
+    
+    <aura:attribute name="accountId" 
+                    type="String" 
+                    default="" />  
+    
+    <aura:attribute name="Invoices" 
+                    type="VA_Invoice__c[]"/> 
+    
+    <aura:attribute type="Boolean" 
+                    name="sortAsc" />   
+    
+    <aura:attribute type="String" 
+                    name="sortField" />
+    
+    <aura:attribute name="PageNumber" 
+                    type="integer" 
+                    default="1"/>
+    
+    <aura:attribute name="TotalPages" 
+                    type="integer" 
+                    default="0"/>
+    
+    <aura:attribute name="TotalRecords" 
+                    type="integer" 
+                    default="0"/>
+    <aura:attribute name="RecordStart" 
+                    type="integer" 
+                    default="0"/>
+    
+    <aura:attribute name="RecordEnd" 
+                    type="integer" 
+                    default="0"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />  
+
+        
+        <div class="slds-float_right">
+            <ui:inputSelect aura:id="pageSize" label="Display Records Per Page: " change="{!c.onSelectChange}">
+                <ui:inputSelectOption text="10" label="10" value="true"/>
+                <ui:inputSelectOption text="3" label="3"/>
+                <ui:inputSelectOption text="4" label="4"/>
+                <ui:inputSelectOption text="5" label="5"/>
+                <ui:inputSelectOption text="15" label="15"/>
+                <ui:inputSelectOption text="20" label="20"/>
+            </ui:inputSelect>
+            <br/>
+        </div>
+    
+    <div class="slds-scrollable">
+    <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal" sortdir="asc">
+        <thead>
+            <tr class="slds-text-heading--label ">
+                
+                
+				<th onclick="{!c.sortByOrderNumber}"><center>Order</center></th>
+				<th onclick="{!c.sortByName}"><center>Invoice Name</center></th>
+				<th onclick="{!c.sortBySAPInvoiceNumber}"><center>SAP Invoice Number</center></th>
+				<th onclick="{!c.sortByInvoiceStatus}"><center>Invoice Status</center></th>
+				<th onclick="{!c.sortByPODUploadDate}"><center>POD Upload Date</center></th>
+				<th onclick="{!c.sortByTotalInvoiceQuantity}"><center>Total Invoice Quantity</center></th>
+                <th onclick="{!c.sortByInvoiceDate}"><center>Invoice Date</center></th>  
+                      
+            </tr>  
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.Invoices}" var="objInvoice">
+                <tr class="slds-hint-parent">
+					<td data-label="Invoice Status" style="padding-left:0;"><center>{!objInvoice.VA_Order__r.OrderNumber}</center></td>
+                    <td class="" data-label="Invoice Name" >  
+                        <a id="{!objInvoice.Id}" onclick="{!c.openRecord}" href="javascript:void(0);" ><center>{!objInvoice.Name}</center></a>  
+                    </td>    
+					<td data-label="Invoice Quantity" style="padding-left:0;"><center>{!objInvoice.VA_Invoice_Number__c}</center></td>    
+                    <td data-label="Invoice Quantity" style="padding-left:0;"><center>{!objInvoice.VA_Invoice_Status__c}</center></td>    
+					<td data-label="Invoice Quantity" style="padding-left:0;">
+                            <center><ui:outputDateTime value="{!objInvoice.VA_POD_Upload_Date__c}" /></center>
+                    </td>
+					<td data-label="Invoice Quantity" style="padding-left:0;">
+                       <center> <ui:outputNumber value="{!objInvoice.VA_Total_Invoice_Quantity__c}" format="0.00"/></center>
+                    </td> 
+                    <td data-label="Invoice Type" style="padding-left:0;">
+                        <center><ui:outputDate value="{!objInvoice.VA_Invoice_Date__c}" /></center>
+                    </td>  
+                </tr> 
+            </aura:iteration>   
+        </tbody>  
+    </table> 
+        </div>
+        <div class="slds-clearfix">
+            <div class="slds-page-header" role="banner">
+                <div class="slds-float_right">            
+                    <lightning:button disabled="{!v.PageNumber == 1}" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.handlePrev}" />            
+                    <lightning:button disabled="{!(v.PageNumber == v.TotalPages || v.TotalPages == 0)}" aura:id="nextPage" variant="brand" label="Next" onclick="{!c.handleNext}"/>
+                </div>
+                <p class="slds-page-header__title">{!v.RecordStart}-{!v.RecordEnd} of {!v.TotalRecords} | Page {!v.PageNumber} of {!v.TotalPages}</p>
+            </div>
+        </div>
+
+</aura:component>

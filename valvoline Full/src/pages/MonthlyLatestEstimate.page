@@ -1,0 +1,785 @@
+<apex:page lightningStylesheets="true" controller="MonthlyLatestEstimateClone" sidebar="false" showHeader="false" doctype="html-5.0">
+
+
+
+<style>
+.blueColor{
+background-color: #9dd5e6;
+}
+</style>
+
+<style>
+html{
+padding:5px !important;
+}
+#spinner{
+    display: none;
+    width:200px;
+    height: 50px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    text-align:center;
+    padding:10px;
+    font:normal 16px Tahoma, Geneva, sans-serif;
+    margin-left: -100px;
+    margin-top: -100px;
+    z-index:2;
+    overflow: auto;
+    border:1px solid #CCC;
+    background-color:white;
+    z-index:100;
+    padding:5px;
+    line-height:20px;
+ }
+ #opaque {
+     position: fixed;
+     top: 0px;
+     left: 0px;
+     width: 100%;
+     height: 100%;
+     z-index: 1;
+     display: none;
+     background-color: gray;
+     filter: alpha(opacity=30);
+     opacity: 0.3;
+     -moz-opacity:0.3;
+     -khtml-opacity:0.3
+ }
+ * html #opaque {
+     position: absolute;
+ }
+
+input[type="text"] {
+    min-width: 5rem !important;
+}
+.mybtncss:hover{
+background-color:#005fb2 !important;
+border-color: #005fb2 !important;
+}
+
+.mybtncss2:hover{
+background-color:#870500 !important;
+border-color: #870500 !important;
+}
+
+.myaddbtncss:hover{
+background-color:#006400 !important;
+border-color: #006400 !important;
+}
+
+.myheadercss{
+ padding-top: -30px;
+}
+
+#wstatus {
+     
+ }
+
+.textstyle {
+   
+    font-size:100%;
+    text-align: center;
+     border-style: Solid;
+     border-width: 0.2px;
+    background-color:#9DD5E6;
+    
+    font-weight: thick;
+    
+}
+
+.select-style {
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}
+
+.mybtn1:hover
+{
+    background-image:none !important;
+    background-color:green !important;
+    border-color:green !important;
+}
+.mybtn:hover
+{
+    background-image:none !important;
+    background-color:#ff0a37 !important;
+    border-color:#ff0a37 !important;
+}
+
+.pbHeader {
+  color:#000;
+  border: 1px solid #F8F8F8;
+  background-color:#F8F8F8 !important;
+  align: center !important;
+  padding: 5px;
+}
+</style>
+
+<script type="text/javascript">
+
+function ChangeGP()
+{
+alert('hi');
+return false; 
+}
+
+function fix(var1,var2){
+alert(var1+"****"+var2);
+document.getElementById('{!$Component.gp}').value = var1 * var2;
+
+}
+       
+</script>
+
+
+  <apex:form id="myfrm">
+  
+ <apex:slds >
+     
+     <apex:pageMessages id="showmsg"></apex:pageMessages>
+     
+     <apex:actionFunction action="{!getOpportunityList}" name="callOpportunityList" reRender="myfrm" status="wstatus"/>
+        
+     
+      <div class="frame">
+          
+          <center>
+            <div class="slds-align_absolute-center" style ="font:  20px/1.5 Arial;">
+                <h1>Monthly Latest Estimate</h1>
+            </div>
+            <div class="slds-align_absolute-center" style ="font:  20px/1.5 Arial;">
+              <h3 style="color:blue">{!currentUserName} </h3>
+           </div>
+           <div class="slds-align_absolute-center" style ="font:  20px/1.5 Arial;">
+          <h3>Financial Year: {!fysYear}</h3> </div>
+          
+          <hr style="margin-top:10px;margin-bottom:10px;"/>
+          
+          <div class="slds-align_absolute-center" style ="font:  14px/1.5 Arial;">
+          
+              <label><b>Select Type:</b></label>&nbsp;                
+              <apex:selectList value="{!selectedtype}" size="1" id="mytype" styleclass="select-style" style="height:30px;">
+                  <apex:selectOptions value="{!typelist}"/>
+                  <apex:actionSupport event="onchange" action="{!checkListType}" status="wstatus" reRender="myfrm"/>
+              </apex:selectList>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            
+              <label><b>Select Month:</b></label>&nbsp;
+              <apex:selectList value="{!selectedmonth}" size="1" styleclass="select-style" style="height:30px;">
+                  <apex:selectOptions value="{!monthlist}"/>
+                  <apex:actionSupport event="onchange" action="{!getOpportunityList}" status="wstatus" reRender="myfrm"/>
+              </apex:selectList>
+              
+          </div>
+          </center>
+          
+          <hr style="margin-top:10px;margin-bottom:10px;"/>  
+  
+  
+           
+<apex:actionStatus id="waitStatus">
+
+    <apex:facet name="start">
+    <div >
+        &nbsp;
+    </div>
+    <div >
+        <div style="background-color: #fff;">
+           <img src="/img/loading.gif" style="float: left; margin: 8px;" /> 
+            <span>Please Wait...</span>
+        </div>
+    </div>
+    </apex:facet>
+    
+</apex:actionStatus>
+
+  <apex:pageBlock rendered="{!isLubes}" id="isLubes" title="> LUBES">
+
+         <apex:outputPanel id="tableid" > 
+        
+         <apex:outputPanel rendered="{!IF(wrapoptyList.size>0,true,false)}" >
+         
+         <apex:variable var="lylubesvol" value="{!0.00}"/>
+         <apex:variable var="lylubesgpltr" value="{!0.00}"/>
+         <apex:variable var="accpot" value="{!0.00}"/>
+         
+         <apex:variable var="latestlubesvol" value="{!0.00}"/>
+         <apex:variable var="latestlubesgpltr" value="{!0.00}"/>
+         
+         <apex:variable var="mtdlubesvol" value="{!0.00}"/>
+         <apex:variable var="mtdlubesgpltr" value="{!0.00}"/>
+         
+         <apex:variable var="lubevolaverage" value="{!0.00}"/>
+         <apex:variable var="lubenspaverage" value="{!0.00}"/>
+         <apex:variable var="lubesmonthaverage" value="{!0}"/>
+         
+         <apex:variable var="lubestotalnspltrlm" value="{!0.00}"/>
+         <apex:variable var="lubestotalnspltrle" value="{!0.00}"/>
+         <apex:variable var="lubestotalnspltrcy" value="{!0.00}"/>
+         <apex:variable var="lubestotalnspltrly" value="{!0.00}"/>
+         
+         <apex:variable value="{!1}" var="srNo"/>
+          
+         <table class="table table-striped table-bordered" border="1" id="example">
+            <thead>       
+                  <tr>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Sr No.</b></span></center></td>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Account Name</b></span></center></td>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>City</b></span></center></td>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Ship-To-Code</b></span></center></td>
+                    <td class="textstyle" colspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Last 3 Months Average</b></span></center></td>                    
+                    <td  class="textstyle" colspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Latest Estimate</b></span></center></td>
+                    <td  class="textstyle" colspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Current Month Actual</b></span></center></td>
+                    <td  class="textstyle" colspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Last Year FY</b></span></center></td>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Potential Volume</b></span></center></td>
+                  </tr>
+                   
+                  <tr>
+                  
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Volume (IN KL)</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/LTR (IN INR)</b></span></center></td>
+                    
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Volume (IN KL)</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/LTR (IN INR)</b></span></center></td>
+                    
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Volume (IN KL)</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/LTR (IN INR)</b></span></center></td>
+                    
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Volume (IN KL)</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/LTR (IN INR)</b></span></center></td>
+                    
+                  </tr> 
+              
+          </thead> 
+          
+           <tbody>           
+               <apex:repeat value="{!wrapoptyList}" var="a" >
+                <tr>
+                  <td style="text-align: center;">
+                      <div class="slds-truncate">
+                        {!srNo}
+                      </div>
+                  </td>  
+                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <a href="/one/one.app#/sObject/{!a.opptyList.Account.Id}" target="_blank"><apex:outputField value="{!a.opptyList.Account.Name}"/></a>       
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <a href="/one/one.app#/sObject/{!a.opptyList.Id}" target="_blank"><apex:outputField value="{!a.opptyList.Account.ShippingCity}"/></a>
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputField value="{!a.opptyList.Account.Ship_to_Code__c}"/>
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!a.lubesvolumeaverage}" />
+                     </apex:outputText>
+                     <apex:variable var="lubevolaverage" value="{!lubevolaverage+a.lubesvolumeaverage}"/> 
+                     <!--<apex:variable var="lubesmonthaverage" value="{!a.opptyList.Average_Month__c}"/>-->                     
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >                     
+                     <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!a.lubesnspltraverage}" />
+                     </apex:outputText>                     
+                     <apex:variable var="lubenspaverage" value="{!lubenspaverage+a.lubesnspltraverage}"/>
+                     <apex:variable var="lubestotalnspltrlm" value="{!lubestotalnspltrlm+(a.lubesvolumeaverage*a.lubesnspltraverage)}"/> 
+                  </div></td>
+                                   
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputPanel rendered="{!IF(a.isDisable, true, false)}">
+                           <apex:outputField value="{!a.opptyList.Latest_Est_Lubes_Volume__c}"/>
+                      </apex:outputPanel>
+                      
+                      <apex:outputPanel rendered="{!IF(a.isDisable, false, true)}" >
+                     
+                          <apex:inputText value="{!a.opptyList.Latest_Est_Lubes_Volume__c}" id="volume" style="width:120px;height:30px;">
+                             <apex:actionSupport event="onchange" status="wstatus" reRender="gp,sumwrapper,latestgp,latestlubesvol,latestlubesgpltr"/> 
+                          </apex:inputText>
+                          
+                      </apex:outputPanel>
+                      
+                      <apex:variable var="latestlubesvol" value="{!latestlubesvol+IF(a.opptyList.Latest_Est_Lubes_Volume__c==NULL, 0.0, a.opptyList.Latest_Est_Lubes_Volume__c)}"/>                       
+                  </div> </td>
+                 
+                   <td style="text-align: center;"><div class="slds-truncate">
+                      <apex:outputPanel rendered="{!IF(a.isDisable, true, false)}">
+                          <apex:outputText value="{!a.opptyList.LE_NSP_Ltr_Lubes__c}"/>
+                      </apex:outputPanel>
+                      
+                       
+                      <apex:outputPanel rendered="{!IF(a.isDisable, false, true)}" >
+                     
+                          <apex:inputText value="{!a.opptyList.LE_NSP_Ltr_Lubes__c}" id="gpltr" style="width:120px;height:30px;">
+                              <apex:actionSupport event="onchange" status="wstatus" reRender="gp,sumwrapper,latestlubesgp,latestlubesgpltr" />
+                          </apex:inputText>
+                          
+                      </apex:outputPanel>
+                     
+                      <apex:variable var="latestlubesgpltr" value="{!latestlubesgpltr+a.opptyList.LE_NSP_Ltr_Lubes__c}"/> 
+                      <apex:variable var="lubestotalnspltrle" value="{!lubestotalnspltrle+(a.opptyList.Latest_Est_Lubes_Volume__c*a.opptyList.LE_NSP_Ltr_Lubes__c)}"/>
+                   </div></td>
+                   
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputField value="{!a.opptyList.MTD_NON_AUS_Volume__c}" />
+                      <apex:variable var="mtdlubesvol" value="{!mtdlubesvol+IF(a.opptyList.MTD_NON_AUS_Volume__c==NULL, 0.0, a.opptyList.MTD_NON_AUS_Volume__c)}"/> 
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate">                      
+                      <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!a.opptyList.MTD_NSP_ltr_Lubesformula__c}" />
+                      </apex:outputText>
+                      <apex:variable var="mtdlubesgpltr" value="{!mtdlubesgpltr+a.opptyList.MTD_NSP_ltr_Lubesformula__c}"/> 
+                      <apex:variable var="lubestotalnspltrcy" value="{!lubestotalnspltrcy+(a.opptyList.MTD_NON_AUS_Volume__c*a.opptyList.MTD_NSP_ltr_Lubesformula__c)}"/>
+                  </div></td>
+                  
+          
+                   <td style="text-align: center;"><div class="slds-truncate">
+                      <apex:outputField value="{!a.opptyList.Account.LY_Lubes_Vol__c}" />
+                      <apex:variable var="lylubesvol" value="{!lylubesvol+IF(a.opptyList.Account.LY_Lubes_Vol__c==NULL, 0.0, a.opptyList.Account.LY_Lubes_Vol__c)}"/> 
+                   </div></td>
+                   
+                   <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!a.opptyList.Account.LY_NSP_Ltr_Lubesformula__c}" />
+                      </apex:outputText>
+                      <apex:variable var="lylubesgpltr" value="{!lylubesgpltr+a.opptyList.Account.LY_NSP_Ltr_Lubesformula__c}"/>
+                      <apex:variable var="lubestotalnspltrly" value="{!lubestotalnspltrly+(a.opptyList.Account.LY_Lubes_Vol__c*a.opptyList.Account.LY_NSP_Ltr_Lubesformula__c)}"/>
+                   </div></td>
+                                      
+                   <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputField value="{!a.opptyList.Account.Account_Potential_Lubes__c}" />
+                      <apex:variable var="accpot" value="{!accpot+IF(a.opptyList.Account.Account_Potential_Lubes__c==NULL, 0.0, a.opptyList.Account.Account_Potential_Lubes__c)}"/> 
+                  </div></td>
+                                      
+                </tr>
+               <apex:variable value="{!srNo+1}" var="srNo"/>
+               </apex:repeat> 
+              
+                 <tr style="background-color:#9dd5e6;border=1px;">
+                    <td colspan="4" style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><span style="font-size:12px;"><b>TOTAL</b></span></div></td>
+                    
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                        <apex:outputText value="{0, number, 0.00}">
+                            <apex:param value="{!lubevolaverage}" />
+                        </apex:outputText>                        
+                      </b>
+                    </div></td>
+                    
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b>                      
+                        <apex:outputPanel rendered="{!IF(lubevolaverage!=0.00, true, false)}">
+                        <apex:outputText value="{0, number, 0.00}">
+                              <apex:param value="{!lubestotalnspltrlm/lubevolaverage}"/>
+                        </apex:outputText>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IF(lubevolaverage!=0.00, false, true)}">
+                            0.00
+                        </apex:outputPanel>
+                      </b>
+                    </div></td>
+                    
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> <apex:outputtext value="{!latestlubesvol}" id="latestlubesvol"/></b></div></td>
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" >
+                     <b>                        
+                     <apex:outputPanel id="latestlubesgpltr">
+                     <apex:outputPanel rendered="{!IF(latestlubesvol!=0.00, true, false)}"> 
+                       <apex:outputText value="{0, number, 0.00}">                      
+                           <apex:param value="{!lubestotalnspltrle/latestlubesvol}"/>
+                       </apex:outputText>
+                     </apex:outputPanel>
+                     <apex:outputPanel rendered="{!IF(latestlubesvol!=0.00, false, true)}">
+                            0.00
+                     </apex:outputPanel>
+                     </apex:outputPanel>                        
+                     </b>
+                     </div>
+                    </td>
+                    
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!mtdlubesvol} </b></div></td>
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                    <apex:outputPanel rendered="{!IF(mtdlubesvol!=0.00, true, false)}"> 
+                       <apex:outputText value="{0, number, 0.00}">                      
+                           <apex:param value="{!lubestotalnspltrcy/mtdlubesvol}"/>
+                       </apex:outputText> 
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!IF(mtdlubesvol!=0.00, false, true)}">
+                            0.00
+                    </apex:outputPanel>
+                    </b></div></td>                      
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre"><b>{!lylubesvol}</b></div> </td>
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre"><b>
+                    <apex:outputPanel rendered="{!IF(lylubesvol!=0.00, true, false)}"> 
+                       <apex:outputText value="{0, number, 0.00}">                      
+                           <apex:param value="{!lubestotalnspltrly/lylubesvol}"/>
+                       </apex:outputText> 
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!IF(lylubesvol!=0.00, false, true)}">
+                            0.00
+                    </apex:outputPanel>
+                    </b></div> </td>                      
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!accpot} </b></div> </td>
+                  </tr>     
+              </tbody>                
+              </table> 
+              
+              </apex:outputPanel>
+              
+              <apex:outputPanel rendered="{!IF(wrapoptyList.size>0,false,true)}">
+                  <center>No record found</center>
+              </apex:outputPanel>
+            </apex:outputPanel>                    
+       
+           <br/>
+           
+         <apex:outputPanel id="mybuttons">
+         <apex:outputPanel rendered="{!IF(wrapoptyList.size>0,true,false)}">
+             <center>
+             <apex:commandButton value="Save" action="{!updateopp}" status="wstatus" reRender="callalert" styleClass="mybtncss" style="background-color:#0070d2;border:1px solid #0070d2;color:white;"/> &nbsp;&nbsp;
+             <apex:commandButton value="Cancel" action="{!cancel}" onClick="closeWin();return false;" styleClass="mybtncss2" style="background-color:#c23934;border:1px solid #c23934;color:white;"/>
+             </center>
+         </apex:outputPanel>
+         </apex:outputPanel>
+         
+                 
+       </apex:pageBlock> 
+       
+       <apex:pageBlock rendered="{!isAus}" id="isAus" title="> AUS">
+           <apex:outputPanel id="tableid2"> 
+        
+         <apex:outputPanel rendered="{!IF(wrapoptyList2.size>0,true,false)}" >
+         
+         <apex:variable var="lyausvol" value="{!0.00}"/>
+         <apex:variable var="lyausgpltr" value="{!0.00}"/>
+         <apex:variable var="accpot2" value="{!0.00}"/>
+         
+         <apex:variable var="latestausvol" value="{!0.00}"/>
+         <apex:variable var="latestausgpltr" value="{!0.00}"/>
+         
+         <apex:variable var="mtdausvol" value="{!0.00}"/>
+         <apex:variable var="mtdausgpltr" value="{!0.00}"/>
+         
+         <apex:variable var="ausvolaverage" value="{!0.00}"/>
+         <apex:variable var="ausnspaverage" value="{!0.00}"/>
+         <apex:variable var="ausmonthaverage" value="{!0}"/>
+         
+         <apex:variable var="austotalnspltrlm" value="{!0.00}"/>
+         <apex:variable var="austotalnspltrle" value="{!0.00}"/>
+         <apex:variable var="austotalnspltrcy" value="{!0.00}"/>
+         <apex:variable var="austotalnspltrly" value="{!0.00}"/>
+         
+         <apex:variable value="{!1}" var="srNo2"/>
+          
+         <table class="slds-table_cell-buffer slds-table_col-bordered" border="1">
+            <thead>       
+                  <tr>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Sr No.</b></span></center></td>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Account Name</b></span></center></td>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>City</b></span></center></td>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Ship-To-Code</b></span></center></td>
+                    <td class="textstyle" colspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Last 3 Months Average</b></span></center></td>                    
+                    <td  class="textstyle" colspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Latest Estimate</b></span></center></td>
+                    <td  class="textstyle" colspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Current Month Actual</b></span></center></td>
+                    <td  class="textstyle" colspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Last Year FY</b></span></center></td>
+                    <td class="textstyle" rowspan="2"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Potential Volume</b></span></center></td>
+                  </tr>
+                   
+                  <tr>
+                  
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Volume (IN KL)</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/LTR (IN INR)</b></span></center></td>
+                    
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Volume (IN KL)</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/LTR (IN INR)</b></span></center></td>
+                    
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Volume (IN KL)</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/LTR (IN INR)</b></span></center></td>
+                    
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Volume (IN KL)</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/LTR (IN INR)</b></span></center></td>
+                    
+                  </tr> 
+              
+          </thead> 
+          
+           <tbody>           
+               <apex:repeat value="{!wrapoptyList2}" var="a" >
+                <tr>
+                  <td style="text-align: center;">
+                      <div class="slds-truncate">
+                        {!srNo2}
+                      </div>
+                  </td>  
+                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <a href="/one/one.app#/sObject/{!a.opptyList2.Account.Id}" target="_blank"><apex:outputField value="{!a.opptyList2.Account.Name}"/></a>       
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <a href="/one/one.app#/sObject/{!a.opptyList2.Id}" target="_blank"><apex:outputField value="{!a.opptyList2.Account.ShippingCity}"/></a>
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputField value="{!a.opptyList2.Account.Ship_to_Code__c}"/>
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!a.ausvolumeaverage}" />
+                     </apex:outputText>
+                     <apex:variable var="ausvolaverage" value="{!ausvolaverage+a.ausvolumeaverage}"/>
+                     <!--<apex:variable var="ausmonthaverage" value="{!a.opptyList2.Average_Month__c}"/>--> 
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >                     
+                     <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!a.ausnspltraverage}" />
+                     </apex:outputText>                     
+                     <apex:variable var="ausnspaverage" value="{!ausnspaverage+a.ausnspltraverage}"/>
+                     <apex:variable var="austotalnspltrlm" value="{!austotalnspltrlm+(a.ausvolumeaverage*a.ausnspltraverage)}"/>  
+                  </div></td>
+                                                     
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputPanel rendered="{!IF(a.isDisable2, true, false)}">
+                           <apex:outputField value="{!a.opptyList2.Latest_Est_AUS_Volume__c}"/>
+                      </apex:outputPanel>
+                      
+                      <apex:outputPanel rendered="{!IF(a.isDisable2, false, true)}" >
+                     
+                          <apex:inputText value="{!a.opptyList2.Latest_Est_AUS_Volume__c}" id="volume" style="width:120px;height:30px;">
+                             <apex:actionSupport event="onchange" status="wstatus" reRender="gp2,sumwrapper2,latestgp2,latestausvol,latestausgpltr"/> 
+                          </apex:inputText>
+                          
+                      </apex:outputPanel>
+                      
+                      <apex:variable var="latestausvol" value="{!latestausvol+IF(a.opptyList2.Latest_Est_AUS_Volume__c==NULL, 0.0, a.opptyList2.Latest_Est_AUS_Volume__c)}"/> 
+                  </div> </td>
+                 
+                   <td style="text-align: center;"><div class="slds-truncate">
+                      <apex:outputPanel rendered="{!IF(a.isDisable2, true, false)}">
+                          <apex:outputText value="{!a.opptyList2.LE_NSP_Ltr_AUS__c}"/>
+                      </apex:outputPanel>
+                      
+                       
+                      <apex:outputPanel rendered="{!IF(a.isDisable2, false, true)}" >
+                     
+                          <apex:inputText value="{!a.opptyList2.LE_NSP_Ltr_AUS__c}" id="gpltr2" style="width:120px;height:30px;">
+                              <apex:actionSupport event="onchange" status="wstatus" reRender="gp2,sumwrapper2,latestausgp,latestausgpltr" />
+                          </apex:inputText>
+                          
+                      </apex:outputPanel>
+                     
+                      <apex:variable var="latestausgpltr" value="{!latestausgpltr+a.opptyList2.LE_NSP_Ltr_AUS__c}"/>
+                      <apex:variable var="austotalnspltrle" value="{!austotalnspltrle+(a.opptyList2.Latest_Est_AUS_Volume__c*a.opptyList2.LE_NSP_Ltr_AUS__c)}"/> 
+                   </div></td>
+                   
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputField value="{!a.opptyList2.MTD_AUS_Volume__c}" />
+                      <apex:variable var="mtdausvol" value="{!mtdausvol+IF(a.opptyList2.MTD_AUS_Volume__c==NULL, 0.0, a.opptyList2.MTD_AUS_Volume__c)}"/> 
+                  </div></td>
+                  
+                  <td style="text-align: center;"><div class="slds-truncate">                      
+                      <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!a.opptyList2.MTD_NSP_ltr_AUSformula__c}" />
+                      </apex:outputText>
+                      <apex:variable var="mtdausgpltr" value="{!mtdausgpltr+a.opptyList2.MTD_NSP_ltr_AUSformula__c}"/>
+                      <apex:variable var="austotalnspltrcy" value="{!austotalnspltrcy+(a.opptyList2.MTD_AUS_Volume__c*a.opptyList2.MTD_NSP_ltr_AUSformula__c)}"/> 
+                  </div></td>
+                  
+          
+                   <td style="text-align: center;"><div class="slds-truncate">
+                      <apex:outputField value="{!a.opptyList2.Account.LY_AUS_Vol__c}" />
+                      <apex:variable var="lyausvol" value="{!lyausvol+IF(a.opptyList2.Account.LY_AUS_Vol__c==NULL, 0.0, a.opptyList2.Account.LY_AUS_Vol__c)}"/> 
+                   </div></td>
+                   
+                   <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="{0, number, 0.00}">
+                          <apex:param value="{!a.opptyList2.Account.LY_NSP_Ltr_AUSformula__c}" />
+                      </apex:outputText>
+                      <apex:variable var="lyausgpltr" value="{!lyausgpltr+a.opptyList2.Account.LY_NSP_Ltr_AUSformula__c}"/>
+                      <apex:variable var="austotalnspltrly" value="{!austotalnspltrly+(a.opptyList2.Account.LY_AUS_Vol__c*a.opptyList2.Account.LY_NSP_Ltr_AUSformula__c)}"/>
+                   </div></td>
+                                      
+                   <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputField value="{!a.opptyList2.Account.Account_Potential_AUS__c}" />
+                      <apex:variable var="accpot2" value="{!accpot2+IF(a.opptyList2.Account.Account_Potential_AUS__c==NULL, 0.0, a.opptyList2.Account.Account_Potential_AUS__c)}"/> 
+                  </div></td>
+                                      
+                </tr>
+               <apex:variable value="{!srNo2+1}" var="srNo2"/>
+               </apex:repeat> 
+              
+                 <tr style="background-color:#9dd5e6;border=1px;">
+                    <td colspan="4" style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><span style="font-size:12px;"><b>TOTAL</b></span></div></td>
+                    
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                       <apex:outputText value="{0, number, 0.00}">
+                              <apex:param value="{!ausvolaverage}" />
+                        </apex:outputText>                                                 
+                      </b>
+                    </div></td>
+                    
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b>                      
+                        <apex:outputPanel rendered="{!IF(ausvolaverage!=0.00, true, false)}">
+                        <apex:outputText value="{0, number, 0.00}">
+                              <apex:param value="{!austotalnspltrlm/ausvolaverage}"/>
+                        </apex:outputText>
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!IF(ausvolaverage!=0.00, false, true)}">
+                            0.00
+                        </apex:outputPanel>
+                      </b>
+                    </div></td>
+                    
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> <apex:outputtext value="{!latestausvol}" id="latestausvol"/></b></div></td>
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                        
+                     <apex:outputPanel id="latestausgpltr"> 
+                       <apex:outputPanel rendered="{!IF(latestausvol!=0.00, true, false)}"> 
+                       <apex:outputText value="{0, number, 0.00}">                      
+                           <apex:param value="{!austotalnspltrle/latestausvol}"/>
+                       </apex:outputText>
+                     </apex:outputPanel>
+                     <apex:outputPanel rendered="{!IF(latestausvol!=0.00, false, true)}">
+                            0.00
+                     </apex:outputPanel>                      
+                     </apex:outputPanel> 
+                        
+                        </b>
+                    </div></td>
+                    
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!mtdausvol} </b></div></td>
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                    <apex:outputPanel rendered="{!IF(mtdausvol!=0.00, true, false)}"> 
+                       <apex:outputText value="{0, number, 0.00}">                      
+                           <apex:param value="{!austotalnspltrcy/mtdausvol}"/>
+                       </apex:outputText> 
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!IF(mtdausvol!=0.00, false, true)}">
+                            0.00
+                    </apex:outputPanel> 
+                    </b></div></td>
+                      
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre"><b>{!lyausvol}</b></div> </td>
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre"><b>
+                    <apex:outputPanel rendered="{!IF(lyausvol!=0.00, true, false)}"> 
+                       <apex:outputText value="{0, number, 0.00}">                      
+                           <apex:param value="{!austotalnspltrly/lyausvol}"/>
+                       </apex:outputText> 
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{!IF(lyausvol!=0.00, false, true)}">
+                            0.00
+                    </apex:outputPanel>
+                    </b></div> </td>
+                      
+                    <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!accpot2} </b></div> </td>
+                  </tr>     
+              </tbody>                
+              </table> 
+              
+              </apex:outputPanel>
+              
+              <apex:outputPanel rendered="{!IF(wrapoptyList2.size>0,false,true)}">
+                  <center>No record found</center>
+              </apex:outputPanel>
+            </apex:outputPanel>          
+        
+           <br/>
+           
+         <apex:outputPanel id="mybuttons2">
+         <apex:outputPanel rendered="{!IF(wrapoptyList2.size>0,true,false)}">
+             <center>
+             <apex:commandButton value="Save" action="{!updateopp2}" status="wstatus" reRender="callalert" styleClass="mybtncss" style="background-color:#0070d2;border:1px solid #0070d2;color:white;"/> &nbsp;&nbsp;
+             <apex:commandButton value="Cancel" action="{!cancel}" onClick="closeWin();return false;" styleClass="mybtncss2" style="background-color:#c23934;border:1px solid #c23934;color:white;"/>
+             </center>
+         </apex:outputPanel>
+         </apex:outputPanel>
+          
+       </apex:pageBlock>                       
+ </div>     
+
+   </apex:slds>
+   
+
+
+  </apex:form>
+<apex:outputPanel id="callalert">
+    <apex:outPutPanel rendered="{!IF(OR(alertrender,alertrender2), true, false)}">
+        <script type="text/javascript">
+        function myalertfun()
+        {
+          alert('Latest estimate has been saved successfully.'); 
+        }
+        myalertfun();
+        </script>
+    </apex:outPutPanel>
+    </apex:outputPanel>
+
+<div id="opaque"/>
+<div id="spinner">
+    <p align="center" style='{font-family:"Arial", Helvetica, sans-serif; font-size:20px;}; padding-top:5px;'><apex:image value="/img/loading.gif"/>&nbsp;Please wait</p>
+</div>
+
+<apex:outputpanel id="mstatus">
+<apex:actionstatus id="wstatus">
+    <apex:facet name="start">
+        <div class="waitingSearchDiv" id="el_loading" style="width:100%;height:100%;background-color: #ECEBEA;opacity:0.65; ">
+            <div class="waitingHolder">
+                <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                <span class="waitingDescription">Please wait...</span>
+            </div>
+        </div>
+    </apex:facet>
+</apex:actionstatus>
+</apex:outputpanel>
+
+<script type="text/javascript">
+
+function closeSpinner()
+{
+    document.getElementById('opaque').style.display='none';
+    var popUp = document.getElementById('spinner');
+      
+    popUp.style.display = 'none';
+}
+function showSpinner()
+{
+   document.getElementById('opaque').style.display='block';
+   var popUp = document.getElementById('spinner');
+  
+   popUp.style.display = 'block';
+   
+   setTimeout(function () {
+      closeSpinner()
+    }, 3000);
+   
+}
+function closeWin()
+{
+    if(confirm('Are you sure want to close this page?'))
+    {
+        window.close();
+    }
+}    
+ </script>   
+    
+</apex:page>

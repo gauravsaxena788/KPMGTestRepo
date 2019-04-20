@@ -1,0 +1,10 @@
+.THIS {
+  background: white;  
+}
+.THIS .slds-output {
+   
+}
+.THIS .slds-modal__container{
+    width: 65%;
+    max-width: 60rem;
+}

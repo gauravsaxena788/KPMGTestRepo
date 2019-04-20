@@ -1,0 +1,487 @@
+<aura:component controller="VCPL_DiffrentialPricingController"
+                implements="force:appHostable,force:lightningQuickActionWithoutHeader,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride"
+                access="global">
+    
+    <aura:attribute name="showTestPage" type="boolean" default="false" />
+    <aura:attribute name="TextName" type="String" />
+    <aura:attribute name="iseditallowed" type="Boolean" default="false" />
+    <aura:attribute name="AccountName" type="String" />
+    <aura:attribute name="DAMName" type="String" default=""/>
+    <aura:attribute name="DealerName" type="String" default=""/>
+    <aura:attribute name="BranchName" type="String" default=""/>
+    <aura:attribute name="userLookupFilter" type="String" default=""/>
+    <aura:attribute name="content" type="String" default=""/>
+    <aura:attribute name="isNatureofBusinessOther"
+                    type="boolean" 
+                    default="false" />
+    
+    <aura:attribute name="IsCloneRequestresponse"
+                    type="Boolean"
+                    default="false"/>
+    
+    <aura:attribute name="previousDP" 
+                    type="String" 
+                    default="" />
+    <aura:attribute name="IsCloneRequestresponseString" 
+                    type="String" 
+                    default="" />
+    
+    
+    
+    <aura:attribute name="isdatepast" 
+                    type="Boolean" 
+                    default="false"/>
+    <aura:attribute name="isLoginAsELP" 
+                    type="Boolean" 
+                    default="false"/>
+    
+    <aura:handler name="updateLookupIdEvent" 
+                  event="c:UpdateLookupIdEvent"
+                  action="{!c.handleComponentEvent}"/>
+    
+    <aura:attribute name="PicklistVal" 
+                    type="String[]" 
+                    description="for Showing PicklistVal" />
+    
+    <aura:attribute name="objWrapCase"
+                    type="VCPL_clsforIdCustomerQuote.WrapobjError"  />
+    
+    <aura:attribute name="NonEditingMessage" 
+                    type="String" 
+                    default=""/>
+    
+    <aura:attribute name="AccountLookupFilter" 
+                    type="String" 
+                    default="RecordType.DeveloperName= VCPL_CD_Customer AND VCPL_Isgroupbyparent__c = False"/>
+    
+    <aura:attribute name="ContactLookupFilter" 
+                    type="String" 
+                    default="Account.RecordType.DeveloperName='VCPL_CD_Customer'"/>
+    
+    <aura:attribute name="meassgefordate" 
+                    type="VCPL_DiffrentialPricingController.wrapdatewithmessage" />
+    
+    <aura:attribute name="objwrapObjectwithName" 
+                    type="VCPL_DiffrentialPricingController.wrapObjectwithName" />
+    
+    <aura:attribute name="valuesinsideclass" 
+                    type="VCPL_DiffrentialPricingController.wrapObjectwithdata" 
+                    default="{'strId': '','objectName': ''}"/>
+    
+    <aura:attribute name="objdiffPric" 
+                    type="VCPL_Differential_Pricing__c" 
+                    description="for Storeing Diffrential Pricing Details"/>
+    
+    <aura:handler 	name="init" 
+                  value="{!this}" 
+                  action="{!c.doInit}" />
+    
+    <aura:attribute name="edit"
+                    type="Boolean"
+                    default="true"/>
+    
+    <aura:attribute name="erroroccured"
+                    type="Boolean"
+                    default="false"/>
+    
+    <aura:method name="clonemethod" 
+                 action="{!c.updateCloneData}" 
+                 access="PUBLIC"/>
+    
+    <!--<style>
+        .slds-modal__container{
+        width: 65%;
+        max-width: 60rem;
+        }
+    </style>-->
+    
+    <div class="">
+        <aura:if isTrue="{!v.edit}">
+            
+            
+            <div >
+                <div class="slds-form slds-form_compound" style="margin-left: 10px;margin-right: 10px;">
+                    <!--<header class="slds-modal__header slds-size_4-of-4">
+                                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.cancel}">
+                                        X
+                                        <span class="slds-assistive-text">Close</span>
+                                    </button>
+                                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                                        New Differential Pricing
+                                    </h2>
+                                </header>-->
+                    <div class="">
+                        <div class="">
+                            <fieldset class="slds-form--compound">
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element slds-section slds-size_4-of-4">
+                                        <div class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+                                            <legend class="slds-form-element__label slds-text-title--caps">Diffrential Pricing Information</legend>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <label class="labelclass slds-is-required" >DAM</label> 
+                                            	<ui:inputText value="{!v.DAMName}" class="slds-input" disabled="true"/>
+                                        </div>
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <label class="labelclass slds-is-required" >Dealer Name</label> 
+                                            <ui:inputText value="{!v.DealerName}" placeholder="Name" class="slds-input" disabled="true"/>
+                                          </div>
+                                        
+                                    </div>
+                                </div>
+                                
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <label class="labelclass slds-is-required" >Branch</label> 
+                                            <aura:if isTrue="{!v.isLoginAsELP}">
+                                                <c:LookupComponent sObjectAPIName="Account"
+                                                                   pluralLabel="Branches" 
+                                                                   label="Branch Name" 
+                                                                   aura:id="BranchLookupauraid"
+                                                                   SelectedItemId="{!v.objdiffPric.VCPL_Branch__c}" 
+                                                                   SelectedItemText="{!v.BranchName}"
+                                                                   clearLookupIdEvent="{!c.clearUser}"
+                                                                   FilterName = "ELPUserMapping"	
+                                                                   FilterCondition="RecordType.Name = 'Cummins Dealer Branch'"
+                                                                   IsClickOnSearch="true"
+                                                                   IconName="standard:account"
+                                                                   />
+                                               <aura:set attribute="else" >
+                                                    <ui:inputText value="{!v.BranchName}" class="slds-input" disabled="true"/>
+                                               </aura:set>
+                                            </aura:if>
+                                        </div>
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <ui:inputDate aura:id="todaydate" class="slds-input" labelClass="slds-form-element__label" disabled="true" value="{!v.objdiffPric.VCPL_Today_Date__c}" label="Date" displayDatePicker="true"  format="dd/MM/yyyy" />
+                                            <!--<lightning:input label="Date" name="Date" value="{!v.objdiffPric.VCPL_Today_Date__c}" required="true"  />
+                                                        <ui:inputText value="{!v.objdiffPric.Name}" placeholder="Name" class="slds-input"/>-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <!--<label class="labelclass slds-is-required" > Status</label> 
+                                                        <ui:outputText value="{!v.objdiffPric.VCPL_DP_Request_Status__c}" class="slds-output" disable="true"/>-->
+                                            <ui:inputText class="slds-input" label="Status" disabled="true" value="{!v.objdiffPric.VCPL_DP_Request_Status__c}" />
+                                        </div>
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <ui:inputDate aura:id="finalapprvldate" class="slds-input" labelClass="slds-form-element__label" disabled="true" value="{!v.objdiffPric.VCPL_Final_Approval_Date__c}" label="Final Approval Date" displayDatePicker="true"  format="dd/MM/yyyy" />
+                                            <!--<lightning:input label="Final Approval Date" name="Final Approval Date" value="{!v.objdiffPric.VCPL_Final_Approval_Date__c}" required="true"  />
+                                                        <ui:inputText value="{!v.objdiffPric.Name}" placeholder="Name" class="slds-input"/>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="slds-form-element__group">       
+                                    <!--   Product Section -->
+                                    <div class="slds-section slds-size_4-of-4">
+                                        <div class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+                                            <legend class="slds-form-element__label slds-text-title--caps">CUSTOMER INFORMATION</legend>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <label class="labelclass slds-is-required" >
+                                                <abbr class="slds-required" title="required">* </abbr>
+                                                Customer Name
+                                            </label>
+                                            <c:LookupComponent sObjectAPIName="Account"
+                                                               pluralLabel="Customers" 
+                                                               label="Customer Name" 
+                                                               aura:id="AccountLookupauraid"
+                                                               SelectedItemId="{!v.objdiffPric.VCPL_Customer_Name__c}" 
+                                                               SelectedItemText="{!v.objdiffPric.VCPL_Customer_Name__r.Name}"
+                                                               clearLookupIdEvent="{!c.clearUser}"
+                                                               FilterCondition="{!v.AccountLookupFilter}"
+                                                               IsClickOnSearch="true"	
+                                                               IconName="standard:account"
+                                                               />
+                                            <!--<c:VA_CustomLookupParent aura:id="lookupCompProject" objectAPIName="Account" 
+                                                                          IconName="standard:channel_program_levels" 
+                                                                          recordId="" 
+                                                                          selectedRecord="{!v.TextName}" 
+                                                                          label="Account" />
+                                                        <ui:inputText value="{!v.objdiffPric.VCPL_Customer_Name__c}" placeholder="Name" class="slds-input"/>-->
+                                        </div>
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <label class="labelclass slds-is-required" >Customer Code</label> 
+                                            <ui:inputText value="{!v.objdiffPric.VCPL_Customer_Code__c}" class="slds-input" disabled="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <label class="labelclass slds-is-required" >
+                                             <abbr class="slds-required" title="required">* </abbr>
+                                                Customer Contact Person
+                                            </label> 
+                                            <!--<c:LookupComponent sObjectAPIName="Contact"
+                                                               pluralLabel="Customer Contact Person" 
+                                                               label="Customer Contact Persons" 
+                                                               aura:id="CustomerContactauraid"
+                                                               SelectedItemId="{!v.objdiffPric.VCPL_Customer_Contact_Person__c}" 
+                                                               SelectedItemText="{!v.objdiffPric.VCPL_Customer_Contact_Person__r.Name}"
+                                                               clearLookupIdEvent="{!c.clearUser}"
+                                                               FilterCondition="{!v.ContactLookupFilter}"
+                                                               IsClickOnSearch="true"
+                                                               IconName="standard:contact"
+                                                               />-->                                            
+                                            <ui:inputText aura:id="CustomerPersonName" value="{!v.objdiffPric.VCPL_Customer_contact_person_name__c}"  class="slds-input" />
+                                        </div>
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <label class="labelclass slds-is-required" >
+                                              <abbr class="slds-required" title="required">* </abbr>  Customer Contact Number
+                                            </label> 
+                                            	<ui:inputPhone aura:id="CustomerMobileNumber" value="{!v.objdiffPric.VCPL_Customer_Contact_No__c}" class="slds-input" maxlength="10" change="{!c.validateCustomerMobilenumber}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <label class="labelclass slds-is-required" >Customer Contact Email</label> 
+                                             <ui:inputEmail aura:id="CustomerEMail" value="{!v.objdiffPric.VCPL_Contact_Person_Email__c}"  class="slds-input" change="{!c.validateCustomeremail}"/>
+                                        </div>
+                                        <div class="slds-form-element slds-size_1-of-2">
+                                            <!--<label class="labelclass slds-is-required" >Customer Contact Number</label> 
+                                            	<ui:inputPhone value="{!v.objdiffPric.VCPL_Customer_Contact_No__c}" class="slds-input" maxlength="10"/>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form slds-form_compound" style="margin-left: 10px;margin-right: 10px;">
+                    <!--<div class=""> hh-->
+                    <fieldset class="slds-form--compound">
+                        
+                        <div class="slds-form-element__group">       
+                            <!--   Product Section -->
+                            <div class="slds-section slds-size_4-of-4">
+                                <div class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+                                    <legend class="slds-form-element__label slds-text-title--caps">Product Information</legend>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>    Product
+                                    </label> 
+                                    <c:LookupComponent sObjectAPIName="Product2"
+                                                       pluralLabel="Product" 
+                                                       label="Products" 
+                                                       aura:id="ProductLookupauraid"
+                                                       SelectedItemId="{!v.objdiffPric.VCPL_Product__c}" 
+                                                       SelectedItemText="{!v.objdiffPric.VCPL_Product__r.Name}"
+                                                       clearLookupIdEvent="{!c.clearUser}"
+                                                       FilterName = "DealerMapping"
+                                                       FilterCondition="{!v.userLookupFilter}"
+                                                       IsClickOnSearch="true"
+                                                       IconName="standard:product"
+                                                       />
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <label class="labelclass slds-is-required slds-is-required" >Part no.</label> 
+                                    <ui:inputText value="{!v.objdiffPric.VCPL_Part_no__c}" class="slds-input" disabled="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <!--<label class="labelclass slds-is-required" >Reason for Discount</label> 
+                                                <ui:inputText value="{!v.objdiffPric.VCPL_Reason_for_Discount__c}" placeholder="Reason for Discount" class="slds-input"/>-->
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <label class="labelclass slds-is-required" >Pack Size</label> 
+                                    <ui:inputText value="{!v.objdiffPric.VCPL_Pack_Size__c}" class="slds-input" disabled="true"/>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        
+                        <div class="slds-form-element__group">       
+                            <!--   Product Section -->
+                            <div class="slds-section slds-size_4-of-4">
+                                <div class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+                                    <legend class="slds-form-element__label slds-text-title--caps">OTHER INFORMATION</legend>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>Offer Price/L
+                                    </label> 
+                                    <ui:inputNumber value="{!v.objdiffPric.VCPL_Offer_Price_L__c}" aura:id="OfferPriceauraid" class="slds-input" change="{!c.validatediscount}" maxlength="10" />
+                                </div>
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >Basic Price/L</label> 
+                                    <ui:inputNumber value="{!v.objdiffPric.VCPL_Basic_Price_L__c}" class="slds-input" disabled="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>Expected volume(In KL)
+                                    </label> 
+                                    <ui:inputNumber value="{!v.objdiffPric.VCPL_Expected_volume__c}" aura:id="expectedvolumeauraid" class="slds-input" />
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <label class="labelclass slds-is-required" >Discount/L</label> 
+                                    <ui:inputNumber value="{!v.objdiffPric.VCPL_Discount_L__c}" aura:id="discountPriceauraid" class="slds-input" disabled="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                
+                                <div class="slds-form-element slds-form-element slds-size_1-of-2" >
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>Validity start date
+                                    </label> 
+                                    <ui:inputDate aura:id="startdate" class="slds-input" labelClass="slds-form-element__label" value="{!v.objdiffPric.VCPL_Validity_Start_Date__c}" change="{!c.dateChangeComponent}" displayDatePicker="true"  format="dd/MM/yyyy"/>
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <!--<label class="labelclass slds-is-required" >Validity Expiry date</label> -->
+                                    <!--<lightning:input type="Date" aura:id="enddate" name="Enddate" value="{!v.objdiffPric.VCPL_DP_Expiry_Date__c}" disable="true" format="dd/MM/yyyy" />-->
+                                    <ui:inputDate aura:id="enddate" class="slds-input" labelClass="slds-form-element__label" disabled="true" value="{!v.objdiffPric.VCPL_DP_Expiry_Date__c}" displayDatePicker="true" label="Validity expiry date" format="dd/MM/yyyy"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <label class="labelclass slds-is-required" >LY volume(If Any in KL)</label> 
+                                    <ui:inputNumber value="{!v.objdiffPric.VCPL_LY_volume__c}" aura:id="lyvolumeauraid"  class="slds-input" disabled="true"/>
+                                </div>
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>KL Potential per year
+                                    </label> 
+                                    <ui:inputNumber value="{!v.objdiffPric.VCPL_KL_Potential_per_year__c}" class="slds-input" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>Reason for Discount
+                                    </label> 
+                                    <ui:inputText value="{!v.objdiffPric.VCPL_Reason_for_Discount__c}" aura:id="reasonfordisauraid" class="slds-input"/>
+                                </div>
+                                <div class="slds-form-element slds-size_1-of-2">
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>Dealer-Margin(%)
+                                    </label> 
+                                    <ui:inputNumber aura:id="DealermarginAuraId" value="{!v.objdiffPric.VCPL_Dealer_Margin_Liter__c}" class="slds-input" change="{!c.validateDealermarginChange}" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-form-element__group"> 
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_2-of-4">                                    
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>Customer nature of business
+                                    </label> 
+                                    <ui:inputSelect class="slds-picklist"  aura:id="natureofbusinessauraid" value="{!v.objdiffPric.VCPL_Customer_nature_of_business__c}" required="true" change="{!c.changennatureofbusiness}">
+                                       <ui:inputSelectOption text="" label="--None--" />
+                                        <aura:iteration var="item" items="{!v.PicklistVal}">
+                                         <ui:inputSelectOption text="{!item}" label="{!item}" value="" />    
+                                        </aura:iteration>  
+                                    </ui:inputSelect> 
+                                </div>
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >Price Increase Plan</label> 
+                                    <lightning:helptext
+                                        content="This is the expected price in the next quarter."
+                                    />
+                                    <ui:inputNumber value="{!v.objdiffPric.VCPL_Price_increase_plan_in_next_quarter__c}" class="slds-input" />
+                                </div>
+                            </div>
+                        </div>                         
+                        
+                        <div class="slds-form-element__group">
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >Existing Supplier</label> 
+                                    <ui:inputText value="{!v.objdiffPric.VCPL_Existing_Supplier__c}" class="slds-input"/>
+                                </div>
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >
+                                        Reason for Exception
+                                    </label> 
+                                    <ui:inputText aura:id="reasonforexceptionauraid" value="{!v.objdiffPric.VCPL_Exception_Reason__c}" class="slds-input"  />
+                                    <div style="color:blue">
+                                        <aura:unescapedHtml value="{!v.content}" />   
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                        
+                        <aura:if isTrue="{!v.isNatureofBusinessOther}">
+                        <div class="slds-form-element__group"> 
+                            <div class="slds-form-element__row">                                
+                                <div class="slds-form-element slds-size_2-of-4">
+                                    <label class="labelclass slds-is-required" >
+                                        <abbr class="slds-required" title="required">* </abbr>
+                                        Other Customer nature of business
+                                    </label> 
+                                    <ui:inputText value="{!v.objdiffPric.VCPL_Others_Customer_Nature_of_Business__c}" class="slds-input" aura:id="Othernatureofbusinessauraid" />
+                                </div>
+                                <div class="slds-form-element slds-size_2-of-4">                                    
+                                    <label class="labelclass slds-is-required" >                                        
+                                    </label> 
+                                </div>
+                            </div>
+                        </div>
+                        </aura:if>
+                        
+                    </fieldset>
+                </div>
+                <div class="slds-modal__footer slds-size_4-of-4">
+                    <lightning:button aura:id="button1" variant="brand" name="buttonname1" label="Submit for approval" onclick="{!c.saverecords}"/>
+                    <lightning:button aura:id="button2" variant="brand" name="buttonname2" label="Save as Draft" onclick="{!c.saverecords}"/>
+                    <lightning:button aura:id="button3" name="buttonname3" label="Cancel" onclick="{!c.cancel}"/>
+                </div>
+            </div>
+            <aura:set attribute="else" >
+                
+                <div class="slds-size_4-of-4">
+                    <div class="slds-text-align_center slds-text-color_error slds-form slds-form_compound" style="margin-left: 10px;margin-right: 10px;"><aura:unescapedHtml value="{!v.NonEditingMessage}" /></div><br/>
+                    <button class="slds-button slds-button--neutral slds-align_absolute-center" onclick="{!c.cancel}" href="javascript:void(0);">
+                        Cancel
+                    </button>
+                </div>
+            </aura:set>
+        </aura:if> 
+    </div>
+</aura:component>

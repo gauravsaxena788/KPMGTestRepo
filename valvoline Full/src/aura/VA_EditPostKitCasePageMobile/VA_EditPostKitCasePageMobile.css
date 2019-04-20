@@ -1,0 +1,32 @@
+.THIS .slds-button_brand, 
+.THIS .slds-button--brand {
+	color: aliceblue;
+}
+
+.THIS .slds-text-heading_label, 
+.THIS .slds-text-heading--label {
+    border-radius: 0.5rem;
+}
+
+.THIS .slds-text-title_caps, 
+.THIS .slds-text-title--caps {
+    line-height: 0.25;
+    font-weight: bold;
+}
+.THIS .formelem-pdng .slds-col{
+    padding-bottom:1rem;
+}
+@media only screen 
+and (min-device-width : 375px) 
+and (max-device-width : 812px)
+and (-webkit-device-pixel-ratio : 3) {
+    .THIS .sWrapTest {
+    height:95vh;
+    }
+}
+.THIS .sWrapTest {
+    height:95vh;
+    margin:6px;
+    max-width:100%;
+    overflow-x:hidden;
+}

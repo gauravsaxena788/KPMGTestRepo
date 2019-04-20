@@ -1,0 +1,14 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	<div style="width:100%;">
+    <div style="float:left; width:auto;">
+        <c:VCPL_PostRecordTypeSelection recordTypeName="Post Test" recordTypeId="0126A000000JMHVQA4"/>
+    </div>
+    
+    <div style="float:left; width:auto;">
+        &nbsp;<c:VCPL_PostRecordTypeSelection recordTypeName="Post Kit" recordTypeId="0126A000000JMHaQAO"/>
+    </div>
+    </div>
+    
+    <br/>
+    <br/>
+</aura:component>

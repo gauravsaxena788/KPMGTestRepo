@@ -1,0 +1,101 @@
+<aura:component controller="QuoteCloneHelper" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global" >
+    
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="qtn" type="String" default="" />
+    <aura:attribute name="accId" type="String" default="" />
+    <aura:attribute name="message" type="String" default="" />
+    
+    <aura:attribute name="accInfo" type="account"/>
+    <aura:attribute name="accountOptions" type="list" />
+    <aura:attribute name="oppOptions" type="list" />
+    
+    <aura:attribute name="qtname" type="String" />
+        <aura:attribute name="accid1" type="String"/>
+
+    <aura:attribute name="accname" type="String"/>
+    <aura:attribute name="oppname" type="String" />
+    <aura:attribute name="cnvalidfrom" type="Date" />
+    <aura:attribute name="cnvalidtill" type="Date" />
+    <aura:attribute name="qtvalidtill" type="Date" />
+    
+    <aura:attribute Name="selItem" type="object"  access="public" /> 
+    <aura:attribute Name="selItem1" type="object"  access="public" />
+    
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <div class="slds-modal_medium" style="height:50%;padding-top:100px;" id="msgdiv">            
+        <center><ui:outputText value="{!v.message}" class="slds-text-color_error" /></center>
+    </div>
+    <div class="slds-modal_medium" style="height:500px;max-height:500px;" id="quoteclone">            
+        <center><h1>Enter Quote details:</h1></center>
+        <lightning:layout multipleRows="true">                
+            <lightning:layoutItem padding="around-large" size="2" smallDeviceSize="12" mediumDeviceSize="2">                                                
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="8" smallDeviceSize="12" mediumDeviceSize="8">
+                <center><label>Quote Name </label></center>
+                <ui:inputText aura:id="qotname" value="{!v.qtname}"/>
+            </lightning:layoutItem>            
+            <lightning:layoutItem padding="around-large" size="2" smallDeviceSize="12" mediumDeviceSize="2">                              
+            </lightning:layoutItem>            
+        </lightning:layout>
+        
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">                    
+                <label style="margin-bottom:-20px;">Account Name</label>
+                <lightning:select name="AccountId" aura:id="AccountId" onchange="{!c.onAccountchange}" class="myselect">
+                    <aura:iteration items="{!v.accountOptions}" var="a" indexVar="key">
+                        <option value="{!a.key}" text="{!a.value}"></option>
+                    </aura:iteration>
+                </lightning:select>                                
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">                    
+                <label>Opportunity Name</label>
+                <lightning:select aura:id="OpportunityId" >
+                    <aura:iteration items="{!v.oppOptions}" var="a" indexVar="key">
+                        <option value="{!a.key}" text="{!a.value}"></option>
+                    </aura:iteration>
+                </lightning:select>               
+            </lightning:layoutItem>
+            
+        </lightning:layout>
+        
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="around-large" size="4" smallDeviceSize="12" mediumDeviceSize="4">
+                <center><label>Contract Valid From </label></center>
+                <ui:inputDate aura:id="convalidfrom" value="{!v.cnvalidfrom}" displayDatePicker="true" format="dd/M/yyyy" />
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="4" smallDeviceSize="12" mediumDeviceSize="4" >
+                <center><label>Contract Valid Till </label></center>
+                <ui:inputDate aura:id="convalidtill" value="{!v.cnvalidtill}" displayDatePicker="true" format="dd/M/yyyy" />
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="4" smallDeviceSize="12" mediumDeviceSize="4" >
+                <center><label>Quote Valid Till </label></center>
+                <ui:inputDate aura:id="qotvalidtill" value="{!v.qtvalidtill}" displayDatePicker="true" format="dd/M/yyyy" />
+            </lightning:layoutItem>
+        </lightning:layout>
+        
+        <br/><br/>
+        
+        <center>
+            <lightning:button variant="brand" label="Continue" title="Continue" onclick="{!c.myAction}"/>
+            <lightning:button variant="destructive" label="Cancel" title="Cancel" onclick="{!c.closeModal}"/>
+        </center>
+        
+    </div>
+</aura:component>

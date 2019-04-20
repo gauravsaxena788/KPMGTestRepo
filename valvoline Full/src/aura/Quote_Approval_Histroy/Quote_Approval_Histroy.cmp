@@ -1,0 +1,90 @@
+<aura:component controller="QuoteApprovalHelper" implements="flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	
+    <aura:attribute access="global" name="recordId" type="Id" />
+   
+    <aura:attribute name="rowIndex" type="String"/>
+    
+    <aura:attribute name="stepone" type="String" />
+   
+    <aura:attribute name="steptwo" type="String" />
+    <aura:attribute name="stepthree" type="String" />
+    <aura:attribute name="stepfour" type="String" />
+    <aura:attribute name="one" type="String" />
+    <aura:attribute name="two" type="String" />
+    <aura:attribute name="three" type="String" />
+    <aura:attribute name="four" type="String" />
+    
+	 <aura:attribute name="approvalone" type="String" />
+    <aura:attribute name="approvaltwo" type="String" />
+    <aura:attribute name="approvalthree" type="String" />
+    <aura:attribute name="approvalfour" type="String" />   
+    
+    <aura:attribute name="status" type="String" />
+    <aura:attribute name="status1" type="String" />
+ 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+   	<aura:if isTrue="{!(v.status == 'In Review')}"> 
+       <div >
+       <div aura:id="tbl" >
+       <table  class="slds-table slds-max-medium-table_stacked-horizontal slds-no-row-hover slds-table_col-bordered slds-table_bordered">
+            <thead>
+                 <tr >
+                    <th  scope = "col" colspan="2" style = "{font-size:20px; font-family: Arial, Helvetica, sans-serif;}" > <div class="slds-truncate"><b style ="font-size:20px;" >Approval Steps</b></div></th>
+                </tr>  
+                 <tr >
+                     <th scope="Col" > <div class="slds-truncate" ><center><b>Step Number</b></center></div></th>
+                	 <th scope="Col" > <div class="slds-truncate" ><center><b>Step Name</b></center></div></th>
+                     <th scope="Col"> <div class="slds-truncate"> <center><b>Assigned To </b></center></div></th>  
+                </tr>
+            </thead>
+           
+            <tbody >
+            <aura:if isTrue="{!(v.one == 1)}">    
+            <tr >
+                <th ><center>{!v.one}</center> </th> 
+                 <th ><center>{!v.approvalone} </center></th> 
+                    <th ><center>{!v.stepone}</center></th>
+               </tr>
+           </aura:if>
+                                     
+            <aura:if isTrue="{!(v.two == 2)}">
+              <tr>
+               <th ><center>{!v.two} </center></th> 
+                  <th ><center>{!v.approvaltwo}</center> </th> 
+               <th ><center>{!v.steptwo}</center></th>
+               </tr>  
+           </aura:if>
+            
+            <aura:if isTrue="{!(v.three == 3)}">
+            <tr >
+             <th><center>{!v.three}</center> </th> 
+                <th><center>{!v.approvalthree} </center></th> 
+               <th><center>{!v.stepthree}</center></th>
+            </tr> 
+            </aura:if>
+                 
+             
+            <aura:if isTrue="{!(v.four == 4)}">    
+            <tr>
+               <th> <center>{!v.four} </center></th>
+                <th><center> {!v.approvalfour}</center> </th>
+               <th><center>{!v.stepfour}</center></th>
+            </tr> 
+            </aura:if>
+            
+            </tbody>
+  		</table>
+       </div>
+  
+  </div>
+        
+         <aura:set attribute="else"> 
+             	<aura:if isTrue="{!(v.status1 == 'Rejected' || v.status1 == 'Draft' || v.status1 == 'Approved')}">
+             <div >
+             <center > <b style ="font-size:16px">No Active Approval Steps</b></center> 
+             </div>
+             </aura:if>
+             
+         </aura:set>
+    </aura:if>
+</aura:component>

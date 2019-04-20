@@ -1,0 +1,27 @@
+.THIS .leftPaddingClass {
+    padding-left: 2rem;
+}
+ 
+.THIS .pillSize{
+ width:100%;
+}
+
+.THIS .slds-form-element__label:before{
+     content:"*" ;
+     color:red   
+     }
+
+
+.THIS .slds-lookup__Custom{
+    background: white;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    z-index: 7000;
+    position: absolute;
+    width: 100%;
+    margin-top: 0.25rem;
+    padding: 0.25rem 0;
+    box-sizing: border-box;
+    font: 100% / 1.5 "Salesforce Sans", Arial, sans-serif;            
+    color: #16325c;
+}

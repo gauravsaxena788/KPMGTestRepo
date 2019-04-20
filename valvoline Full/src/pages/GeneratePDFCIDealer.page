@@ -1,0 +1,937 @@
+<apex:page showHeader="false" controller="VCPL_QuotePDFIDCustomerController"  sidebar="false" standardStylesheets="false" renderAs="pdf" applyHtmlTag="false">
+<head>
+    
+<style type="text/css">
+    table {
+        border-collapse: collapse;
+    }
+
+body {font-family: 'Arial';font-size:12pt;}
+
+    .headings{
+        color: black;
+        font-size:14pt;
+        font-weight:bold!important;
+        }
+    .texts{
+        color: #999999;
+        }
+        
+    .headerRow td{
+                   background-color: #F0F8E2;
+                   font-size: 16px;
+                    /*font-weight: bold;*/
+          }
+          .myCol{
+              border:solid 1px #000;
+              text-align:center;
+              
+          }
+        .myunderlinecss{
+        text-decoration: underline !important;
+        font-size:14px !important;
+        color:#020202 !important;
+        font-family: Arial Unicode MS;
+        }
+          
+</style>
+<style type="text/css" media="print">
+
+   @page {
+           size: A4 portrait;
+           padding-top: 70px;
+            @top-center {
+                   
+                   content: element(header);
+           } 
+       
+           
+           @bottom-left {
+                 content: element(footer);
+           }
+           
+           
+          
+           <apex:outputPanel layout="none" rendered="{!IF(quotestatus!='Approved',true,false)}">
+                background: url("{!$Resource.DraftImage}") no-repeat center center;
+           </apex:outputPanel> 
+        }
+        
+        
+        
+        
+         div.header {
+          padding: 10px;
+          position: running(header);
+       }
+       div.footer {
+        display: block;
+        margin-bottom: 80px !important;
+        color: gray;
+        font-size: 12px;
+        position: running(footer);
+      }
+  
+     .pagenumber:before {
+         content: counter(page);
+       }
+     .pagecount:before {
+         content: counter(pages);
+       }
+       .mylist{
+           padding-bottom:20px;
+       } 
+       .textransformclass{
+               text-transform: uppercase;
+       }
+       .changetext{
+        font-size: 1.875em;
+        color:blue;
+        }
+        .changetextheading{
+        font-size: 1.2em;
+        color:blue;
+        }
+</style>
+
+</head>
+
+<body class="watermark">
+
+ <div class="header">
+ <table width="100%">
+     <tr>
+         <td style="text-align:center;width=10%;valign:bottom;">
+             
+             <!--<img src="{!URLFOR($Resource.Logo_Valvoline,'Logo_Valvoline/Valvoline_Logo.jpg')}"  height="50px" width="50px" alt="Truck Oil" href="#" />-->
+             
+         </td>
+         <td style="text-align:center;width:100%;padding:5px;">
+             <div  class="textransformclass changetextheading" >
+                <center> <b class="changetext">{!CustomerIDname}</b></center>
+             </div>
+         </td>
+         <td style="width=10%;valign:bottom;text-align:right;" >
+             
+             <!--<img src="{!URLFOR($Resource.Logo_Valvoline,'Logo_Valvoline/Cummins_Logo.PNG')}" height="50px" width="50px" alt="Truck Oil" href="#" />-->
+             
+         </td>
+     </tr>
+     <tr>
+         <td colspan="3">
+             <hr style="border: 0; background:red; margin:0; height: 3px"/>
+             <hr style="border: 0; background:rgb(0,97,186); margin:0; height: 5px; margin-top: 3px;"/>
+         </td>
+     </tr>
+     </table>
+ </div>
+
+<apex:form id="formid" >
+   
+    <div style="font-style:italic;">
+        Ref – {!quotenumber}<br/> 
+        Date: {!DAY(TODAY())}/{!MONTH(TODAY())}/{!YEAR(TODAY())} 
+    </div><br/>
+    
+    <img src="{!URLFOR($Resource.Logo_Valvoline,'Logo_Valvoline/truckandoilID.png')}" alt="Truck Oil" href="#" />
+    
+    <div style="text-align:center;padding:40px;border:5px solid black;">
+        <h3>{!CustomerIDname}</h3>
+        <h3>{!quotename}</h3>
+        <h3>For</h3>
+        <h3>{!accountname}</h3>
+    </div>
+    <br/>
+    <p style="font-style:bold;">
+    
+    To, <br/>
+      <p style="margin-left:10px; border:1px solid gray;width:400px;padding:5px;">
+        {!customername} <br/>
+        {!customerdesignation} <br/>
+        {!accountname}<br/>
+        {!customeraddress} <br/>
+        {!customeremail}<apex:outputText rendered="{!IF((customerphone != null && customerphone != ''),true,false)}" value=" ,Phone - {!customerphone}"/>            
+      </p>  
+    
+    From, <br/>
+      <table border="0" width="100%">
+        <tr>
+           <td width="50%">
+              <p style="margin-left:10px; border:1px solid gray;width:300px;padding:5px;font-size:12px;">
+                {!tbmname} <br/>
+                {!tbmdesignation} <br/>
+                {!CustomerIDname} <br/>
+                {!tbmemail}<apex:outputText rendered="{!IF((tbmphone!= null && tbmphone != ''),true,false)}" value=" ,Phone - {!tbmphone}"/>
+              </p>
+           </td>
+           <td width="50%">
+              <p style="margin-left:10px; border:1px solid gray;width:300px;padding:5px;font-size:12px;">
+                {!managername} <br/>
+                {!managerdesignation} <br/>
+                 <br/>
+                {!manageremail} <apex:outputText rendered="{!IF((managerphone != null && managerphone != ''),true,false)}" value=" ,Phone - {!managerphone}"/> 
+              </p>
+           </td>
+        </tr>  
+      </table>   
+    </p>
+    
+     <div class="footer" style="padding-bottom:50px;">
+     <center>
+         {!CustomerIDname} <br/>
+         {!CIDUserAdd}<br/>&nbsp;<br/>&nbsp;
+     </center>
+ </div>
+    <div style="page-break-before:always;" >
+    
+        Respected Sir <br/><br/>Greetings from <b class="textransformclass">{!CustomerIDname}</b><br/><br/> 
+        <p>We thank your goodself for courtesies extended to us during our previous meetings and rounds of discussions.
+         With reference to the discussions, we are looking forward to work with your esteemed organization, 
+         offering the best prices for the requirement of High Quality Lubricants of Valvoline Cummins Brand, for the afore mentioned project site.
+        </p>   
+        <p>In India, the confidence demonstrated by various other organization in the Construction, Mining &amp; Industrial Segment had made Valvoline
+         becoming the Fastest growing Lubricants Company in India and 2nd largest foreign brand in aftermarket in INDIA. See the annexure for a 
+         glimpse of Key accounts who rely on Valvoline Cummins Lubricants in India.
+        </p>  
+        <p>Few key strengths of Valvoline Cummins are as follows:</p>
+        <ol>
+         <li> 
+             Capacity Ahead of Demand: Valvoline has a state of the art blending plant with 100% computer controlled production facility at Ambernath, Mumbai with an installed capacity of 120 ML/annum capable of meeting any current &amp; future lubricants demands.
+         </li>
+         <li>       
+             Distribution Network: Valvoline has widest distribution network capabilities in the country among foreign brands with 32 Depots, 400 plus distributors &amp; 40,000 plus retailers to service customers in any part of the country and minimize their equipment down time.
+         </li>
+         <li>       
+             Research &amp; Development Lab:  The well equipped laboratory at the plant in Mumbai which can be jointly utilized for any new product development, improving value added services to the customers like ODI improvement, field support &amp; analysis. Valvoline can also provide training support to customers and channel partners on various aspects of Lubricants.
+         </li>
+         <li>      
+             Proven OEM business expertise: Valvoline has a very strong Genuine oil Tie -up with prestigious OEM customers like Volvo Eicher, Tata Motors Ltd, Mahindra &amp; Mahindra, International Tractor Ltd, AMW, Elgi, Liu Gong, Terex, Ajax Fori etc. for factory fill or/and aftermarket which demonstrates the credibility in managing large and complex businesses. 
+         </li>
+         <li>       
+             Easy to do Business &amp; Transparency : All our stock points and factory are connected through SAP and thus giving real time sales data, transparency as billing executed through centralized order taking.
+         </li>
+         <li>       
+             Global Presence : Valvoline is the sixth largest lubricant oil company &amp; most enduring lubricant brand in the world. Valvoline global presence in more than 130 countries 
+        </li>
+        </ol>
+        <p>As per our discussion, please find enclosed the Most Competitive Best Price for Lubricants &amp; Grease for your requirement.</p> 
+        
+        <p>
+            Assuring you of our best services always, we look forward to an early response and long term business association.
+         </p>
+        
+        <p>
+            Our endeavor will not only sell the lubricants to you but also enhance your “peace of mind” by establishing us as a 
+            competent Lube solution provider. It can only be possible with cooperation and guidance from you and your team at the 
+            site and the office.
+        </p>  
+        <p>
+            Herewith the document, are the best and competitive pricing for lubricants offered from Valvoline Cummins, for kind 
+            perusal and needful action.
+        </p> 
+        <p>
+            Whatever your lubricants solutions need is, from engines to transmission, Valvoline assures the highest standards of performance and quality.
+        </p> 
+        
+        <p>
+            Valvoline Lubricant;s technology edge is reinforced by our patrons as well  as by the partnership with major the leading engine manufacturer in the 
+            world – Cummins Inc. Indeed since many OEM’s field Cummins engines, it gives us a unique opportunity to provide solutions to your most vital needs.
+            Our endeavor will not only sell the lubricants to you but also enhance your "peace of mind" by establishing us as a competent Lube solution provider. 
+            It can only be possible with cooperation and guidance from you and your team at the site and the office.
+        </p>
+        <p>
+            Herewith the document, are the best and competitive pricing for lubricants offered from Valvoline Cummins, for kind perusal and needful action.
+        </p>
+
+        <p style="font-style:underline;">
+            <h3>
+                {!industrysegmentheading}
+            </h3>
+            {!industrysegmentcontent}        
+        </p>
+       
+       
+        
+        <apex:variable var="imageVar" value="{!industrysegment}"/> <!-- -->
+        ​<apex:image url="{!URLFOR($Resource.IDimages, imageVar)}" alt="{!industrysegment}" height="400px" width="700px" style="padding-top:5px;" />
+        
+        <!---- image will be place here ---->
+        
+        <p style="page-break-before:always;" >
+        <h3 style="text-decoration:underline;">Commercial Offer</h3> 
+        </p>
+        <br/>
+        
+        <table style="border:collapsible" cellpadding="4" cellspacing="0" width="100%">
+          <tr class="headerRow">
+              <td class="myCol" width="5%">SL. No</td>
+              <td class="myCol" width="20%">Type of Oil</td>
+              <td class="myCol" width="20%">Product Name</td>
+             <!--<td class="myCol" width="10%">Code</td>-->
+              <td class="myCol" width="10%">Pack Size</td>
+              <td class="myCol" width="35%">Unit Price</td>
+          </tr>
+          <apex:variable value="{!1}" var="srNo"/>
+          <apex:repeat value="{!quoteLineItemList}" var="item">
+          <tr>
+              <td class="myCol" width="5%">{!srNo}</td>
+              <td class="myCol" width="10%">{!item.Product2.PH6_Qlikview__c}</td>
+              <td class="myCol" width="40%">{!item.Product2.Name}</td>
+              <!--<td class="myCol" width="5%">{!item.Product2.SKU_Id__c}</td>-->
+              <td class="myCol" width="10%">{!item.Pack_Size__c}</td>
+              <td class="myCol" width="30%">{!item.UnitPrice}</td>
+          </tr>
+          <apex:variable var="srNo" value="{!srNo+1}"/>
+          </apex:repeat>
+          
+      </table>
+        
+        <div style="page-break-before:always;" >
+        <h3 style="text-decoration:underline;">Commercial Terms &amp; Conditions</h3>        
+        <!--<p>
+        This document identifies the Terms and Conditions under which Valvoline Cummins Private 
+        Limited makes this service available to you.
+        </p>-->
+        <ul>
+            <!--<li class="mylist">
+                Confidentially: This proposal reveals very specific and highly preferred prices &amp; pricing strategy, especially offered for 
+                your organization. All the elements in this document are extremely confidential and require that the customer keeps 
+                the proposal in confidence in regard to third parties.
+            </li>-->
+            <li class="mylist">
+                Taxes : The prices quoted above are exclusive of GST and any other taxes like Entry tax, Octroi , LBDT etc.
+            </li>
+           <!-- <li class="mylist">
+                Material will be supplied directly from Valvoline Depot or Plant to your site. 
+            </li>-->
+            <li class="mylist">
+                Freight : 
+                <apex:outputPanel rendered="{!IF(deliveryterm=='Conditional MOQ based FOC', true, false)}">
+                  The freight charges, against the delivery of material,  will be waived off if the order size is for more than&nbsp; 
+                </apex:outputPanel>
+                <apex:outputPanel styleClass="myunderlinecss" rendered="{!IF(deliveryterm=='Conditional MOQ based FOC', true, false)}">
+                  <apex:outputText styleClass="myunderlinecss" value="{!moqvalue}"><!--1200 L or 900 KG or equivalent-->
+                      
+                  </apex:outputText>                  
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!IF(deliveryterm=='Conditional MOQ based FOC', true, false)}">
+                  Else the delivery freight charges are applicable at actuals.
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!IF(deliveryterm=='Conditional MOQ based FOC', false, true)}">
+                  <apex:outputText >The above quoted prices do not include freight charges. Freight will be charged extra, at actuals.</apex:outputText>
+                </apex:outputPanel>
+                <!--1200 L or 900 KG or equivalent--> 
+                
+            </li>
+            <li class="mylist">
+                Delivery Time : Delivery of order shall take upto&nbsp;
+                <apex:outputText value="{!deliverytime}" styleClass="myunderlinecss"/>
+                <!--{!deliverytime}--> 
+                following placement of order and its acceptance. Order acceptance is subject to clearance of credit outstanding or receipt of advance payment whichever is applicable. 
+            </li>
+            <li class="mylist">
+                Payment: We agree to offer to your esteemed organization a credit period&nbsp; 
+                <apex:outputText value="{!paymentterm}" styleClass="myunderlinecss"/>
+                <!--{!paymentterm}--> 
+                for processing the payments from the date of invoicing. 
+            </li>
+            <li class="mylist">
+                Quote Validity : The prices quoted above are valid for acceptance on or before&nbsp;
+                <apex:outputtext value="{0, date, dd'.'MMM'.'yyyy}" styleClass="myunderlinecss">
+                    <apex:param value="{!quotevalidtill}"></apex:param>
+                </apex:outputtext>.                
+            </li>    
+            <li class="mylist">
+                Contract Validity:  Once agreed upon, the prices quoted above will remain unchanged towards the supplies from 
+                
+                <apex:outputtext value="{0, date, dd'.'MMM'.'yyyy}" styleClass="myunderlinecss">
+                    <apex:param value="{!contractvalidfrom}"></apex:param>
+                </apex:outputtext> to 
+                <apex:outputtext value="{0, date, dd'.'MMM'.'yyyy}" styleClass="myunderlinecss">
+                    <apex:param value="{!contractvalidto}"></apex:param>
+                </apex:outputtext>
+                
+            </li>
+            <apex:outputPanel rendered="{!IF(pvclauseapplicable==true, true, false)}">
+            <li class="mylist" style="margin-top:-25px;">
+                Price Variation Clause : Prices quoted above are based on the current International crude prices, supplier’s current prices, other raw component base prices, international and local freight charges, policies , levies &amp; guidelines by Government of India, in calculating and ascertaining the rate of duty or other Government taxes. In the event of a change or fluctuation in any of such prices or rates, the above quoted prices shall be subject to revision.
+            </li>
+            </apex:outputPanel>
+        </ul>
+        <apex:outputPanel rendered="{!IF(othertermandcondition!='', true, false)}">
+            <h3 style="text-decoration:underline;">Other Terms &amp; Conditions</h3>        
+            <p>{!othertermandcondition}</p>
+        </apex:outputPanel>
+        </div>
+        
+        <apex:outputPanel rendered="{!IF((cashdiscountpolicy!='' || volumetricdiscount==true), true, false)}">
+        <div style="page-break-before:always;" >
+            <h3 style="text-decoration:underline;">Special Commercial Discount Offer</h3>
+            <apex:variable value="{!0}" var="index"/>
+            <apex:outputPanel rendered="{!IF(cashdiscountpolicy=='Discount Rates - For all Distributors (Non-Cummins)', true, false)}">
+            
+            <h4> <apex:variable value="{!index+1}" var="index"/> {!index}) {!cashdiscountpolicy}</h4><br/>
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+                <tr class="headerRow">
+                    <td width="50%" align="center">&nbsp;</td>
+                    <td width="50%" colspan="2" align="center">Mode of Payment</td>
+                </tr>
+                <tr class="headerRow">
+                    <td width="50%" align="center">Description</td>
+                    <td width="20%" align="center">Cheque</td>
+                    <td width="30%" align="center">Demand Draft / RTGS / Credit Note </td>
+                </tr>
+                <tr>
+                    <td> &nbsp; Advance Payment</td>
+                    <td align="center"> 2.00%</td>
+                    <td align="center"> 2.50%</td>
+                </tr>
+                <tr>
+                    <td>&nbsp; Payment with 7 days *</td>
+                    <td align="center"> 1.25%</td>
+                    <td align="center"> 1.50%</td>
+                </tr>
+                <tr>
+                    <td>&nbsp; Payment beyond 7 days and within 14 days *</td>
+                    <td align="center"> 0.50%</td>
+                    <td align="center"> 0.75%</td>
+                </tr>
+                <tr>
+                    <td>&nbsp; Payment Beyond 14 Days *</td>
+                    <td align="center"> NIL</td>
+                    <td align="center"> NIL</td>
+                </tr>
+                <tr>
+                    <td colspan="3"> 
+                        &nbsp; * Days to be counted from the billing date 
+                        <ul>
+                            <li>
+                                Instruments should be deposited on or before the due date of Credit so as to avail the Cash Discount.
+                            </li>
+                            <li>
+                                For the purpose of calculating on invoice CD, SAP entry date will be considered as the payment receipt date.
+                            </li>
+                            <li>
+                                However the final CD will be calculated on the basis of the actual credit date by bank, increased by grace period of “in-transit instrument” ranging from 1-3 working days subject to approval by respective BU heads.
+                            </li>
+                            <li>
+                                Further, if the last date of the CD slab is a bank holiday the same will be extended to the next working date.
+                            </li>
+                        </ul>                        
+                    </td>
+                </tr>
+            </table>
+            </apex:outputPanel>
+            
+            <!---------------------------------------------->
+            <apex:outputPanel rendered="{!IF(cashdiscountpolicy=='Discount Rates - For CIL Dealers', true, false)}">
+            
+            <h4> <apex:variable value="{!index+1}" var="index"/> {!index}) {!cashdiscountpolicy}</h4><br/>
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+                <tr class="headerRow">
+                    <td width="50%" align="center">&nbsp;</td>
+                    <td width="50%" colspan="2" align="center">Mode of Payment</td>
+                </tr>
+                <tr class="headerRow">
+                    <td width="50%" align="center">Payment Days</td>
+                    <td width="50%" align="center">Demand Draft / RTGS / Credit Note </td>
+                </tr>
+                <tr>
+                    <td align="center"> 0 - 3 Days</td>
+                    <td align="center"> 2.00%</td>
+                </tr>
+                <tr>
+                    <td align="center"> 4 - 7 Days</td>
+                    <td align="center"> 1.25%</td>
+                </tr>
+                <tr>
+                    <td align="center"> 8 - 14 Days</td>
+                    <td align="center"> 1.00%</td>
+                </tr>               
+            </table>
+            <p>* Cheque realization date in bank will be considered as payment date for CD.</p>
+            </apex:outputPanel>
+            <!---------------------------->
+            <apex:outputPanel rendered="{!IF(cashdiscountpolicy=='Discount Rates - For all direct customers (Excluding OEM)', true, false)}">
+            
+            <h4> <apex:variable value="{!index+1}" var="index"/> {!index}) {!cashdiscountpolicy}</h4><br/>
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+                <tr class="headerRow">
+                    <td width="50%" align="center">&nbsp;</td>
+                    <td width="50%" colspan="2" align="center">Mode of Payment</td>
+                </tr>
+                <tr class="headerRow">
+                    <td width="40%" align="center">Description</td>
+                    <td widht="20%" align="center">Cheque</td>
+                    <td width="40%" align="center">Demand Draft / RTGS / Credit Note </td>
+                </tr>
+                <tr>
+                    <td align="center">Advance Payment</td>
+                    <td align="center"> 2.00%</td>
+                    <td align="center"> 2.50%</td>
+                </tr>                               
+            </table>
+            <p>* Cheque realization date in bank will be considered as payment date for CD.</p>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!IF(volumetricdiscount==true, true, false)}">
+           
+            <h4> <apex:variable value="{!index+1}" var="index"/> {!index}) Volumetric Discount</h4>
+            <p>With the company of your repute and scale, we are obliged and eager to offer a special volume discount scheme based on the total volume takeoff in the span of defined Contract period of the business.</p>
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+              <tr class="headerRow">
+                  <td width="10%" align="center">Sr No</td>
+                  <td width="60%" align="center">Volume Purchase In 12 Months Period</td>
+                  <td width="30%" align="center">Cash Back (Per Litre)</td>
+              </tr>
+              <apex:variable value="{!1}" var="slNo"/>
+              <apex:repeat value="{!avdlineitemList}" var="items">
+              <tr>
+                  <td class="myCol" width="10%" align="center">{!slNo}</td>
+                  <td class="myCol" width="60%" align="center">{!items.Volume_From__c}KL To {!items.Volume_To__c}KL</td>
+                  <td class="myCol" width="30%" align="center">RS {!items.Slab_Discount__c}</td>
+              </tr>
+              <apex:variable var="slNo" value="{!slNo+1}"/>
+              </apex:repeat>
+            </table>
+            <p>* The remittance will be through a credit note, which will be assessed after the closure of the contract period, subject to condition that the party has no outstanding dues</p>
+            <!--<p>* The discount net payment will be done through a credit note at the end of the year on clearance of all payment/tax etc liabilities</p>-->
+            </apex:outputPanel>            
+            
+        </div>
+        </apex:outputPanel>
+        
+        <div style="page-break-before:always;" >
+            <!--<p>
+                For more details about our company, products and services, please visit http://www.Valvolinecummins.com 
+            </p>-->
+            <p>
+                Hope we have done best to be in line with your requirements &amp; requesting your goodself to favor us with your valued Rate Contract at the earliest.
+            </p>
+            <p>
+                Thanking you once again and assuring our best services at all the times.
+            </p>
+        </div>
+        <br/><br/>
+        <table border="0" width="100%">
+            <tr>
+                <td width="50%">For</td>
+                <td width="50%">For</td>
+            </tr>
+            <tr>
+                <td><br/></td>
+                <td><br/></td>
+            </tr>
+            <tr>
+                <td width="50%" class="textransformclass">{!CustomerIDname}</td>
+                <td width="50%"> {!accountname} </td>
+            </tr>
+            <tr>
+                <td width="50%">&nbsp;</td>
+                <td width="50%">{!customername}</td>
+            </tr>
+            
+            <tr>
+                <td>{!regionalhead}</td>
+                <td>{!customerdesignation}<!--{!tbmdesignation}--></td>
+            </tr>
+                        
+        </table>
+                                    
+        </div>
+         
+       <!--------- Annexures Contents ---------->  
+         
+       <apex:outputPanel rendered="{!IF(annexure1==true, true, false)}">
+            
+        <div style="page-break-before:always;" >
+            <center><h1 style="text-decoration:underline;">Annexure A101</h1></center>
+            <h2>Technical-Value Added Services:</h2> 
+            
+            <table border="0" width="100%">
+                <tr><td width="80%">
+                <h4>POST – Progressive Oil Sampling Technique</h4> <br/>
+                POST is a value added services offered by Valvoline to their esteemed customers in Construction and Mining segment. 
+                It is an on-site service offering designed to help customers gain additional insight into equipment condition &amp; 
+                vital information to help successfully predict and protect catastrophic failure. <br/>
+                Progressive Oil Sampling Technique is this industry’s most acclaimed used oil testing module. 
+                Valvoline has three fully equipped laboratories across the country which uploads the results on web along with 
+                expert analysis and recommended actions within 24 hours of the receipt of the sample.
+                </td>
+                <td>
+                    <img src="{!URLFOR($Resource.images,'images/bottle.png')}" alt="Truck Oil" href="#" />
+                </td>
+                </tr>
+                
+            </table>
+            
+            <p>    
+                <img src="{!URLFOR($Resource.images,'images/customer.png')}" alt="Truck Oil" href="#" />
+            </p>
+            
+            <p>
+                In today’s highly competitive marketplace equipment-owners are looking for more tools to keep their equipment “ON THE JOB &amp; OUT OF THE SHOP”. Valvoline POST Program is a state of the art web based Predictive &amp; Preventive maintenance program designed to: 
+            </p>
+            <ul>
+                <li>
+                    DECREASE DOWNTIME, by detecting contaminants such as water, fuel, silica and glycol that can cause unscheduled downtime and costly repairs. 
+                </li>
+                <li>
+                    EXTEND COMPONENT LIFE by monitoring individual component wear such as engines, transmissions, differentials and hydraulics, helps you schedule your maintenance rather than your maintenance scheduling you. 
+                </li>
+                <li>
+                    OPTIMIZE OIL DRAIN INTERVALS, by carefully monitoring the fluid’s quality and condition, while applying this information to each fleets operating conditions and service intervals. 
+                </li>
+                <li>
+                    MONITOR FLUID QUALITY, through the on-going sampling of new fluids including oils, fuels and coolants to ensure integrity and serviceability. 
+                </li>
+            </ul>
+            <p>
+            When using Valvoline’s Progressive Oil analysis tests, you can be confident that the test results through POST are accurate, repeatable and performed to consistent methodologies and interpretation. All Valvoline analysis laboratories provide consistent, global support, testing and diagnostics interpretation.   
+            </p>
+        </div>
+        </apex:outputPanel>
+            
+            
+        <apex:outputPanel rendered="{!IF(annexure2==true, true, false)}">
+        <div style="page-break-before:always;" >
+            <center><h1 style="text-decoration:underline;">Annexure - A201</h1></center>
+            <p>
+                <img src="{!URLFOR($Resource.images,'images/Annexure-A201.png')}" alt="Annexure A201" href="#" height="500px" width="700px" />
+            </p>
+        </div>
+        </apex:outputPanel>
+        
+        <apex:outputPanel rendered="{!IF(annexure4==true, true, false)}">
+        <div style="page-break-before:always;" >
+            <center><h1 style="text-decoration:underline;">Annexure - B101</h1></center>
+            
+            <h3>Key Products Specifications</h3>
+            <p>
+             For your quick reference, below is the list of only few selected products to give you a glimpse of their 
+             Specifications, Recommendations, other important attributes. Valvoline offers a much wider range of products, 
+             other than the listed below, for application in construction and mining. Please feel free to connect to us, 
+             should you like to know more about any of the product listed below are other than these.
+            </p>
+            
+            <h4>Heavy Duty Diesel Engine Oil</h4>
+            <table border="1" width="100%">
+                <tr>
+                    <th width="30%" align="center">Product Name</th>
+                    <th width="70%" align="center">Details</th>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline Premium Blue<br/> Plus 15W40</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds API CI-4 Plus/SL, ACEA E7-08 , MB 228.3 , Mack EO-M Plus/EO-N , CES 20078 , Volvo VDS 3 , Caterpillar ECF-2 , MAN 3275 , Renault RLD-2 , MTU Type 2 Specifications
+                        </li>
+                        <li>
+                            Endorsed and recommended by Cummins Inc. for use in medium size &amp; heavy duty diesel engines for G-drive, off highway mining &amp; construction, marine, loco, city fleet and long haul on highway applications.
+                        </li>
+                        <li>
+                            Unique boosters with premium Group II base oil provide advanced soot control, cold start protection,  Valve train/pistons/ring/liner wear protection and temperature deposit control.
+                        </li>
+                        <li>
+                            Exclusively formulated and recommended for use in all models of naturally aspirated &amp; turbocharged (incl EGR) diesel engines manufactured by Cummins India Ltd.
+                        </li>
+                      </ul>  
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline Premium Blue<br/> 15W40 – CI-4</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds API CI-4 /SL, ACEA E7-08 , MB 228.3 , Mack EO-M Plus, CES 20078 , Volvo VDS 3 , Caterpillar ECF-2 , MAN 3275 &amp; 271, MTU Type 2, Global DHD1  Specifications
+                        </li>
+                        <li>
+                            Endorsed and recommended by Cummins Inc. for use in medium size &amp; heavy duty diesel engines for G-drive, off highway mining &amp; construction, marine, loco, city fleet and long haul on highway applications.
+                        </li>
+                        <li>
+                            Unique boosters with premium Group II base oil provide advanced soot control, cold start protection, Valve train/pistons/ring/liner wear protection and temperature deposit control.
+                        </li>
+                        <li>
+                            Exclusively formulated and recommended for use in all models of naturally aspirated &amp; turbocharged (incl EGR) diesel engines manufactured by Cummins India Ltd
+                        </li>
+                      </ul>
+                        
+                    </td>
+                </tr>
+            </table>
+            
+            <div style="page-break-before:always;" >
+            <h4>Gear Lubricants</h4>
+            <table border="1" width="100%">
+                <tr>
+                    <th width="30%" align="center">Product Name</th>
+                    <th width="70%" align="center">Details</th>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline Gear Gard Super <br/> EP 90/140</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds performance standards of API GL-5 , US MILITARY MIL-L-2105D
+                        </li>
+                        <li>
+                            Gear Gard Super 90 / 140 are thermally stable, superior sulphur-phosphorus extreme pressure gear lubricants with good anti-rust, anticorrosion and anti-oxidant characteristics. These are multipurpose heavy duty type gear lubricants specially formulated to comply with the stringent service requirements of commercial fleet, mechanical transmission, axles &amp; final drives operating under high speed, high load, high torque &amp; high horse power conditions
+                        </li>
+                        <li>
+                            recommended for use in conventional rear axles, limited slip rear axles &amp; transmissions of Vehicles requiring EP gear oils to GL-5 performance level
+                        </li>
+                      </ul>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline Gear Gard <br/> EP 80W-90</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds Performance standards of API GL-4, MIL-L-2105 , IS 1118 : 1992
+                        </li>
+                        <li>
+                            Its a multipurpose sulphur-phosphorus based extreme pressure superior quality heavy-duty multi grade gear oil. It has been specially formulated to meet severe duty operation in manual transmissions and heavily loaded gear systems such as hypoid, spiral bevel, worm gears, where an active GL-4 performance oils are required.
+                        </li>
+                        <li>
+                            Offers excellent performance under severe stress, heavy loads and low temperatures
+                        </li>
+                        <li>
+                            Fully inhibited with advanced additive chemistry to combat extreme pressure, wear, corrosion, oxidation and foaming
+                        </li>
+                        <li>
+                            Recommended for hypoid, spiral bevel or worm gear transmission system of cars, buses, trucks and tractors requiring EP type lubricants. It is also recommended for transmission, final drives and hydraulic system of Ford Tractors. Because of its viscometrics, the product can be used in areas where ambient temperatures vary widely
+                        </li>
+                      </ul>                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+            
+            <div style="page-break-before:always;" >
+            <h4>Hydraulic Oils</h4>
+            <table border="1" width="100%">
+                <tr>
+                    <th width="30%" align="center">Product Name</th>
+                    <th width="70%" align="center">Details</th>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline AW EHVI 46, 68 &amp; 100</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds performance standards of Dennison HF-0 , Eaton M-2950-S , Vickers I-286-S3 , DIN 51524 Part III , Cincinnati Milacron P-68, P-69, P-70 , Bosch Rexroth 90220 ,US Steel 127
+                        </li>
+                        <li>
+                            Valvoline AW EHVI Oils are formulated from hydrocracked base stocks with inherent oxidation and thermal stability. The products are further fortified with antioxidant, antirust, antifoam and antiwear additives, plus a special shear stable viscosity index improver which assists in maintaining viscosity under continuous use &amp; severity of operation
+                        </li>
+                        <li>
+                            Recommended for all hydraulic applications including critical systems in industrial and mobile equipment using high pressure vane, gear &amp; piston pumps. Valvoline AW EHVI Oils are suitable for use in various types of earthmoving equipment
+                        </li>
+                        <li>
+                            Recommended for all kinds of hydraulic systems &amp; equipments working onsite which are subjected to extreme temperature variation.
+                        </li>
+                        <li>
+                            Especially recommended for Tata Hitachi, L&amp;T-Komatsu &amp; JCB Excavators and other civil engineering, agriculture, marine, transport and other industrial application
+                        </li>
+                      </ul>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline HLP 32 / 46 / 68 SC</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds performance standards of Dennison HF-0 , Eaton M-2950-S , Vickers I-286-S3 , DIN 51524 Part III , Cincinnati Milacron P-68, P-69, P-70 , Bosch Rexroth 90220 ,US Steel 127 &amp; Confirms to NAS 6 cleanliness levels of NAS 1638
+                        </li>
+                        <li>
+                            Valvoline HLP 32 / 46 / 68 SC are specially formulated for use in hydraulic systems employing high performance pumps. They are specially filtered to minimize particle contamination to meet NAS 6 cleanliness levels of NAS 1638, which ensures trouble free function of servo valves.
+                        </li>
+                        <li>
+                            These products possess excellent oxidation, demulsibility characteristics &amp; high FZG rating. The products are further fortified with rust &amp; foam inhibitors
+                        </li>
+                        <li>
+                            Valvoline HLP 32 / 46 / 68 SC are recommended for use in hydraulic systems, high performance electro-hydraulic or numerically controlled systems, pumps &amp; circulation oiling systems &amp; enclosed gear boxes.
+                        </li>                        
+                      </ul>                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+            
+            
+            <div style="page-break-before:always;" >
+            <h4>Greases</h4>
+            <table border="1" width="100%">
+                <tr>
+                    <th width="30%" align="center">Product Name</th>
+                    <th width="70%" align="center">Details</th>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline Lithium MP Grease</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds Performance standards of IS 7623: 1993
+                        </li>
+                        <li>
+                            Its a lithium soap grease formulated to provide outstanding mechanical stability. It is a multi-purpose grease developed for use in a variety of operating conditions
+                        </li>
+                        <li>
+                            Provides excellent lubrication in both high and low temperature conditions. The product combines oxidation and corrosion inhibitors with high quality base stocks. It performs well under heavy load and high speed conditions. It maintains excellent pumpability at low temperatures with a drop point of 180ºC.
+                        </li>
+                        <li>
+                            Highly recommended for automotive, industrial, mining &amp; agriculture applications.
+                        </li>
+                      </ul>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline Lithium EP2 Grease</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds Performance standards of  IS 7623: 1993 (EP Type)
+                        </li>
+                        <li>
+                            A premium quality lithium soap grease containing an extreme pressure additive, formulated to provide outstanding mechanical stability &amp; EP characteristics under severe operating conditions. It is a multi-purpose grease developed for use in a variety of operating conditions.
+                        </li>
+                        <li>
+                            Provides excellent lubrication in both high and low temperature conditions. The product combines oxidation, anti-wear and corrosion inhibitors with high quality base stocks. It performs well under heavy load and high speed conditions
+                        </li>
+                        <li>
+                            Recommended for lubrication of both plain &amp; anti-friction bearings in a wide variety of applications such as automotive, earthmoving equipment, gear coupling, mining equipment &amp; other industrial applications.
+                        </li>                        
+                      </ul>                        
+                    </td>
+                </tr>
+            </table>
+            </div>
+            
+            <div style="page-break-before:always;" >
+            <h4>Radiator Coolant</h4>
+            <table border="1" width="100%">
+                <tr>
+                    <th width="30%" align="center">Product Name</th>
+                    <th width="70%" align="center">Details</th>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline Koolant Concentrate Heavy Duty</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds Performance standards of JIS K-2234-2006, Class 2, ASTM D3306 , SAE J1034, J814, J1941
+                        </li>
+                        <li>
+                            Incorporates state-of-the-art organic acid technology in an ethylene glycol base for protection of all cooling system metals including aluminum.
+                        </li>
+                        <li>
+                            It is a carboxylate formulation and does not contain phosphates, silicates, borates, nitrates, amines and nitrites. Its formulation meets the phosphate-free requirements of European automobile manufacturers and the silicate free requirement of Asian automobile manufacturers.
+                        </li>
+                        <li>
+                            When diluted 50% with water, Valvoline Koolant Concentrate Heavy Duty protects modern engine components from winter freezing and summer boiling. Valvoline Koolant Concentrate Heavy Duty is storage stable for up to five years as both a concentrate or diluted with water. It contains a high quality defoamer and will not harm gaskets, hoses,plastics or original vehicle paint
+                        </li>
+                        <li>
+                            Recommended for use in light and heavy duty diesel / gasoline engines for both mobile as well as stationary application
+                        </li>
+                        <li>
+                            Ideal for Protection against corrosion to cooling system metals including aluminium. Prevents hot whether boil-overs and cold weather freez-ups.
+                        </li>
+                        <li>
+                            Compatible with elastomers, gaskets, etc.
+                        </li>
+                      </ul>                        
+                    </td>
+                </tr>                
+            </table>
+            </div>
+            
+            <div style="page-break-before:always;">
+            <h4>Transmission Fluid</h4>
+            <table border="1" width="100%">
+                <tr>
+                    <th width="30%" align="center">Product Name</th>
+                    <th width="70%" align="center">Details</th>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Valvoline Drive Train Transmission Oil C4, SAE 10W &amp; SAE 30</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            Exceeds Performance Standards of C4 of Detroit Diesel, Allison Division of G.M., USA
+                        </li>
+                        <li>
+                            Blended from hydrocracked base stocks and carefully selected additive package to meet the requirements of General Motors Allison Division specifications for C4 heavy duty automatic and power shift transmission fluids. The products possess excellent oxidation stability, anti-wear, anti-rust &amp; anti-foam characteristics.
+                        </li>
+                        <li>
+                            Valvoline Drive Train Transmission Oil C4 fluids meet non-asbestos clutch friction tests &amp; fluoroelastomer seal compatibility. The fluids are expected to provide trouble-free service &amp; required drain period
+                        </li>
+                        <li>
+                            Recommended for use in all commercial power shift transmissions, &amp; automatic transmissions for on-highway &amp; off-highway service. Such hauling &amp; cycling transmissions find wide applications in off-highway equipments such as dumpers, scrapers, crawler tractors, excavators, showel loaders etc.
+                        </li>                        
+                      </ul>                        
+                    </td>
+                </tr>                
+            </table>
+            
+            <h4>Radiator Treatments</h4>
+            <table border="1" width="100%">
+                <tr>
+                    <th width="30%" align="center">Product Name</th>
+                    <th width="70%" align="center">Details</th>
+                </tr>
+                <tr>
+                    <td align="center" valign="center">Zerex Super Sealer</td>
+                    <td>
+                      <ul>  
+                        <li>
+                            The Zerex Super Sealer stops cooling system leaks and helps prevent future occurrences. The non-clogging formulation seals leaks where other products may fail.
+                        </li>
+                        <li>
+                            It is safe for all cooling system metals including aluminum. It is nonfoaming and can be used with all types of engine coolants.
+                        </li>
+                        <li>
+                            External coolant leaks pose environmental concerns when puddles of antifreeze are left behind in mining/construction sites. Internal coolant leaks (leaks of coolant into the combustion chamber and/or the engine oil) contribute to oil filter plugging and engine failure.
+                        </li>
+                        <li>
+                            Zerex Super Sealer is a proven technology that can provide safe, fast, and effective, repair of coolant leaks in heavy duty engines. Super Sealer is the only stop-leak product approved by Cummins for use in ISX / QSX 15 engines.
+                        </li>                        
+                      </ul>                        
+                    </td>
+                </tr>                
+            </table>
+            
+            </div>
+                       
+        </div>
+        </apex:outputPanel>
+        
+        <apex:outputPanel rendered="{!IF(annexure3==true, true, false)}">
+        <div style="page-break-before:always;" >
+            <center><h1 style="text-decoration:underline;">Annexure - A301</h1></center>
+            <h3>Valvoline’s Distribution Network </h3>
+            <p>
+            Valvoline has an established nationwide distribution network. 
+            Our lubricants are available from over 31 stock points spread all over India. 
+            The depots and warehouses are strategically located to ensure that the Genuine 
+            and High quality Lubricants are available, at the most competitive prices, 
+            in the shortest span of time , even in the most remote areas of work.
+            </p>
+            <p>
+                <img src="{!URLFOR($Resource.images,'images/Annexure-A301.png')}" alt="Annexure B101" href="#" height="500px" width="700px" />
+            </p>
+        </div>
+        </apex:outputPanel>
+    
+        
+        
+</apex:form>
+
+</body>  
+</apex:page>

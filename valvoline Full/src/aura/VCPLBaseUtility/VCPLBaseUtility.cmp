@@ -1,0 +1,13 @@
+<aura:component extensible="true">
+    <!-- Public Attributes -->
+    <aura:attribute name="isLoading" 
+                    type="Boolean"
+                    access="public"
+                    default="true" 
+                    description="A boolean variable to keep track of the components loading state." />
+    
+    <aura:attribute name="displayApplication" 
+                    type="Boolean" />
+    <!-- Markup -->
+    {!v.body}
+</aura:component>

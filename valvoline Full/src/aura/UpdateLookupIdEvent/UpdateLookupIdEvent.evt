@@ -1,0 +1,21 @@
+<aura:event type="COMPONENT" 
+			description="Update Lookup Id">
+			
+    <aura:attribute name="sObjectId" 
+    				type="Id"  
+    				required="true" 
+    				description="The Id of the selected SObject." />
+
+    <aura:attribute name="recordName" 
+    				type="string"  
+    				required="true" 
+    				description="The name of the selected SObject." />
+
+    <aura:attribute name="ObjectLabel"
+    				type="String" 
+    				description="Store name of object written in lable text"/>
+
+    <aura:attribute name="externalParameter" 
+    				type="Integer" 
+    				description="To pass any external Parameter of number type."/>
+</aura:event>

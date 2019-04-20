@@ -1,0 +1,22 @@
+.THIS {
+}
+.THIS .dropDownWidth{
+    width:250px;  
+    height:2px;              
+}
+
+.THIS select.select, .THIS select.select:focus{
+    background: transparent url(/customers/sfsites/c/resource/1532756085000/VCPL_Customer_Resource/icons/utility/chevrondown.svg) no-repeat right center !important;
+    background-size: 15px !important;
+    border: 0;
+    border-bottom: 1px solid #fff;
+    border-radius: 0;
+    -webkit-appearance: none;
+    min-width: 150px;
+    padding: 0px 10px;
+    color: #fff;
+    outline: none;
+}
+.THIS select.select option{
+    color: #000;
+}

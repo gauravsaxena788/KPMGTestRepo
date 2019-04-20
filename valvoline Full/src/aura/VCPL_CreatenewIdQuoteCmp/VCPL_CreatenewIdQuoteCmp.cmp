@@ -1,0 +1,19 @@
+<aura:component controller="VCPL_clsforIdCustomerQuote" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+    
+	<aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="qtn" type="String" default="" />
+    <aura:attribute name="accId" type="String" default="" />
+    <aura:attribute name="message" type="String" default="" />
+    <aura:attribute name="objWrapCase" type="VCPL_clsforIdCustomerQuote.Wrapobj"  />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    
+        <div class="slds-modal_medium" style="height:50%;text-align:center">
+            <ui:outputText value="{!v.message}" aura:id="strmessage" /><br/>
+        	<div class="slds-align_absolute-center">
+                <button aura:id="btn" class="slds-button slds-button_brand slds-align_absolute-Right" onclick="{!c.openNewQuote}" >Continue</button> 
+                <button aura:id="btntoclose" class="slds-button slds-button_brand slds-align_absolute-Right" onclick="{!c.Closeapp}" >Close</button> 
+            </div>        
+    	</div>
+</aura:component>

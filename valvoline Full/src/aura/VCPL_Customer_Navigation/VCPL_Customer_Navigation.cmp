@@ -1,0 +1,38 @@
+<aura:component controller = "VA_PostAccessCommunity" extends="forceCommunity:navigationMenuBase" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="userId" type="Id"/>
+    <aura:attribute name="wrapperList" type="object"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:registerEvent name="appEvent" 
+                        type="c:VA_RefreshComponent"/>
+
+    
+    <div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+       <nav class="navigationBar">    
+		<ul>
+			<li class="home">
+				<a href="https://vcplselfservice.force.com/customers/s/" class="dash_logo" ></a>
+			</li>
+            <li><a href="#" class="account" onclick="{!c.accountstatementgotoList}">Account Info</a></li>  
+            <li><a href="#" class="order" onclick="{!c.ordergotoList}">Order</a></li>  
+            <aura:iteration items="{!v.wrapperList.lstUser}" var="objUser">
+                 <aura:if isTrue="{!v.wrapperList.isrendered == true}" > 
+       				<li><a href="#" class="post" onclick="{!c.postgotoList}">POST</a></li> 
+                  </aura:if> 
+            </aura:iteration> 
+            <li><a target="_blank" class="product" href="https://www.valvoline.com/en-india/our-products" >Products</a></li>
+            <li><a target="_blank" class="solutions" href="https://www.valvoline.com/en-india/about-us/business-support">Solutions</a></li>       
+			<li><a target="_blank" class="promote" href="https://www.valvoline.com/en-india/about-us/all-valvoline-websites" >Promote</a></li>        
+
+			<!--<li>    
+				<a href="#" class="serviceRequest" onclick="{!c.ccmsgotoList}">    
+					Service Request  
+				</a>
+			</li>
+			<li><a href="#" onclick="{!c.PODgotoList}">POD</a></li>  
+			<li><a href="#" onclick="{!c.createVideosRecord}">Videos</a></li>-->    
+			
+		</ul>
+	</nav>
+   </div>
+</aura:component>

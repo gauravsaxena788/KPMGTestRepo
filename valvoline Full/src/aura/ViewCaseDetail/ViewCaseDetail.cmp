@@ -1,0 +1,17 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller = "DynamicObjectDetail" >
+	<aura:attribute name="sobj" type="sobject"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+	<aura:if isTrue="{!v.sobj.RecordType.DeveloperName == 'VA_Post_kit'}">	
+        <c:VCPL_ShowPostKitDetailPage objCase="{!v.sobj}"/> 
+	</aura:if> 
+    
+    <aura:if isTrue="{!v.sobj.RecordType.DeveloperName == 'VA_CCMS'}">
+        <c:VCPL_SHowDetailPage objCase="{!v.sobj}"/>  
+	</aura:if> 
+    
+	<aura:if isTrue="{!v.sobj.RecordType.DeveloperName == 'VA_Post'}">
+        <c:VCPL_ShowPostTestDetailPage objCase="{!v.sobj}"/>
+	</aura:if> 
+
+</aura:component>

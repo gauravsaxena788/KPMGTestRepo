@@ -1,0 +1,20 @@
+<aura:component implements="forceCommunity:themeLayout" >
+    <aura:attribute name="search" type="Aura.Component[]"/>
+    <aura:attribute name="sidebarFooter" type="Aura.Component[]"/>
+    <aura:attribute name="profileMenu" type="Aura.Component[]" required="false"/>
+    <div class="slds-grid slds-grid--align-left">
+        <!--<div class="slds-col">-->
+            <div class="slds-grid slds-grid--vertical">
+                <div class="slds-col">
+                    <c:VCPL_Customer_Navigation/>
+                </div>
+                
+            </div>
+        <!--</div>-->
+        <div class="slds-col content">
+            
+            <c:VCPL_Customer_Custom_Header profileMenu ="{!v.profileMenu}" search="{!v.search}"/>
+            <div class="slds-container_large container_align_center">{!v.body}</div>
+        </div>
+    </div>
+</aura:component>

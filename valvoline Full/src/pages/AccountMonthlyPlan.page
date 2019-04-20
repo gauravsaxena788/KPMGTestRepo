@@ -1,0 +1,361 @@
+<apex:page controller="AccountMonthlyPlanController" lightningStylesheets="true">
+ 
+   <style>
+    .fixed_header tbody{
+  display:block;
+  overflow:auto;
+  height:200px;
+  width:100%;
+}
+.fixed_header thead tr{
+  display:block;
+}
+        .header img {
+  float: left;
+  width: 80px;
+  height: 60px;
+  }
+  .sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 102px;
+}
+ 
+.scroll {
+  border: 0;
+  border-collapse: collapse;
+}
+
+.scroll tr {
+  display: flex;
+}
+
+.scroll td {
+  padding: 3px;
+  flex: 1 auto;
+  border: 1px solid #aaa;
+  width: 1px;
+  word-wrap: break;
+}
+
+.scroll thead tr:after {
+  content: '';
+  overflow-y: scroll;
+  visibility: hidden;
+  height: 0;
+}
+
+.scroll thead th {
+  flex: 1 auto;
+  display: block;
+  border: 1px solid #000;
+}
+
+.scroll tbody {
+  display: block;
+  width: 100%;
+  overflow-y: auto;
+  height: 300px;
+}
+
+        #wstatus {
+        
+        }
+
+.mybtncss:hover{
+background-color:#005fb2 !important;
+border-color: #005fb2 !important;
+}
+
+.mybtncss2:hover{
+background-color:#870500 !important;
+border-color: #870500 !important;
+}
+
+.myaddbtncss:hover{
+background-color:#006400 !important;
+border-color: #006400 !important;
+}        
+
+    </style>
+    <!--<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.top-container {
+  background-color: #f1f1f1;
+  padding: 30px;
+  text-align: center;
+}
+ .header img {
+  float: left;
+  width: 80px;
+  height: 60px;
+  }
+ 
+
+.header {
+  padding: 10px 16px;
+  background: #555;
+  color: #f1f1f1;
+}
+
+.content {
+  padding: 16px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 102px;
+}
+</style>
+</head>-->
+
+    
+    
+    <apex:form id="myfrm">
+        <apex:slds >
+        <apex:actionFunction action="{!getAllAccounts}" name="callAccounts" reRender="myfrm" status="wstatus"/>
+        <apex:pageMessages />
+    <div class="header">
+  <img src="{!URLFOR($Resource.Valvoline,'images/Valvoline_logo.png')}" alt="logo" />
+        <h1 style="font-weight:bold;font-size:18px;"><center>Monthly Plan</center></h1> 
+</div>
+        <br/>
+        <br/>
+       <!-- <div class="header">
+     <img src="{!URLFOR($Resource.Valvoline,'images/Valvoline_logo.png')}" style="margin-left:-70px;height:20px;width:20px" alt="Truck Oil" href="#" />
+ 
+        <h1 style="font-weight:bold;font-size:18px;"><center>Monthly Plan</center></h1><br/>
+</div>-->      
+<apex:pageBlock >
+          
+            <div class="myheadercss" data-aura-class="cAddProduct">
+                <apex:pageBlockSection columns="4">
+                    <apex:outputText label="TBM Name:" value="{!currentUserName}"/>
+                    <apex:outputText label="Financial Year:" value="{!fysYear}"/>          
+                </apex:pageBlockSection>            
+            </div>
+        </apex:pageBlock>
+        
+        <apex:pageBlock >
+        
+            <apex:variable value="{!1}" var="srNo"/>
+            <apex:outputPanel rendered="{!IF(wrapaccountList.size>0,true,false)}">
+                <apex:variable var="atp" value="{!0.00}"/>
+                <apex:variable var="lyva" value="{!0.00}"/>
+                <apex:variable var="lyvl" value="{!0.00}"/>
+                <apex:variable var="apa" value="{!0.00}"/>
+                <apex:variable var="apl" value="{!0.00}"/>
+          <apex:outputPanel layout="block" style="overflow:auto;height:350px;">
+          
+              
+               <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+               <!--<div class="slds">
+    <div class="slds-table--header-fixed_container" style="height:450px;">
+        <div class="slds-scrollable_y" style="height:100%;">
+                <table class="slds-table slds-table_bordered slds-table--header-fixed">-->
+                    <thead>
+                        <tr class="slds-text-title_caps">
+                            <th scope="col">
+                                <div class="slds-truncate" title="S No.">S No.</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Account Name">Account Name</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Ship to Code">Ship-to-Code</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="City">City</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Account Total Potential(Vol In KL)">Account Total Potential(Vol In KL)</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="LY Volume(AUS)">LY Volume(AUS)</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="LY Volume(Lubes)">LY Volume(Lubes)</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Annual Plan(AUS)">Annual Plan(AUS)</div>
+                            </th>
+                          <th scope="col">
+                                <div class="slds-truncate" title="Annual Plan(AUS)">Annual Plan(LUBES)</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>           
+                        <apex:repeat value="{!wrapaccountList}" var="a">
+                            <tr>
+                                <td style="text-align: center;">
+                                    <div class="slds-truncate">
+                                        {!srNo}
+                                    </div>
+                                </td>
+                                <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> <a href="/{!a.accList.Id}" target="_blank">{!a.accList.Name} </a> </b></div></td>
+                                <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!a.accList.Ship_to_Code__c} </b></div></td>
+                                <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!a.accList.ShippingCity} </b></div></td>
+                                <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!a.accList.Total_Account_Potential__c} </b>
+                                    <apex:variable var="atp" value="{!atp+a.accList.Total_Account_Potential__c}"/></div></td>
+                                <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!a.accList.LY_AUS_Vol__c} </b>
+                                    <apex:variable var="lyva" value="{!lyva+a.accList.LY_AUS_Vol__c}"/></div></td>
+                                <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> {!a.accList.LY_Lubes_Vol__c } </b>
+                                    <apex:variable var="lyvl" value="{!lyvl+a.accList.LY_Lubes_Vol__c}"/></div></td>
+                                <td style="text-align: center;"><div class="slds-truncate">
+                                    <apex:inputText value="{!a.annualplanAUS}" id="apaus" style="width:120px;height:30px;text-align:center;">
+                                        <apex:actionSupport event="onchange" status="wstatus" reRender="totalapa"/>
+                                    </apex:inputText>
+                                    <apex:variable var="apa" value="{!apa+a.annualplanAUS}"/>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;"><div class="slds-truncate " >
+                                    <apex:inputText value="{!a.annualplanLUB}" id="aplub" style="width:120px;height:30px;text-align:center;">
+                                        <apex:actionSupport event="onchange" status="wstatus" reRender="totalapl"/> 
+                                    </apex:inputText>
+                                    <apex:variable var="apl" value="{!apl+a.annualplanLUB}"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <apex:variable value="{!srNo+1}" var="srNo"/>          
+                        </apex:repeat>
+                        <tr style="background-color:#f2f4f7;border=1px;">
+                            <td colspan="4" style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><span style="font-size:12px;"><b>TOTAL</b></span></div></td>
+                            
+                            <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                                <apex:outputText value="{0, number, 0.00}">
+                                    <apex:param value="{!atp}" />
+                                </apex:outputText>                        
+                                </b>
+                                </div></td>
+                            <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                                <apex:outputText value="{0, number, 0.00}">
+                                    <apex:param value="{!lyva}" />
+                                </apex:outputText>                        
+                                </b>
+                                </div></td>
+                            <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                                <apex:outputText value="{0, number, 0.00}">
+                                    <apex:param value="{!lyvl}" />
+                                </apex:outputText>                        
+                                </b>
+                                </div></td>
+                            <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                                <apex:outputPanel id="totalapa">
+                                <apex:outputText value="{0, number, 0.00}">
+                                    <apex:param value="{!apa}" />
+                                </apex:outputText>
+                                </apex:outputPanel>                        
+                                </b>
+                                </div></td>
+                            <td style="text-align: center;"><div class="slds-truncate slds-text-align_centre" ><b> 
+                                <apex:outputPanel id="totalapl">
+                                <apex:outputText value="{0, number, 0.00}">
+                                    <apex:param value="{!apl}" />
+                                </apex:outputText>
+                                </apex:outputPanel>                        
+                                </b>
+                                </div></td>                   
+                            
+                        </tr>     
+                        
+                        
+                    </tbody>
+               </table>
+             
+                
+                
+                
+             </apex:outputPanel>  
+           </apex:outputPanel>  
+            <apex:outputPanel rendered="{!IF(wrapaccountList.size>0,false,true)}">
+                <center>No record found</center>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!IF(wrapaccountList.size>0,true,false)}">
+                <br/>
+                <center class="cAddProduct" data-aura-class="cAddProduct">
+                    <apex:commandButton value="Save" action="{!updateMonthlyOpportunity}" status="wstatus" reRender="myfrm" styleClass="mybtncss" style="background-color:#0070d2;border:1px solid #0070d2;color:white;"/>
+                    <apex:commandButton value="Close" onclick="closeWin();return false;" styleClass="mybtncss2" style="background-color:#c23934;border:1px solid #c23934;color:white;"/>
+                </center>
+            </apex:outputPanel>
+            
+        </apex:pageBlock>
+        </apex:slds>
+    </apex:form>
+    
+    <div id="scroll"/>
+    <!--<div id="spinner">
+        <p align="center" style='{font-family:"Arial", Helvetica, sans-serif; font-size:20px;}; padding-top:5px;'><apex:image value="/img/loading.gif"/>&nbsp;Please wait</p>
+    </div>-->
+    
+    <apex:outputpanel id="mstatus">
+        <apex:actionstatus id="wstatus">
+            <apex:facet name="start">
+                <div class="waitingSearchDiv" id="el_loading" style="width:100%;height:100%;background-color: #ECEBEA;opacity:0.65;">
+                    <div class="waitingHolder">
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">Loading...</span>
+                    </div>
+                </div>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:outputpanel>
+    
+    <script type="text/javascript">
+   function closeSpinner()
+    {
+        document.getElementById('opaque').style.display='none';
+        var popUp = document.getElementById('spinner');
+        
+        popUp.style.display = 'none';
+    }
+    function showSpinner()
+    {
+        document.getElementById('opaque').style.display='block';
+        var popUp = document.getElementById('spinner');
+        
+        popUp.style.display = 'block';
+        
+        setTimeout(function () {
+            closeSpinner()
+        }, 3000);
+        
+    }
+    function closeWin()
+    {
+        if(confirm('Are you sure want to close this page?'))
+        {
+            window.close();
+        }
+    }
+    window.onscroll = function() {myFunction()};
+
+var header = document.getElementById("myHeader");
+var sticky = header.offsetTop;
+
+function myFunction() {
+  if (window.pageYOffset > sticky) {
+    header.classList.add("sticky");
+  } else {
+    header.classList.remove("sticky");
+  }
+}
+    
+    
+    </script>
+</apex:page>

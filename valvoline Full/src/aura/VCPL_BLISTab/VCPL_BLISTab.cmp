@@ -1,0 +1,16 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <div class="slds-m-around--medium">
+        <div class="slds-tabs--scoped">
+            <ul class="slds-tabs--scoped__nav" role="tablist">
+                <li aura:id="BLISGROUP" class="slds-tabs--scoped__item slds-text-title--caps slds-active customClassForTab" title="Group wise" role="presentation" ><a class="slds-tabs--scoped__link" href="javascript:void(0);" onclick="{!c.groupTab}" role="tab" tabindex="0" aria-selected="false" aria-controls="tab-default-1" id="group_linking">Group Wise </a></li>
+                <li aura:id="BLISBRANCH" class="slds-tabs--scoped__item slds-text-title--caps customClassForTab" title="Dealer wise" role="presentation"><a class="slds-tabs--scoped__link" href="javascript:void(0);" onclick="{!c.dealerTab}" role="tab" tabindex="-1" aria-selected="true" aria-controls="tab-default-2" id="dealer_linking">Dealer Wise</a></li>    
+            </ul>
+            <div name="tabdataName" aura:id="groupDataId" id="tab-default-1" class="slds-tabs--scoped__content slds-show customClassForTabData" role="tabpanel" aria-labelledby="group_linking">
+                <c:VCPL_BLIS />
+            </div>
+            <div name="tabdataName" aura:id="dealerDataId" id="tab-default-2" class="slds-tabs--scoped__content slds-hide customClassForTabData" role="tabpanel" aria-labelledby="dealer_linking">
+                <c:VCPL_AVDQVDSecondarySales />
+            </div>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,122 @@
+<aura:component controller="VA_editPostCasePageController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    
+    <aura:attribute name="recordId" type="String" description="This Attribute is storing case record Id" />
+    
+    <aura:attribute name="selectedLookUpRecord" type="Account" default="{}" />
+    
+    <aura:attribute name="selectedProjectrecord" type="VA_Project__c" default="{}" />
+    
+    <aura:attribute name="selectedProductrecord" type="Product2" description="For Storing Product Record" />
+    
+    <aura:attribute name="selectedProductCategoryRecord" type="VA_Product_Category__c" description="For Storing Product Category Record" />
+    
+    <aura:attribute name="selectedLookUpContact" type="Contact" default="{}" />
+    
+    <aura:attribute name="recTypeId" type="String" />
+    
+    <aura:attribute name="isAdditionalOtherReason" type="boolean" default="false" />
+    
+    <aura:attribute name="isProject" type="boolean" default="false" />
+    
+    <aura:attribute name="isComplaint" type="boolean" default="false" />
+    
+    <aura:attribute name="isDesktop" type="boolean" default="false" />
+    
+    <aura:registerEvent name="ClosePostTestEvent" type="c:ClosePostKitEvent" />
+    
+    <aura:attribute name="caseObj" type="Case" default="{'sobjectType': 'Case'}" description="" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <div aura:id="EDIT_CASE_PAGE_MOBILE" id="EDIT_CASE_PAGE_MOBILE" style="display:none;">
+        <lightning:spinner variant="brand" size="large" />
+    </div>
+    
+    <div class="mainWrap">
+        <ui:scrollerWrapper class="sWrapTest">
+            <div class="container">
+                <fieldset class="slds-form--compound">
+                    <div class="slds-m-bottom--medium"/>
+                    <div class="slds-form-element__group">
+                        <div class="slds-grid slds-wrap slds-gutters formelem-pdng">
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <div class="slds-page-header slds-text-heading--label">
+                                    <legend class="slds-form-element__label slds-text-title--caps">Case Information</legend>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputSelect class="slds-input" aura:id="lab" labelClass="slds-form-element__label" value="{!v.caseObj.VA1_Lab__c}" label="Lab" required="true" disabled="true" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputSelect class="slds-input" aura:id="reqPurpose" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Request_Purpose__c}" label="Request Purpose" change="{!c.setReqPurpose}" required="true" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <c:VA_CustomLookupParent aura:id="lookupComp" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.selectedLookUpRecord}" label="Account" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <c:VA_CustomLookupParent aura:id="lookupContact" objectAPIName="contact" IconName="standard:contact" selectedRecord="{!v.selectedLookUpContact}" label="Contact" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputSelect aura:id="sampleType" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Type_Of_Sample__c}" label="Type Of Sample" required="true" change="{!c.onSampleTypeChange}" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputCheckBox class="" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Additive_Elements_Testing_Required__c}" label="Additive Elements Testing Required" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1" aura:id="AdditionalCommentsDiv">
+                                <ui:inputText aura:id="AdditionalComments" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Additional_Comments__c}" label="Additional Comments" required="true" updateOn="keyup" keyup="{!c.removeAdditionalCommentError}" />
+                            </div>
+                            <div aura:id="projectdiv" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <c:VA_CustomLookupParent aura:id="lookupCompProject" objectAPIName="VA_Project__c" IconName="standard:channel_program_levels" recordId="{!v.selectedLookUpRecord.Id}" selectedRecord="{!v.selectedProjectrecord}" label="Project" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1" aura:id="complaintDiv">
+                                <ui:inputText aura:id="complaint" class="slds-input" required="true" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Complaint_Number__c}" label="Complaint Number" updateOn="keyup" keyup="{!c.removeComplaintError}" />
+                            </div>
+                            <div aura:id="otherSampleDiv" class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputText aura:id="otherSampleType" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Other_Sample__c}" label="Other Sample" required="true" updateOn="keyup" keyup="{!c.removeOtherSampleTypeError}" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <div class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+                                    <legend class="slds-form-element__label slds-text-title--caps">Sample Details</legend>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <c:VA_CustomLookupParent aura:id="lookupCompProduct" objectAPIName="Product2" IconName="standard:product" selectedRecord="{!v.selectedProductrecord}" label="Product" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputText aura:id="engineMakeModelNo" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Engine_Make_Model__c}" label="Engine Make/Model" required="true" updateOn="keyup" keyup="{!c.removeEngineMakeModelNoError}" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <c:VA_CustomLookupParent aura:id="lookupCompProductCategory" objectAPIName="VA_Product_Category__c" IconName="standard:product_item" selectedRecord="{!v.selectedProductCategoryRecord}" label="Product Category" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputText aura:id="vehRegNo" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Veh_Reg_No__c}" label="Veh. Reg. No." required="true" updateOn="keyup" keyup="{!c.removeVehRegNoError}" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputText aura:id="engineSerialNo" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.Va_Engine_Serial_No__c}" label="Engine Serial No." required="true" updateOn="keyup" keyup="{!c.removeEngineSerialNoError}" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputDate aura:id="dateofSampleDrawn" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Date_of_Sample_Drawn__c}" label="Date of Sample Drawn" displayDatePicker="true" required="true" format="dd/MM/yyyy" change="{!c.removeDateofSampleDrawnError}"/>
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputSelect aura:id="totalEquipmentLife" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Total_Engine_Hours__c}" label="Total Equipment Life" required="true" change="{!c.removeTotalEquipmentLifeError}" />
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputNumber aura:id="hoursKMSeenByOil" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Hours_Km_seen_by_Oil__c}" label="Hours/Km seen by Oil" required="true" updateOn="keyup" keyup="{!c.removeHoursKMSeenByOilError}" format="0.00"/>
+                            </div>
+                            <div class="slds-col slds-form-element slds-large-size_1-of-2 slds-size_1-of-1">
+                                <ui:inputText aura:id="equipmentID" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Equipment_ID__c}" label="Equipment ID" required="true" updateOn="keyup" keyup="{!c.removeEquipmentIDError}" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </ui:scrollerWrapper>
+        <div style="height:80px;">
+            <div class="slds-docked-form-footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.saveData}" href="javascript:void(0);">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</aura:component>

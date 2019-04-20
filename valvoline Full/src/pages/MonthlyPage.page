@@ -1,0 +1,5 @@
+<apex:page >
+<script>
+window.open('/apex/MonthlyLatestEstimate');
+</script>
+</apex:page>

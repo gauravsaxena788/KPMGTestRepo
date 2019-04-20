@@ -1,0 +1,180 @@
+<aura:component controller="LookupSObjectController" access="PUBLIC">
+    
+    <!-- Attributes -->
+    <aura:attribute name="IdContact" 
+                    type="String"/>
+    
+    <aura:attribute name="Accountlookup" 
+                    type="String"/>
+    
+    <aura:attribute name="sObjectAPIName" 
+                    type="String" 
+                    required="true"
+                    description="The API name of the SObject to search"/>
+    
+    <aura:attribute name="label"
+                    type="String"
+                    required="true"
+                    description="The label to assign to the lookup, eg: Account"/>
+    
+    <aura:attribute name="pluralLabel"
+                    type="String" 
+                    required="true"
+                    description="The plural label to assign to the lookup, eg: Accounts"/>
+    
+    <aura:attribute name="listIconSVGPath"
+                    type="String" 
+                    default="/resource/SLDS001/assets/icons/custom-sprite/svg/symbols.svg#custom11"
+                    description="The static resource path to the svg icon to use."/>
+    
+    <aura:attribute name="listIconClass" 
+                    type="String" 
+                    default="slds-icon-custom-11"
+                    description="The SLDS class to use for the icon."/>
+    
+    <aura:attribute name="searchString" 
+                    type="String"   
+                    description="The search string to find."/>
+    
+    <aura:attribute name="matches" 
+                    type="Object[]" 
+                    description="The resulting matches returned by the Apex controller."/>
+    
+    <aura:attribute name="FilterCondition" 
+                    type="String" 
+                    description="Where condition in case of dependend loockup"/>
+    
+    <aura:attribute name="FilterName"
+                    type="string"/>
+	
+	<aura:attribute name="IconName"
+                    type="string"/>
+					
+	<aura:attribute name="isProcessing"
+                    type="boolean"/>
+    
+    <aura:attribute name="SelectedItemText" 
+                    type="String" 
+                    default="" 
+                    description="Set default selected item text in this attribute"/>
+    
+    <aura:attribute name="SelectedItemId" 
+                    type="String" 
+                    default="" 
+                    description="Set default selected item id in this attribute"/>
+    
+    <aura:attribute name="LookupDisabled" 
+                    type="Boolean" 
+                    description="If this property is ture then lookup contorl is disabled other wise lookup control is enabled"/>
+    
+    <aura:attribute name="IsClickOnSearch" 
+                    type="Boolean" 
+                    default="false"/>
+    
+    <aura:attribute name="isValid" 
+                    type="Boolean"
+                    default="true"/>
+    
+    <aura:attribute name="errorMessage" 
+                    type="String" 
+                    default="Please select this field"/>
+    
+    <aura:attribute name="listOfFieldsToBeQueried"
+                    type="String[]"/>
+    
+    <aura:attribute name="externalParameter" 
+                    type="Integer" 
+                    description="To pass any external Parameter of number type."/>
+    
+    <!-- Events -->
+    <aura:registerEvent name="updateLookupIdEvent" 
+                        type="c:UpdateLookupIdEvent"/>
+    
+    <aura:registerEvent name="clearLookupIdEvent" 
+                        type="c:clearLookupIdEvent"/>
+    
+    <!--Handler-->
+    <aura:handler name="init" 
+                  value="{!this}" 
+                  action="{!c.SetDefaultValue}" />
+    
+    <aura:method name="initMethod" 
+                 action="{!c.SetDefaultValue}" 
+                 access="PUBLIC"/>
+    
+    <!--Method-->
+    <aura:method name="ClearLookupControl" 
+                 action="{!c.clear}" 
+                 access="PUBLIC"/>
+    
+    <!-- Lookup Markup : See https://www.lightningdesignsystem.com/components/lookups -->
+    <div  aura:id="searchRes" class="slds-form-element slds-lookup">  
+        
+		<!-- This is the Input form markup -->
+		<div class="slds-form-element__control">
+			<div class="slds-input-has-icon slds-input-has-icon--right">
+			   
+				<div aura:id="lookupField"  class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" >
+					
+					<ui:inputText aura:id="lookup" 
+							  value="{!v.searchString}"
+							  disabled="{!v.LookupDisabled}" 
+							  class="{!if(v.isValid,'slds-input', 'slds-input error')}" 
+							  updateOn="keyup"
+							  click="{!c.search}"
+							  keyup="{!c.search}"
+							  placeholder="{!'Search ' + v.pluralLabel}" />						
+					
+					<span aura:id="lookupSearch" class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+						<lightning:icon iconName="utility:search" size="x-small" alternativeText="icon"/>
+					</span>
+				</div>
+			   
+				<!-- This markup is for when an item is currently selected -->
+				<div aura:id="lookup-pill"  class="slds-pill-container slds-hide">
+					<lightning:pill class="w100 slds-m-around_xx-small" label="{!v.searchString}" name="{!v.searchString}" onremove="{!c.clear}">
+						<aura:set attribute="media">
+							<lightning:icon iconName="{!v.IconName}" size="x-small" alternativeText="icon"/>
+						</aura:set>
+					</lightning:pill>
+				</div>
+				
+				
+			</div>
+		</div>
+        
+		<aura:if isTrue="{!v.isProcessing}">
+            <lightning:spinner  variant="brand" size="small" aura:id="mySpinner"/>
+        </aura:if>
+        
+		<aura:if isTrue="{!v.matches.length > 0 }">
+                        
+			<ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds" role="listbox">
+				<div  style="overflow-y: scroll;overflow-x: hidden;" >	
+					
+					<!--<center>{!v.Message}</center>-->
+					<aura:iteration items="{!v.matches}" var="match" indexVar="i">
+						<li role="presentation" class="slds-listbox__item" data-selectedIndex="{#i}" 
+							id="{!globalId + '_id_' + match.SObjectId + '_Name_' + match.SObjectLabel}" onclick="{!c.select}">
+							<span id="{#'listbox-option-unique-id-'+i+1}"  
+								  class="slds-media slds-listbox__option slds-listbox__option_entity 
+										 slds-listbox__option_has-meta" 
+								  role="option">
+								<span class="slds-media__figure optionIcon">
+									<span class="slds-icon_container" >
+										<lightning:icon iconName="{!v.IconName}" size="x-small"/>
+										<span class="slds-assistive-text">{!v.IconName}</span>
+									</span>
+								</span>
+								<span class="slds-media__body singleRow">
+									<span class="optionTitle slds-listbox__option-text slds-listbox__option-text_entity">{!match.SObjectLabel}</span>
+								</span>
+							</span>
+						</li>
+					</aura:iteration> 
+				</div>
+			</ul>
+		</aura:if>
+    </div>
+    
+</aura:component>

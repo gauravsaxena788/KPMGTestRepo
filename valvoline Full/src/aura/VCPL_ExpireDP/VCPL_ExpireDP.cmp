@@ -1,0 +1,70 @@
+<aura:component 
+                    implements="force:lightningQuickActionWithoutHeader,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" 
+                    access="global" 
+                    controller="VCPL_DiffrentialPricingController">
+        
+        <aura:handler 	name="init" 
+                        value="{!this}" 
+                        action="{!c.doInit}" />
+        
+         <aura:attribute name="objdiffPric" 
+                        type="VCPL_Differential_Pricing__c" 
+                        description="for Storeing Diffrential Pricing Details"/>
+        
+        <aura:attribute name="strmessage"
+                        type="String"
+                        description="for Storeing message"/>
+        <aura:attribute name="strexpiremessage"
+                        type="String"
+                        description="for Storeing message"/>
+        <aura:attribute name="expiryDate" type="Date" />
+        
+        <aura:attribute name="isOpen" type="boolean" default="true" />
+        
+        <div style="width:100%;">
+             <aura:if isTrue="{!v.isOpen}">
+            <div class="slds-m-around--xx-large">
+                <header class="slds-modal__header slds-size_4-of-4">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Expire Differential Pricing
+                    </h2>
+                </header>
+               
+                <div class="slds-form-element__group">
+                    <fieldset class="slds-form--compound">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size_4-of-4">
+                                <ui:inputDate aura:id="todaydate" class="slds-input" labelClass="slds-form-element__label"  value="{!v.expiryDate}" label="Expiry Date" displayDatePicker="true"  format="dd/MM/yyyy" disabled="true"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="slds-form--compound">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size_4-of-4">
+                                <label class="labelclass slds-is-required" >Expiry reason</label> 
+                                <ui:inputTextArea  aura:id="reasonforclose" value="{!v.strexpiremessage}" class="slds-input" rows="2"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="slds-modal__footer slds-size_4-of-4">
+                    <button class="slds-button slds-button_brand" onclick="{!c.saverecords}" href="javascript:void(0);">
+                        Save
+                    </button>
+                    <button class="slds-button slds-button--neutral" onclick="{!c.cancel}" href="javascript:void(0);">
+                        Cancel
+                    </button>
+                </div>
+                </div>
+            </div>
+                 <aura:set attribute="else" >
+                        <div class="slds-size_4-of-4"><br/>
+                            <div class="slds-text-align_center slds-text-color_error slds-form slds-form_compound" style="margin-left: 10px;margin-right: 10px;"><aura:unescapedHtml value="{!v.strmessage}" /></div>
+                            <br/>
+                            <button class="slds-button slds-button--neutral slds-align_absolute-center" onclick="{!c.cancel}" href="javascript:void(0);">
+                                Cancel
+                            </button>
+                        </div>
+                    </aura:set>
+                </aura:if>
+        </div>
+    </aura:component>

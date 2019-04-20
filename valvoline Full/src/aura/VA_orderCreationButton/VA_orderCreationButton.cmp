@@ -1,0 +1,25 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="passRecIdToOrderCmp" type="String" />
+    <style>
+    .forceListViewManagerHeader .test-lvmForceActionsContainer{
+	display:none;
+	}
+    </style> 
+    <aura:attribute name ="showTestPage" type = "boolean" default = "false"/>
+	  <aura:handler event = "c:ClosePostKitEvent" action = "{!c.closePostKit}"/>
+    <div aura:id = "desktopDiv">
+        <div class="slds-button-group" role="group">
+
+            <ui:button  class="slds-button slds-button_neutral" aura:id="showRequest" label="Create Order" press="{!c.navigateToTestPage}"/>
+        </div>
+    </div>
+    <div aura:id = "phoneDiv">
+        <div class="slds-button-group" role="group">
+			<ui:button  class="slds-button slds-button_neutral" aura:id="show" label="Create Order" press="{!c.navigateToPhonePage}"/>
+        </div>
+    </div>
+	  <aura:if isTrue = "{!v.showTestPage}">
+          <c:VA_createOrderpage showTestPage="{!v.showTestPage}" passedChildAccId="{! v.passRecIdToOrderCmp }" />
+    </aura:if>
+</aura:component>

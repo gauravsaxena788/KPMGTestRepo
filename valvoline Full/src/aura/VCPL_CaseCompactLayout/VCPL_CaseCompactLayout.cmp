@@ -1,0 +1,177 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller = "DynamicObjectDetail" >
+    <aura:attribute name="sobj" type="sobject"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    
+    <aura:if isTrue="{!v.sobj.RecordType.DeveloperName == 'VA_Post_kit'}">	
+        <a onclick="{!c.goBackPostKit}" href="javascript:void(0);">Back</a>
+        <div class="slds-m-bottom--medium"></div>
+        <!--Detail panel--> 
+        <lightning:card variant="base" iconName="standard:case">
+            <aura:set attribute="title">
+                Case
+            </aura:set>
+            
+            <div class="container">
+                <fieldset class="slds-form--compound">
+                    <div class="slds-m-bottom--medium">
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size--1-of-3">
+                                <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                                    <label class="slds-form-element__label"> Case Number </label>
+                                </div>
+                            </div>
+                            
+                            <div class="slds-form-element slds-size--1-of-3">
+                                <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                                    <label class="slds-form-element__label"> Status </label>
+                                </div>
+                            </div>
+                            
+                            <div class="slds-form-element slds-size--1-of-3">
+                                <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                                    <label class="slds-form-element__label"> Post Kit Request Number </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size--1-of-3">
+                                <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                                    <ui:outputText class="slds-output" value="{!v.sobj.CaseNumber}" />
+                                </div>
+                            </div>
+                            
+                            <div class="slds-form-element slds-size--1-of-3">
+                                <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                                    <ui:outputText class="slds-output" value="{!v.sobj.Status}" />
+                                </div>
+                            </div>
+                            
+                            <div class="slds-form-element slds-size--1-of-3">
+                                <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                                    <ui:outputText class="slds-output" value="{!v.sobj.VA_Kit_Number__c}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>   
+        </lightning:card>
+    </aura:if> 
+    
+    
+    <aura:if isTrue="{!v.sobj.RecordType.DeveloperName == 'VA_CCMS'}">
+        <a onclick="{!c.goBackCCMS}" href="javascript:void(0);">Back</a>
+    <div class="slds-m-bottom--medium"></div>
+    <!--Detail panel-->  
+    <lightning:card variant="base" iconName="standard:case">
+        <aura:set attribute="title">
+			Case
+    	</aura:set>
+        
+         <div class="container">
+             <fieldset class="slds-form--compound">
+                 <div class="slds-m-bottom--medium">
+                     <div class="slds-form-element__row">
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Case Number </label>
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Status </label>
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Complaint Id </label>
+                             </div>
+                         </div>
+                      </div>
+                     
+                     <div class="slds-form-element__row">
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.sobj.CaseNumber}" />
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.sobj.Status}" />
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.sobj.VA_Complaint_Id__c}" />
+                             </div>
+                         </div>
+                      </div>
+                 </div>
+             </fieldset>
+        </div>   
+    </lightning:card>
+    </aura:if> 
+    
+    <aura:if isTrue="{!v.sobj.RecordType.DeveloperName == 'VA_Post'}">
+        <a onclick="{!c.goBackPostTest}" href="javascript:void(0);">Back</a>
+    <div class="slds-m-bottom--medium"></div>
+    <!--Detail panel-->  
+    <lightning:card variant="base" iconName="standard:case">
+        <aura:set attribute="title">
+			Case
+    	</aura:set>
+        
+         <div class="container">
+             <fieldset class="slds-form--compound">
+                 <div class="slds-m-bottom--medium">
+                     <div class="slds-form-element__row">
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Case Number </label>
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Status </label>
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Post Number </label>
+                             </div>
+                         </div>
+                      </div>
+                     
+                     <div class="slds-form-element__row">
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.sobj.CaseNumber}" />
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.sobj.Status}" />
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.sobj.VA_POST_Number__c}" />
+                             </div>
+                         </div>
+                      </div>
+                 </div>
+             </fieldset>
+        </div>   
+    </lightning:card>
+    </aura:if> 
+</aura:component>

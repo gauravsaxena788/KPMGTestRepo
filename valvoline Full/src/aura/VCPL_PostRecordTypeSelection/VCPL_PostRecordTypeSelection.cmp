@@ -1,0 +1,7 @@
+<aura:component controller = "VA_recordtypeController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global">
+	<aura:attribute name="recordTypeName" type="String" />
+    <aura:attribute name="recordTypeId" type="String"  />
+    
+    <lightning:button label="{! 'New ' + v.recordTypeName}" onclick="{!c.createRecord}" class="btnstyle"/>
+    
+</aura:component>

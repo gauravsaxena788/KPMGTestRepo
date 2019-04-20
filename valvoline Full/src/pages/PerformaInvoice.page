@@ -1,0 +1,300 @@
+<apex:page showHeader="false" controller="QuotePDFController" sidebar="false" standardStylesheets="false" renderAs="PDF" applyHtmlTag="false">
+<head>
+   
+<style type="text/css">
+table {
+    border-collapse: collapse;
+}
+
+body {font-family: 'Arial';font-size:12pt;}
+
+.headings{
+    color: black;
+    font-size:14pt;
+    font-weight:bold!important;
+    }
+.texts{
+    color: #999999;
+    }
+    
+    .headerRow td{
+                   background-color: #F0F8E2;
+                   font-size: 14px;
+                    /*font-weight: bold;*/
+          }
+          .myCol{
+              border:solid 1px #000;
+              text-align:center;
+          }
+          
+.myunderlinecss{
+text-decoration: underline !important;
+font-size:14px !important;
+color:#020202 !important;
+font-family: Arial Unicode MS;
+}
+          
+</style>
+<style type="text/css" media="print">
+   @page {
+             @top-center {
+                   content: element(header);
+           }
+           @bottom-left {
+                 content: element(footer);
+           }
+           
+           padding-top: 70px;
+           
+           <apex:outputPanel layout="none" rendered="{!IF(quotestatus!='Approved',true,false)}">
+                background: url("{!$Resource.DraftImage}") no-repeat center center;
+           </apex:outputPanel>
+        }
+                 div.header {
+                  padding: 10px;
+                  position: running(header);
+       }
+   div.footer {
+    display: block;
+    margin-bottom: 80px !important;
+    color: gray;
+    font-size: 12px;
+    position: running(footer);
+  }
+  
+ .pagenumber:before {
+     content: counter(page);
+   }
+ .pagecount:before {
+     content: counter(pages);
+   }
+   .mylist{
+       padding-bottom:20px;
+   } 
+   
+   
+    
+</style>
+
+</head>
+
+<body class="watermark">
+
+ <div class="header">
+     <img src="{!URLFOR($Resource.images,'images/Header.png')}" style="margin-left:-70px;" alt="Truck Oil" href="#" />
+ </div>
+ <div class="footer">
+     <center>Valvoline Cummins Private Limited <br/> 
+     3rd floor, Vipul Plaza, Suncity, Sector 54, Gurgaon – 122003, Haryana.CIN:- U74899DL1994PTC062425<br/>
+     Visit us at www.vavlvolinecummins.com<br/>&nbsp;<br/>&nbsp;</center>
+ </div>
+<apex:form id="formid">
+    
+    <div style="border:1px solid black;border-color:1px solid black;background-color:#DCDCDC;">
+        <center><h3>PROFORMA INVOICE</h3></center>
+    </div>
+    
+    <div style="float:right;padding-right:1px;">
+        <table border="1">
+            <tr>
+                <td>&nbsp;&nbsp;Date</td>
+                <!--<td>&nbsp;&nbsp;&nbsp;{!DAY(TODAY())}/{!MONTH(TODAY())}/{!YEAR(TODAY())}&nbsp;&nbsp;&nbsp;</td>-->
+                <td>&nbsp;&nbsp;&nbsp;
+                    <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                        <apex:param value="{!NOW()}" />
+                    </apex:outputText>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;&nbsp;Quote Ref &nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{!quotenumber}&nbsp;&nbsp;&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    
+    <br/><br/><br/>
+    
+    <div>
+        Quote To:
+        <table border="0" style="font-weight:bold;">
+            <tr>
+                <td>{!toname}</td>
+            </tr>
+            <tr>    
+                <td>{!accountname}</td>
+            </tr>
+            <tr>
+                <td>{!customerphone}</td>
+            </tr>
+            <tr>
+                <td>{!customeremail}</td>
+            </tr>
+        </table>
+        <!--<h4>{!toname}
+        {!accountname}
+        {!customerphone}
+        {!customeremail}</h4>-->
+    </div>
+    
+    <br/>
+    <!--{!cashdiscountvalue}  ,  {!cashdiscountpolicy}-->
+    <table style="border:collapsible;font-size:14px;border-color:gray;" cellpadding="4" cellspacing="0" width="100%">
+      <tr class="headerRow">
+          <td class="myCol" width="5%">SL. No</td>
+          <td class="myCol" width="10%">PRODUCT CODE</td>
+          <td class="myCol" width="25%">PRODUCT DESCRIPTION</td>
+          <td class="myCol" width="10%">PACK SIZE (Ltrs.)</td>
+          <td class="myCol" width="10%">QUANTITY (L)</td>
+          <td class="myCol" width="20%">BILLING RATES/Ltrs. (Rs)</td>
+          <td class="myCol" width="20%">TOTAL AMOUNT (Rs)</td>
+      </tr>
+      <apex:variable value="{!0.00}" var="sumofsubtotal"/>
+      <apex:variable value="{!0.00}" var="cashdiscountval"/>
+      <apex:variable value="{!0.00}" var="sumofsubtotalafterdiscount"/>
+      <apex:variable value="{!0.00}" var="gstcalculation"/>
+      <apex:variable value="{!1}" var="srNo"/>
+      <apex:repeat value="{!quoteLineItemList}" var="item">
+      <tr>
+          <td class="myCol" width="5%">{!srNo}</td>
+          <td class="myCol" width="10%">{!item.Product2.SKU_Id__c}</td>
+          <td class="myCol" width="25%">{!item.Product2.Name}</td>
+          <td class="myCol" width="10%">{!item.Pack_Size__c}</td>
+          <td class="myCol" width="10%">
+            <apex:outputText value="{!DynamicFormatString}">
+                <apex:param value="{!item.Quantity*1000}" />
+            </apex:outputText>  
+          </td>
+          <td class="myCol" width="20%">
+            <apex:outputText value="{!DynamicFormatString}">
+                <apex:param value="{!item.UnitPrice}" />
+            </apex:outputText>
+          </td>
+          <td class="myCol" width="20%">
+            <apex:outputText value="{!DynamicFormatString}">
+                <apex:param value="{!item.Sub_Total__c}" />
+            </apex:outputText>
+          </td>
+      </tr>
+      <apex:variable var="srNo" value="{!srNo+1}"/>
+      <apex:variable var="sumofsubtotal" value="{!sumofsubtotal+item.Sub_Total__c}"/>
+      </apex:repeat>
+      
+    </table>
+    <table border="1" style="float:right;padding-top:5px;padding-bottom:5px;font-size:14px;border:collapsible;" width="39%" cellpadding="4" cellspacing="0">
+        <tr>
+            <td class="myCol" width="23%" style="color:black;font-weight:bold;">&nbsp;Sub-Total (Rs)</td>
+            <td class="myCol" width="20%" style="color:black;font-weight:bold;">
+                <apex:outputText value="{!DynamicFormatString}">
+                    <apex:param value="{!sumofsubtotal}" />
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td class="myCol" width="23%" style="color:black;font-weight:bold;">&nbsp;Cash Discount ({!cashdiscountvalue}%)</td>
+            <td class="myCol" width="20%" style="color:black;font-weight:bold;">
+                <apex:variable var="cashdiscountval" value="{!cashdiscountval+(sumofsubtotal*cashdiscountvalue)/100}"/>
+                
+                <apex:outputText value="{!DynamicFormatString}">
+                    <apex:param value="{!cashdiscountval}" />
+                </apex:outputText>
+                <!--<apex:outputText value="{0, number, 00.00}">
+                      <apex:param value="{!cashdiscountval}" />
+                </apex:outputText>-->
+               
+            </td>
+        </tr>
+        <tr>
+            <td class="myCol" width="20%" style="color:black;font-weight:bold;">&nbsp;Sub-Total</td>
+            <td class="myCol" width="20%" style="color:black;font-weight:bold;">
+                <apex:variable var="sumofsubtotalafterdiscount" value="{!sumofsubtotal-cashdiscountval}"/>
+                
+                <apex:outputText value="{!DynamicFormatString}">
+                    <apex:param value="{!sumofsubtotalafterdiscount}" />
+                </apex:outputText>
+                <!--<apex:outputText value="{0, number, 00.00}">
+                      <apex:param value="{!sumofsubtotalafterdiscount}" />
+                </apex:outputText>-->
+                
+            </td>
+        </tr>
+        <tr>
+            <td class="myCol" width="20%" style="color:black;font-weight:bold;">&nbsp;GST ({!gstvalue}%)</td>
+            <td class="myCol" width="20%" style="color:black;font-weight:bold;">
+                <apex:variable var="gstcalculation" value="{!gstvalue/100}"/>
+                
+                <apex:outputText rendered="{!IF(gstcalculation!=0.0, true, false)}" value="{!DynamicFormatString}">
+                      <apex:param value="{!sumofsubtotalafterdiscount*gstcalculation}" />
+                </apex:outputText>
+                
+                <apex:outputText rendered="{!IF(gstcalculation!=0.0, false, true)}" value="0.0">
+                      
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td class="myCol" width="20%" style="color:black;font-weight:bold;">&nbsp;Total Amount (Rs)</td>
+            <td class="myCol" width="20%" style="color:black;font-weight:bold;">
+                <apex:outputText rendered="{!IF(gstcalculation!=0, true, false)}" value="{!DynamicFormatString}">
+                      <apex:param value="{!(sumofsubtotalafterdiscount*gstcalculation)+sumofsubtotalafterdiscount}" />
+                </apex:outputText>
+                
+                <apex:outputText rendered="{!IF(gstcalculation!=0, false, true)}" value="{!DynamicFormatString}">
+                      <apex:param value="{!sumofsubtotalafterdiscount}" />
+                </apex:outputText>
+                <!--{!sumofsubtotalafterdiscount+gstvalue}-->
+            </td>
+        </tr>
+    </table>
+    
+    <br/>
+    <p style="padding-top:100px;">
+    <h3>Terms &amp; Conditions</h3>
+    <table style="border:collapsible" cellpadding="4" cellspacing="0" width="60%" border="1">
+        <tr>
+            <td width="20%" style="color:black;font-weight:bold;">Quote Validity</td>
+            <td width="40%">
+                <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                    <apex:param value="{!quotevalidtill}" />
+                </apex:outputText>
+            </td>
+        </tr>
+        <tr>
+            <td width="20%" style="color:black;font-weight:bold;">Payment Terms</td>
+            <td width="40%">{!paymentterm}</td>
+        </tr>
+        <tr>
+            <td style="color:black;font-weight:bold;">Fright</td>
+            <td>{!deliveryterm}</td>
+        </tr>
+    </table>
+    <br/>
+    </p>
+    <p style="font-style:bold;">
+    
+    From, <br/>
+      <table border="0" width="100%">
+        <tr>
+           <td width="50%">
+              <p style="margin-left:10px; border:1px solid gray;width:300px;padding:5px;font-size:12px;">
+                {!tbmname} <br/>
+                {!tbmdesignation} <br/>
+                {!tbmaddress} <br/>
+                {!tbmemail}, Phone - {!tbmphone}
+              </p>
+           </td>
+           <td width="50%">
+              <p style="margin-left:10px; border:1px solid gray;width:300px;padding:5px;font-size:12px;">
+                {!managername} <br/>
+                {!managerdesignation} <br/>
+                {!manageraddress} <br/>
+                {!manageremail}, Phone - {!managerphone}
+              </p>
+           </td>
+        </tr>  
+      </table>   
+    </p>
+        
+</apex:form>
+
+</body>  
+</apex:page>

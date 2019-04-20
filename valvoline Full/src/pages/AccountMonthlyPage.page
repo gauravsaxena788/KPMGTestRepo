@@ -1,0 +1,5 @@
+<apex:page >
+<script>
+window.open('/apex/AccountMonthlyPlan');
+</script>
+</apex:page>

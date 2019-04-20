@@ -1,0 +1,5 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+	<div style="float:right;margin:10px;">
+        <a class="slds-button slds-button_brand" href="/Cummins/VCPL_ExportPrimSecReport" target="_blank">Export Details</a>
+    </div>
+</aura:component>

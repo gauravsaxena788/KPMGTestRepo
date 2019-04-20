@@ -1,0 +1,423 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VCPL_AVDQVDBLISController">
+
+    <aura:attribute name="lstAccount" type="Account[]" />
+
+    <aura:attribute name="isPicklistVisible" type="boolean" default="false" />
+
+    <aura:attribute name="isAccountPicklistVisible" type="boolean" default="false" />
+
+    <aura:attribute name="showSpinner" type="boolean" default="false" />
+
+    <aura:attribute name="configs" type="string[]" default="" />
+
+    <aura:attribute name="acctId" type="String" />
+
+    <aura:attribute name="configFY" type="String" />
+
+    <aura:if isTrue="{!v.showSpinner}">
+        <div class="slds-spinner_container">
+            <lightning:spinner aura:id="spinner" variant="brand" size="large" />
+        </div>
+    </aura:if>
+	
+	<aura:attribute name="showlastYearColumns" type="boolean" default="false"/>
+
+    <aura:attribute name="DetailsWrapper" type="VCPL_AVDQVDIDController.DataWrapper" description="for Storing Details" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Initialization Handler" />
+
+    <table>
+        <tr>
+            <td width="50%">
+                <div class="slds-align_absolute-center" style="height: 4rem;">
+                    <lightning:select aura:id="accountSelect" name="" label="" value="{!v.acctId}" disabled="{!v.isAccountPicklistVisible}" onchange="{!c.onChangeofAccount}" class="slds-input slds-account">
+                        <aura:iteration items="{!v.lstAccount}" var="acct" indexVar="index">
+                            <option value="{!index}">{!acct.Name}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </td>
+            <td width="50%">
+                <div class="slds-align_absolute-center" style="height: 4rem;">
+                    <lightning:select aura:id="config" label="" onchange="{!c.onChangeofAccount}" class="slds-input slds-Configs" disabled="{!v.isPicklistVisible}">
+                        <aura:iteration items="{!v.configs}" var="pd">
+                            <option value="{!pd}">{!pd}</option>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="slds-coach__keys slds-size--1-of-1  slds-large-size--1-of-1 slds-box slds-theme_shade slds-theme_alert-texture">
+        <div class="slds slds-resizable slds-scrollable--x sWrapTest">
+            <table class="slds-table slds-table--bordered slds-table_col-bordered slds-table_striped slds-no-row-hover">
+                <aura:if isTrue="{!v.DetailsWrapper != NULL}">
+                    <thead>
+                        <tr class="slds-text-heading--label">
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="2" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Quarter</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="2" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>LY Qtr <br/>Performance</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <aura:if isTrue="v.showlastYearColumns" >
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="4">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass"> 
+                                        <b>Current Year Qtr Target - As per Growth Slabs</b>
+                                    </label>
+                                </a>
+                            </th>
+                            </aura:if>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="2" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Sales Done<br/> QTD (IN L)</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="4">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Sales Reqd to reach target Incentive Slab</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="2">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Qtr End Update</b>
+                                    </label>
+                                </a>
+                            </th>
+                        </tr>
+                        <tr>
+                        	<aura:if isTrue="v.showlastYearColumns" >
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>{!v.DetailsWrapper.growthSlab1Label}</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>{!v.DetailsWrapper.growthSlab2Label}</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>{!v.DetailsWrapper.growthSlab3Label}</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>{!v.DetailsWrapper.growthSlab4Label}</b>
+                                    </label>
+                                </a>
+                            </th>
+                            </aura:if>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>{!v.DetailsWrapper.incentiveSlab1QVDLabel}</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>{!v.DetailsWrapper.incentiveSlab2QVDLabel}</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>{!v.DetailsWrapper.incentiveSlab3QVDLabel}</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>{!v.DetailsWrapper.incentiveSlab4QVDLabel}</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Sales (L)</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" rowspan="1" colspan="1">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Incentive (Rs.)</b>
+                                    </label>
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="slds-truncate slds-resizable">
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><label class="slds-q1">Q1</label></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ1Sales}" format="###,###,##0"/></b>
+                            </td>
+                            <aura:if isTrue="v.showlastYearColumns" >
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ1Sales1Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ1Sales4Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ1Sales7Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ1Sales10Percent}" format="###,###,##0"/></b>
+                            </td>
+                            </aura:if>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearQ1Sales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ1Rs1PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ1Rs2PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ1Rs4PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ1Rs6PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.Q1ClosedSales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.Q1Incentive}" format="###,###,##0"/></b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b>Q2</b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ2Sales}" format="###,###,##0"/></b>
+                            </td>
+                            <aura:if isTrue="v.showlastYearColumns" >
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ2Sales1Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ2Sales4Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ2Sales7Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ2Sales10Percent}" format="###,###,##0"/></b>
+                            </td>
+                            </aura:if>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearQ2Sales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ2Rs1PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ2Rs2PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ2Rs4PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ2Rs6PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.Q2ClosedSales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.Q2Incentive}" format="###,###,##0"/></b>
+                            </td>
+                        </tr>
+						<tr>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b>Q3</b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ3Sales}" format="###,###,##0"/></b>
+                            </td>
+                            <aura:if isTrue="v.showlastYearColumns" >
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ3Sales1Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ3Sales4Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ3Sales7Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ3Sales10Percent}" format="###,###,##0"/></b>
+                            </td>
+                            </aura:if>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearQ3Sales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ3Rs1PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ3Rs2PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ3Rs4PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ3Rs6PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.Q3ClosedSales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.Q3Incentive}" format="###,###,##0"/></b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b>Q4</b>
+                            </td>
+                            
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ4Sales}" format="###,###,##0"/></b>
+                            </td>
+                            <aura:if isTrue="v.showlastYearColumns" >
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ4Sales1Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ4Sales4Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ4Sales7Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearQ4Sales10Percent}" format="###,###,##0"/></b>
+                            </td>
+                            </aura:if>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearQ4Sales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ4Rs1PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ4Rs2PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ4Rs4PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.QVDQ4Rs6PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.Q4ClosedSales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.Q4Incentive}" format="###,###,##0"/></b>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b>Total Volume</b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearTotalSales}" format="###,###,##0"/></b>
+                            </td>
+                            <aura:if isTrue="v.showlastYearColumns" >
+                            
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearTotalSales1Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearTotalSales4Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearTotalSales7Percent}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.lastYearTotalSales10Percent}" format="###,###,##0"/></b>
+                            </td>
+                            </aura:if>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearTotalSales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearTotalSalesRs1PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearTotalSalesRs2PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearTotalSalesRs4PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.CurrentYearTotalSalesRs6PerLiter}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.totalClosedSales}" format="###,###,##0"/></b>
+                            </td>
+                            <td class="slds-truncate slds-cell-shrink slds-cell-shrink" rowspan="1" colspan="1">
+                                <b><ui:outputnumber value="{!v.DetailsWrapper.totalIncentive}" format="###,###,##0"/></b>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <aura:set attribute="else">
+                        <div class="slds-align_absolute-center slds-no-records">
+                            <b>No Records !!</b>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </table>
+        </div>
+    </div>
+
+</aura:component>

@@ -1,0 +1,199 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VCPL_TargetAssignmentController">
+    
+    <aura:attribute name="lstAccounts" type="Account[]" description="" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Initialization Handler" />
+    <aura:attribute name="isBranchPicklistVisible" type="boolean" default="false" />
+    <aura:attribute name="dataWrapper" type="VCPL_TargetAssignmentController.dataWrapper[]" description="for Storing Details" />
+    <aura:attribute name="dataWrapperReference" type="VCPL_TargetAssignmentController.dataWrapper[]" description="for Storing Details" />
+    <aura:attribute name="paginationWrapper" type="VCPL_TargetAssignmentController.dataWrapper[]" description="for Storing 20 records" />
+    <aura:attribute name="showButtons" type="Boolean" default="false" />
+    <aura:attribute type="Integer" name="pageNumber" default="1" />
+    <aura:attribute type="Integer" name="maxPage" default="1" />
+    <aura:attribute name="showSpinner" type="boolean" default="false" />
+    
+    <aura:if isTrue="{!v.showSpinner}">
+        <div class="slds-spinner_container">
+            <lightning:spinner aura:id="spinner" variant="brand" size="large" />
+        </div>
+    </aura:if>
+    
+    <aura:attribute name="disableFirstButton" type="Boolean" default="false" />
+    <aura:attribute name="disablePrevButton" type="Boolean" default="false" />
+    <aura:attribute name="disableNextButton" type="Boolean" default="false" />
+    <aura:attribute name="disableLastButton" type="Boolean" default="false" />
+    
+    <aura:attribute name="assignmentClassificationsFilter" type="String[]" default="['All', 'Top 20', 'Target 20','Focused','Others']" />
+    <aura:attribute name="defaultClassification" type="String" default="All" />
+    <aura:attribute name="strClassification" type="String" />
+    <aura:attribute name="assignmentClassifications" type="String[]" default="['Target 20','Focused','Others']" />
+    <aura:attribute name="searchString" type="string" default="" description="Search String" />
+    <aura:attribute name="sortingOrder" type="Object" description="for Storing Last Sort Order" />
+    <aura:attribute name="sortingOrderLYVolume" type="Boolean" default="false" />
+    <aura:attribute name="sortingOrderPD" type="Boolean" default="false" />
+    <aura:attribute name="sortingOrderLYP" type="Boolean" default="false" />
+    <aura:attribute name="acctId" type="String" />
+    <aura:handler name="change" value="{!v.pageNumber}" action="{!c.renderPage}" />
+    <aura:attribute name="recordId" type="string" default="{!v.RecordId}" />
+    
+    <div style="overflow: auto; -webkit-overflow-scrolling: touch; width:100%">
+        <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+            <tr>
+                <td width="33%">
+                    <div class="slds-align_absolute-center slds-account" style="height: 4rem;">
+                        <lightning:select aura:id="accountSelect" name="" label="Branch:" value="{!v.acctId}" disabled="{!v.isBranchPicklistVisible}" onchange="{!c.onChangeofAccount}" class="slds-input slds-account">
+                            <aura:iteration items="{!v.lstAccounts}" var="acct" indexVar="index">
+                                <option value="{!index}">{!acct.Name}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                </td>
+                <td width="33%">
+                    <div class="slds-align_absolute-center" style="height: 4rem;">
+                        <lightning:select aura:id="ClassificationFilter" label="Classification:" class="slds-input slds-Classify"  onchange="{!c.onChangeofClassification}" value="{!v.strClassification}">
+                            <aura:iteration items="{!v.assignmentClassificationsFilter}" var="objClassification">
+                                <ui:inputSelectOption text="{!objClassification}" label="{!objClassification}" value="" />
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                </td>
+                <td width="33%">
+                    <div class="slds-align_absolute-center" style="height: 4rem;">
+                        <ui:inputText class="slds-input slds-search-user" placeholder="Search Account" value="{!v.searchString}" required="false" updateOn="keyup" keyup="{!c.onSearchStringChange}" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="slds-coach__keys slds-size--1-of-1  slds-large-size--1-of-1 slds-box slds-theme_shade slds-theme_alert-texture">
+        <div class="slds slds-resizable slds-scrollable--x sWrapTest">
+            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal slds-table_striped slds-table_col-bordered">
+                <aura:if isTrue="{!v.paginationWrapper.length > 0}">
+                    <thead>
+                        <tr class="slds-text-heading--label">
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" width="30%">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Customer Account</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="{!c.sortList}" data-label="lastYearVolume" data-order="{!v.sortingOrder.lastYearVolume}" width="10%">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>CO LY Sales Volume</b>
+                                    </label>
+                                    <aura:if isTrue="{!v.sortingOrderLYVolume == true}">&nbsp; &#9660; </aura:if>
+                                    <aura:if isTrue="{!v.sortingOrderLYVolume == false}"> &nbsp; &#9650; </aura:if>
+                                </a>
+                            </th>
+                            <!--<th class="slds-is-sortable slds-text-title__caps" scope="col" onclick="{!c.sortList}" data-label="potentialLYDifference" data-order="{!v.sortingOrder.potentialLYDifference}" width="10%">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link__reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>LY Untapped Potential </b>
+                                    </label>
+                                    <aura:if isTrue="{!v.sortingOrderPD == true}">&nbsp; &#9660; </aura:if>
+                                    <aura:if isTrue="{!v.sortingOrderPD == false}"> &nbsp; &#9650; </aura:if>
+                                </a>
+                            </th>-->
+                            
+							<th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="{!c.sortList}" data-label="potential" data-order="{!v.sortingOrder.potential}" width="10%">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Potential </b>
+                                    </label>
+                                    <aura:if isTrue="{!v.sortingOrderLYP == true}">&nbsp; &#9660; </aura:if>
+                                    <aura:if isTrue="{!v.sortingOrderLYP == false}"> &nbsp; &#9650; </aura:if>
+                                </a>
+                            </th>
+                            
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" width="20%">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Assignment Classification</b>
+                                    </label>
+                                </a>
+                            </th>
+                            <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" width="30%">
+                                <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                    <span class="slds-assistive-text">Sort</span>
+                                    <label class="labelclass">
+                                        <b>Assigned To</b>
+                                    </label>
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.paginationWrapper}" var="objWrapper" indexvar="index">
+                            <tr class="slds-truncate slds-resizable">
+                                <td  class="slds-truncate slds-cell-shrink slds-cell-shrink" title="{!objWrapper.strAccountName}" data-label="ACCOUNT NAME" scope="row" >
+                                    <ui:inputText value="{!objWrapper.strAccountName}" disabled="true" class="slds-input" />
+                                </td>
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="LY SALES VOLUME" scope="row">
+                                    <ui:inputNumber value="{!objWrapper.lastYearVolume}" disabled="true" class="slds-input" format="0.00" />
+                                </td>
+                                <!--<td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="LY Untapped Potential" scope="row">
+                                    <ui:inputNumber value="{!objWrapper.potentialLYDifference}" disabled="true" class="slds-input" format="0.00" />
+                                </td>-->
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="LY Untapped Potential" scope="row">
+                                    <ui:inputNumber value="{!objWrapper.potential}" disabled="true" class="slds-input" format="0.00" />
+                                </td>
+                                
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="ASSIGNMENT CLASSIFICATION" scope="row" style="padding: 0rem;">
+                                    <aura:If isTrue="{!objWrapper.strAssignmentClassification != 'Top 20'}">
+                                    	<lightning:select aura:id="ClassificationAccount" class="slds-input slds-contact" value="{!objWrapper.strAssignmentClassification}" disabled="{!objWrapper.strAssignmentClassification == 'Top 20'}">
+                                            <aura:iteration items="{!v.assignmentClassifications}" var="objClassification" indexVar="key">
+                                                <option text="{!objClassification}" value="{!objClassification}" selected="{!objClassification==objWrapper.strAssignmentClassification}" />
+                                            </aura:iteration>
+                                        </lightning:select>
+                                        
+                                        <aura:set attribute="else">
+                                            <lightning:select aura:id="ClassificationAccount" class="slds-input slds-contact" value="{!objWrapper.strAssignmentClassification}" disabled="{!objWrapper.strAssignmentClassification == 'Top 20'}">
+                                                <option text="Top 20" value="Top 20" selected="{!objClassification==objWrapper.strAssignmentClassification}" />
+                                            </lightning:select>
+                                        </aura:set>
+                                    </aura:If>
+                                </td>
+                                <td class="slds-truncate slds-cell-shrink slds-cell-shrink" data-label="ASSIGNED TO" scope="row" style="padding: 0rem;">
+                                    <lightning:select aura:id="Contacts" name="" label="" value="{!objWrapper.assignedToID}" disabled="{!v.isBranchPicklistVisible}"  class="slds-input slds-contact">
+                                        <option text="--None--" value="NULL" selected="{!objWrapper.assignedToName==NULL}" />
+                                        <aura:iteration items="{!objWrapper.lstContacts}" var="objContact" indexVar="key">
+                                            <option text="{!objContact.Name}" value="{!objContact.Id}" selected="{!objContact.Name==objWrapper.assignedToName}" />
+                                        </aura:iteration>
+                                    </lightning:select> 
+                                </td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                    <aura:set attribute="else">
+                        <div class="slds-align_absolute-center slds-no-records">
+                            <b>NO RECORDS FOUND</b>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </table>
+        </div>
+        <div class="slds-p-top_small"></div>
+        <!--Save Button Commented for save Functionality is still in progress -->
+        <aura:if isTrue="{!v.showButtons}">
+            <div class="slds-align_absolute-center">
+                <button class="slds-button slds-button_brand" onclick="{!c.onSaveButtonClick}" href="javascript:void(0);">
+                    Save
+                </button>
+            </div>
+        </aura:if>
+        <div class="slds-p-top_small"></div>
+        <aura:if isTrue="{!v.paginationWrapper.length > 0}">
+            <div class="slds-align_absolute-center">
+                <c:VCPL_PaginationComponent currentPageNumber="{!v.pageNumber}" maxPageNumber="{!v.maxPage}" disableFirst="{!v.disableFirstButton}" 
+                                            disablePrev="{!v.disablePrevButton}" disableNext="{!v.disableNextButton}" disableLast="{!v.disableLastButton}" />
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

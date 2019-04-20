@@ -1,0 +1,17 @@
+<aura:component access="global" controller="VA_PicklistValuesController">
+	<aura:attribute name="objectAPIName" type="string" required="true"/>
+    <aura:attribute name="fieldAPIName" type="string"  required="true"/>
+    
+    <aura:attribute name="pickval" type="string"  default=""/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <aura:attribute name="pickValues" type="string[]"/>
+    
+    <ui:inputSelectOption text="" label="--None--"/>
+    <aura:iteration items="{!v.pickValues}" var="pickValue">
+        <ui:inputSelectOption text="{!pickValue}" label="{!pickValue}" value="{!pickValue == v.pickval}"/>
+    </aura:iteration>
+    
+    
+</aura:component>

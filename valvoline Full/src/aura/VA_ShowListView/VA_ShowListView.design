@@ -1,0 +1,7 @@
+<design:component>
+	<design:attribute name="objectName" label="sObject Name" description="Enter sObject Name" />
+    <design:attribute name="fieldNames" label="Field API names" description="Comma Saperated field API names" />
+    <design:attribute name="filterName" label="Filter Name" description="Enter Filter Name which is handled in Controller" />
+    <design:attribute name="caseType" label="Case Type" datasource="ccms,post" description="Pass case type such as ccms or post for rendering them" />
+    <design:attribute name="compContext" label="Component Context" datasource="parent,child" description="Using this component in which account context? " default="parent" />
+</design:component>

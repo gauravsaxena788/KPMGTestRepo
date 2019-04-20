@@ -1,0 +1,13 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" controller="VA_assignToTBMController" >
+    <aura:attribute name="recordId" type="String" />    
+    <aura:attribute name="strName" type="string" />
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+   <aura:attribute name="isVisible" type="boolean" default="false"/>
+   <aura:attribute name="isAvailable" type="boolean" default="false"/>  
+    <aura:attribute name="message" type="String" default="Do you want to assign to TBM?" />             
+    <div class="slds-modal_small">         
+    
+    <div class="slds-align_absolute-center"><lightning:button aura:id="btn" label="Continue" onclick="{!c.assignToTBMJS}" iconName="utility:approval" iconPosition="centre" variant="destructive"/></div>  
+    
+    </div>  
+</aura:component>

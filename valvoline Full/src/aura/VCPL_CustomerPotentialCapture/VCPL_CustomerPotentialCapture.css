@@ -1,0 +1,58 @@
+.THIS .slds-month {
+    
+}
+
+.THIS .slds-search-user {
+    width: 50%;
+}
+
+.THIS .slds-medium-size_1-of-2,
+.THIS .slds-medium-size--1-of-2 {
+    width: 100%;
+}
+
+.THIS .slds-no-records {
+    height: 78px;
+}
+
+.THIS .slds-spinner_container {
+    position: fixed;
+}
+
+.THIS .slds-page-header {
+    background: transparent;
+    border-color: transparent;
+}
+
+.THIS .slds-table_cell-buffer tr>td:last-child {
+    padding-right:0.5rem;
+}
+
+.THIS.slds-nomargin {
+    margin-top:0;
+}
+
+.THIS .slds_blanktd {
+    height:1rem;
+}
+
+.THIS .slds-small-text {
+    font-size:0.9rem
+}
+
+@media only screen 
+and (min-device-width : 375px) 
+and (max-device-width : 812px)
+and (-webkit-device-pixel-ratio : 3) {
+    .THIS .sWrapTest {
+        overflow:scroll;
+        max-width:350px;
+    }
+}
+.THIS .sWrapTest {
+    
+    /*width:100%;
+    margin:6px;
+    max-width:100%;*/
+    
+}

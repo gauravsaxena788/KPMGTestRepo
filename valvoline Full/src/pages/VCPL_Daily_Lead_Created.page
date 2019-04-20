@@ -1,0 +1,30 @@
+<apex:page controller="VCPL_CreatedLead" contentType="application/vnd.ms-excel#DailyCreatedLead.xls" cache="true">
+    <style type="text/css">
+         .TableTitle {
+            background-color:#638658 !important;color:#FFFFFF;
+        }
+        
+    </style>
+    <apex:pageBlock title="Hello {!Dealername}!">
+      You are viewing the Lead created in Salesforce for Date {!DAY(TODAY())}-{!MONTH(TODAY())}-{!YEAR(TODAY())}.
+    </apex:pageBlock>
+    <apex:pageBlock title="Daily Created Lead" >
+        <apex:pageBlockTable value="{!lstLead }" var="Lead" >
+            <apex:column style="text-align:center" value="{!Lead.Owner.Name}" headerValue="Owner Name" headerClass="TableTitle" />
+            <apex:column style="text-align:center" value="{!Lead.Name}"/>
+            <apex:column style="text-align:center" value="{!Lead.LeadSource}"/>
+            <apex:column style="text-align:center" value="{!Lead.Others__c}"/>
+            <apex:column style="text-align:center" value="{!Lead.Status}"/>
+            <apex:column style="text-align:center" value="{!Lead.BU_Name__c}"/>
+            <apex:column style="text-align:center" value="{!Lead.Market_Segment__c}"/>
+            <apex:column style="text-align:center" value="{!Lead.Industry_Segment__c}"/>
+            <apex:column style="text-align:center" value="{!Lead.Company}"/>
+            <apex:column style="text-align:center" value="{!Lead.Zone__c}"/>
+            <apex:column style="text-align:center" value="{!Lead.Service_By__c}"/>
+            <apex:column style="text-align:center" value="{!Lead.VCPL_Partner_Account__r.Name}" headerValue="Dealer Name"/>
+            <apex:column style="text-align:center" value="{!Lead.Email}"/>
+            <apex:column style="text-align:center" value="{!Lead.Phone}"/>
+            <apex:column style="text-align:center" value="{!Lead.MobilePhone}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

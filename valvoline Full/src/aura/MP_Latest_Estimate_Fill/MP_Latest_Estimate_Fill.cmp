@@ -1,0 +1,176 @@
+<aura:component controller="OpportunityHelper" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+   
+    <aura:attribute name="recordId" type="Id" />
+    
+    
+    <aura:attribute name="opportunities" type="Opportunity[]" />
+    <aura:attribute name="account" type="Account" />
+    <aura:attribute name="actualMonth" type="Integer" />
+    <aura:attribute name="FiscalYear" type="String" />
+    <aura:attribute name="lyvol" type="Decimal"/> 
+    <aura:attribute name="lygpltr" type="Decimal"/>
+    <aura:attribute name="accpotential" type="Decimal"/> 
+    <aura:attribute name="monthvolume" type="Decimal"/> 
+    <aura:attribute name="monthgpltr" type="Decimal"/> 
+    <aura:attribute name="monthgp" type="Decimal"/> 
+    <aura:attribute name="latestvol" type="Decimal"/> 
+    <aura:attribute name="latestgpltr" type="Decimal"/> 
+    <aura:attribute name="latestgp" type="Decimal"/> 
+    <aura:attribute name="actualvol" type="Decimal"/> 
+    <aura:attribute name="actualgpltr" type="Decimal"/>
+    <aura:attribute name="actualgp" type="Decimal"/>
+    <aura:attribute name="editablemonthlyplan" type="Boolean"/>
+    <aura:attribute name="isEditableAllLE" type="Boolean"/>    
+     
+   <!-- <aura:handler name="sumres" value="{!this}" action="{!c.sumVal}"/> -->
+  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <div class="frame">
+        <div class="slds-align_absolute-center"><h3>Latest Estimate</h3></div>
+        <div class="slds-media__body slds-m-left_xx-large">
+            
+            <h1 class="slds-page-header__title slds-p-right_x-small">
+                
+                <a href="{! '/one/one.app#/sObject/' + v.account.Id+'/view'}" target="_blank" >
+                    <span class="slds-grid slds-has-flexi-truncate slds-grid_vertical-align-center">
+                        <span class="slds-truncate" >{!v.account.Name}</span>
+                    </span>
+                </a>
+                
+                <span class="slds-grid slds-has-flexi-truncate slds-grid_vertical-align-center">
+                    <span class="slds-truncate" >Ship To Code : {!v.account.Ship_to_Code__c}</span>
+                </span>
+                
+				<span class="slds-grid slds-has-flexi-truncate slds-grid_vertical-align-center">
+                    <span class="slds-truncate" >Financial Year : {!v.FiscalYear} </span>
+                </span>                
+            </h1>
+        </div>
+        
+        <div class="slds-scrollable slds-p-around_medium slds-m-around_small" aura:id="tbl" >
+            <table class="slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+                <thead>
+                    <tr class="slds-text-title slds-text-title_caps ">
+                        <th  rowspan="2" ><div class="slds-text-align_centre" >Month</div></th>
+                        <th scope="col" colspan="2" class="slds-text-align_centre" ><div class="slds-text-align_centre" >Last Year </div></th>
+                        <th  rowspan="2" ><div class="slds-text-align_centre" >Account Potential</div></th>
+                        <th scope="col" colspan="3" class="slds-text-align_centre" ><div class="slds-text-align_centre" >Monthly Plan</div></th>
+                        <th scope="col" colspan="3" class="slds-text-align_centre" ><div class="slds-text-align_centre" >Latest Estimate</div></th>
+                      <!--  <th scope="col" colspan="3" class="slds-text-align_centre" ><div class="slds-text-align_centre" >MTD</div></th>-->
+                        <th scope="col" colspan="3" class="slds-text-align_centre" ><div class="slds-text-align_centre" >Actual</div></th>
+                    </tr>
+                    <tr class="slds-text-title slds-text-title_caps">
+                        <!--<th scope="col"><div class="" title="opp_id">Opportunity ID</div></th>-->
+                        
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >Volume <br/>(in KL) </div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >GP/Ltr <br/>(in INR)</div></th>
+                        
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >Volume <br/>(in KL)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >GP/Ltr <br/>(in INR)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >GP <br/>(in Lacs)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >Volume (in KL)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >GP/Ltr (in INR)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >GP (in Lacs)</div></th>
+                        
+                      <!--  <th scope="col"><div class="slds-truncate slds-text-align_centre" >MTD Volume <br/>(in KL)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >MTD GP/Ltr <br/>(in INR)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" >MTD GP <br/>(in INR)</div></th> -->
+                        
+                         <th scope="col"><div class="slds-truncate slds-text-align_centre" > Volume <br/>(in KL)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" > GP/Ltr <br/>(in INR)</div></th>
+                        <th scope="col"><div class="slds-truncate slds-text-align_centre" > GP <br/>(in Lacs)</div></th>
+
+                    </tr>
+                </thead>
+                
+                 
+                <tbody>
+                    <aura:iteration items="{!v.opportunities}" var="oppLE" indexVar="index">
+                        <tr class="">
+                            <td ><div class="slds-truncate " >
+                                <a href="{! '/one/one.app#/sObject/' + oppLE.Id+'/view'}" target="_blank" >
+                                	{!oppLE.Month__c}
+                                </a>
+                                </div>
+                            </td>
+                            <td ><div class="slds-truncate " ><ui:outputNumber value="{!oppLE.LY_Volume__c}" /></div></td>
+                            <td ><div class="slds-truncate " ><ui:outputNumber value="{!oppLE.LY_GP_ltr__c}" format="0.0"/></div></td>
+                            <td ><div class="slds-truncate " ><ui:outputNumber value="{!oppLE.Account_Potential__c}"/></div></td>
+                           
+                            <aura:if isTrue="{!v.editablemonthlyplan}">
+                                <td ><div class="slds-truncate "><ui:inputNumber aura:id="Planned_Volume" value="{!oppLE.Planned_Volume__c}" blur="{!c.calc_Planned_GP}"/></div></td>
+                                <td ><div class="slds-truncate "><ui:inputNumber aura:id="Planned_GP_Ltr" value="{!oppLE.Planned_GP_Ltr__c}" blur="{!c.calc_Planned_GP}" format="0.0"/></div></td>
+                                <td ><div class="slds-truncate "><ui:outputNumber aura:id="Planned_GP" value="{!(oppLE.Planned_GP__c/100000)}"/></div></td>
+                            	<aura:set attribute="else">
+                                	<td ><div class="slds-truncate "><ui:outputNumber value="{!oppLE.Planned_Volume__c}"/></div></td>
+                                    <td ><div class="slds-truncate "><ui:outputNumber value="{!oppLE.Planned_GP_Ltr__c}" format="0.0"/></div></td>
+                                    <td ><div class="slds-truncate "><ui:outputNumber value="{!(oppLE.Planned_GP__c/100000)}"/></div></td><!-- ,, -->
+                                </aura:set>
+                            </aura:if>
+                            
+                            <aura:if isTrue="{!v.isEditableAllLE}">
+                                <td ><div class="slds-truncate "><ui:inputNumber aura:id="Latest_Est_Volume" value="{!oppLE.Latest_Est_Volume__c}" blur="{!c.calc_GP}"/></div></td>
+                                <td ><div class="slds-truncate "><ui:inputNumber aura:id="Latest_Est_GPL"  value="{!oppLE.Latest_Est_GP_ltr__c}" blur="{!c.calc_GP}" format="0.0"/></div></td>
+                                <td ><div class="slds-truncate " ><ui:outputNumber aura:id="Latest_Est_GP" value="{!(oppLE.Latest_Est_GP__c)/100000}"/> </div></td>
+                            	<aura:set attribute="else">
+                                    <aura:if isTrue="{!oppLE.Month_Actual__c >= v.actualMonth}">
+                                        <td ><div class="slds-truncate "><ui:inputNumber aura:id="Latest_Est_Volume" value="{!oppLE.Latest_Est_Volume__c}" blur="{!c.calc_GP}"/></div></td>
+                                        <td ><div class="slds-truncate "><ui:inputNumber aura:id="Latest_Est_GPL"  value="{!oppLE.Latest_Est_GP_ltr__c}" blur="{!c.calc_GP}" format="0.0"/></div></td>
+                                        <td ><div class="slds-truncate " ><ui:outputNumber aura:id="Latest_Est_GP" value="{!(oppLE.Latest_Est_GP__c)/100000}"/> </div></td>
+                                        <aura:set attribute="else">
+                                            <td ><div class="slds-truncate "><ui:outputNumber value="{!oppLE.Latest_Est_Volume__c}"/></div></td>
+                                            <td ><div class="slds-truncate "><ui:outputNumber value="{!oppLE.Latest_Est_GP_ltr__c}" format="0.0"/></div></td>
+                                            <td ><div class="slds-truncate "><ui:outputNumber value="{!(oppLE.Latest_Est_GP__c)/100000}"/></div></td>
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
+                            
+                            <!--<aura:if isTrue="{!oppLE.Month_Actual__c >= v.actualMonth}">
+                                <td ><div class="slds-truncate "><ui:inputNumber aura:id="Latest_Est_Volume" value="{!oppLE.Latest_Est_Volume__c}" blur="{!c.calc_GP}"/></div></td>
+                                <td ><div class="slds-truncate "><ui:inputNumber aura:id="Latest_Est_GPL"  value="{!oppLE.Latest_Est_GP_ltr__c}" blur="{!c.calc_GP}" format="0.0"/></div></td>
+                                <td ><div class="slds-truncate " ><ui:outputNumber aura:id="Latest_Est_GP" value="{!(oppLE.Latest_Est_GP__c)/100000}"/> </div></td>
+                        		<aura:set attribute="else">
+                                    <td ><div class="slds-truncate "><ui:outputNumber value="{!oppLE.Latest_Est_Volume__c}"/></div></td>
+                                    <td ><div class="slds-truncate "><ui:outputNumber value="{!oppLE.Latest_Est_GP_ltr__c}" format="0.0"/></div></td>
+                                    <td ><div class="slds-truncate "><ui:outputNumber value="{!(oppLE.Latest_Est_GP__c)/100000}"/></div></td>
+                                </aura:set>
+                            </aura:if>-->
+                            
+                            <td ><div class="slds-truncate "><ui:outputNumber value="{!oppLE.MTD_Volume__c}"/></div></td>
+                            <td ><div class="slds-truncate "><ui:outputNumber value="{!oppLE.MTD_GP_Ltr__c}" format="0.0"/></div></td>
+                            <td ><div class="slds-truncate "><ui:outputNumber value="{!(oppLE.MTD_GP__c)}"/></div></td>
+                    	</tr>
+                    </aura:iteration>
+                    
+                </tbody>
+                
+                <tr>
+                <th><div class="slds-text-align_centre" >Total</div></th>
+                <th ><div class="slds-truncate slds-text-align_centre" ><ui:outputNumber value="{!v.lyvol}" />  </div></th>
+                 <th ><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber value="{!v.lygpltr}" format="0.0"/></div></th>
+                  
+                 <th  rowspan="2" ><div class="slds-text-align_centre" > <ui:outputNumber value="{!v.accpotential}" /></div></th>
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber aura:id="Month_vol" value="{!v.monthvolume}" />  </div></th>
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber value="{!v.monthgpltr}" format="0.0"/></div></th>
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber value="{!v.monthgp}" /></div></th>
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber aura:id="Latest_vol" value="{!v.latestvol}" /></div></th>
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber value="{!v.latestgpltr}" format="0.0"/></div></th>
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber value="{!v.latestgp}" /></div></th>   
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber value="{!v.actualvol}" /> </div></th>
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber value="{!v.actualgpltr}" format="0.0" /></div></th>
+                 <th scope="col"><div class="slds-truncate slds-text-align_centre" > <ui:outputNumber value="{!v.actualgp}" /></div></th>
+           
+                </tr>
+                    	
+                
+            </table>
+        </div>
+    </div>
+    <div class="slds-align_absolute-center">
+        <lightning:button class="slds-button slds-button_success svbtn" aura:id="svbttn" label="Save" onclick="{!c.saveLEOpp}"/>
+        <lightning:button class="slds-button slds-button_destructive clbtn" aura:id="clbttn" label="Cancel" onclick="{!c.cancelLEOpp}"/>
+    </div>
+    
+</aura:component>

@@ -1,0 +1,460 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<aura:attribute name="objCase" type="Case" />
+    
+   <div class="slds-p-around--none slds-panel__section">  
+ 
+     <div class="slds-section slds-is-open">
+            
+         <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Complaint Information </button>
+                </h3>   
+           
+                
+              <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded"> 
+ 
+                <div class="slds-p-horizontal--small slds-size--1-of-2">  
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Complaint Category </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                              <ui:outputText class="slds-output" value="{!v.objCase.VA_Complaint_Category__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Other Complaints </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Other_Complaints__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Complaint Description </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Complaint_Description__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Customer Closure Consent </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Customer_Closure_Consent__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Consent Comment </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Consent_Comment__c}" />
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+         
+         </div>  
+            
+            <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Contact Information </button>
+                </h3>
+                
+                <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded"> 
+                                     
+               <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Account Name </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                              <ui:outputText class="slds-output" value="{!v.objCase.Account.Name}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Contact Name </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Contact.Name}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Contact Email </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.ContactEmail}" />
+                        </div>  
+                    </div>
+                </div>
+                
+            </div>
+                </div>  
+         
+                     <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Additional Information </button>
+                </h3>
+                         
+                 <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded"> 
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Stacking pattern </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Stacking_pattern__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Quantity Affected </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Quantity_Affected__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Physical Sample </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Physical_Sample__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+                         
+                </div>   
+         
+         <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Common Information </button>
+                </h3>
+             
+             <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded">
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Product </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Product__r.Name}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Batch Number </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Batch_No__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Pack Size </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Pack_Size__c}" />
+                        </div>
+                    </div>
+                </div>
+             
+             <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Pack Size Unit </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Pack_Size_Unit__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+             
+             </div>
+         
+         <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Pack Damage Information </button>
+                </h3>
+                
+             <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded">
+                 
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Leakage / Damage observed at </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Leakage_Damage_observed_at__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Is it a case of part load to Retailor </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Is_it_a_case_of_part_load_to_Retailor__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Leakage / Damage happened at </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Leakage_Damage_happened_at__c}" />
+                        </div>
+                    </div>
+                </div>
+             
+             <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Physical Pack Sample </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Physical_Pack_Sample__c}" />
+                        </div>
+                    </div>
+                </div>
+             
+             <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Mould Number </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Mould_Number__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+             
+              </div>  
+         
+          <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Short Pack Information </button>
+                </h3>
+              
+              <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded">
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Shortage during receipt from </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Shortage_during_receipt_from__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Complaint Location </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Complaint_Location__c}" />
+                        </div>
+                    </div>
+                </div>
+          </div>
+              
+               </div>  
+         
+         <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Short Product Quantity Information</button>
+                </h3>
+             
+             <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded">
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Weight of Pack </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Weight_of_Pack__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Weight of Pack Unit </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Weight_of_Pack_Unit__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Is the sealing intact with image </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Is_the_sealing_intact_with_image__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+             
+             </div>  
+         
+         <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Transit Damage </button>
+                </h3>
+             
+             <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded">
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Damage observed during Delivery to </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Damage_observed_during_Delivery_to__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Is it a case of part load </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Is_it_a_case_of_part_load__c}" />
+                        </div>
+                    </div>
+                </div>
+          </div>
+             
+             </div>  
+         
+         <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> Case Information </button>
+                </h3>
+             
+             <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded">
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Complaint Id </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Complaint_Id__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Case Owner </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Owner.Name}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Problem Description </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Description}" />
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+             
+             </div>  
+         
+         <div class="slds-section slds-is-open">
+                
+                <h3 class="slds-section__title">
+                    <button class="slds-button slds-section__title-action"> VCPL Use Only </button>
+                </h3>
+             
+             <div class="slds-grid slds-grid slds-wrap slds-grid--pull-padded">
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Status </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Status}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> On Hold Reason </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_On_Hold_Reason__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Additional comments </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.VA_Additional_Comments__c}" />
+                        </div>
+                    </div>
+                </div>
+             
+              <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Web Email</label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.SuppliedEmail}" />
+                        </div>
+                    </div>
+                </div>
+             
+              <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Case Origin </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Origin}" />
+                        </div>
+                    </div>
+                </div>
+             
+              <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Subject </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Subject}" />
+                        </div>
+                    </div>
+                </div>
+             
+              <div class="slds-p-horizontal--small slds-size--1-of-2">
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                        <label class="slds-form-element__label"> Priority </label>
+                        <div class="slds-form-element__control" style="min-height: 18px;">
+                             <ui:outputText class="slds-output" value="{!v.objCase.Priority}" />
+                        </div>
+                    </div>
+                </div>
+                
+            </div>  
+             
+             </div>  
+         
+            
+        </div>
+        
+</aura:component>

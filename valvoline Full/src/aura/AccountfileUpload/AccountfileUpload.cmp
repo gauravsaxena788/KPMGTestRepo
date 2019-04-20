@@ -1,0 +1,26 @@
+<aura:component controller="FileUploadController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+<!--<ltng:require styles="/resource/gpcal_lex_yo_SLDS0121/assets/styles/salesforce-lightning-design-system-ltng.css,/resource/fullcal" 
+	scripts="/resource/jquery3,/resource/fullcalenderupdated/fullcalendar-3.9.0/lib/moment.min.js,/resource/fullcalenderupdated/fullcalendar-3.9.0/fullcalendar.js"
+	afterScriptsLoaded="{!c.doInit}"
+/> -->
+   <aura:attribute name="parentId" type="Id" default="" />
+   <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+   <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    
+   <div class="slds-modal_medium" style="height:50%;border:1px solid #DDD;padding:10px;background-color:#FFFF;border-radius:5px;" id="accsummary">            
+    <h1 style="font-size:16px;"><b>Upload Customer Logo</b></h1><br/>   
+    <div style="padding-left:20px;">
+    <lightning:input aura:id="fileId" onchange="{!c.handleFilesChange}" type="file" name="file" label="Upload Logo" accept="image/*" multiple="false"/>
+    <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>
+         
+    <aura:if isTrue="{!v.showLoadingSpinner}">
+        <div class="slds-text-body_small slds-text-color_error">Uploading... 
+            <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading"/>'
+        </div>
+    </aura:if>
+    
+    <br/> 
+    <button class="slds-button slds-button_brand" onclick="{!c.doSave}">Upload</button>
+    </div>
+    </div>
+</aura:component>

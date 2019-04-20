@@ -1,0 +1,13 @@
+<aura:component Controller="VA_CARReportController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+	<aura:attribute name="pageId" type="String" default="/apex/CARReportPage?id="/>	  
+    <aura:attribute name="recordId" type="String" />
+     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+     <aura:attribute type="String" name ="parentURL"/>
+    <iframe src="{!v.parentURL + v.pageId + v.recordId}" width="100%" height="500px;" frameBorder="0"/>       
+    <br/>  
+    <br/>    
+    <br/>
+    <!--<div style="text-align:center;">
+        <lightning:button variant="brand" label="Save" iconName="action:approval" iconPosition="left" onclick="{!c.save}" />
+    </div>-->   
+</aura:component>

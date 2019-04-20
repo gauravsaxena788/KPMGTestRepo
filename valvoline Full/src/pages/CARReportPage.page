@@ -1,0 +1,246 @@
+<apex:page showHeader="false" applyHtmlTag="false" applyBodyTag="false" standardStylesheets="false" renderAs="pdf" Controller="VA_CARReportController">
+<html lang="en">
+<head>
+    <title>Valvoline PDF</title>  
+    <style>
+        @page{
+            margin: 0;  
+        padding: 0;
+        size: A4;
+        }
+        
+        input[type="checkbox"]{
+            border: 1px solid #000;
+            display: inline-block;
+        width: 5px;
+        height: 5px;
+        vertical-align: middle;
+        margin-top: 3px;
+        }
+        body{
+            font-family: SansSerif;
+        }
+       table, table td, table th {
+  border: solid black;
+}
+table {
+  border-width: 1px 1px 0 0;
+}
+table td, table th {
+  border-width: 0 0 1px 1px;
+}
+          
+         
+    </style>
+</head>
+<body>
+    <div style="width: 90%; margin: 0 auto;">
+    <table width="100%" align="center" border="0"  cellpadding="0" cellspacing="0" style="border: 0;">
+    </table>
+    <table width="100%" align="center" border="0" cellpadding="3" cellspacing="0" style="border:1px solid #000">
+        <tr>
+            <th width="20%" style="border: 0">
+                <apex:image url="{!URLFOR($Resource.ComplaintValvolineLogo)}" alt="" width="50px" /> 
+            </th>
+            <th width="60%" align="center" style="border: 0">
+                <h1 style="font-weight: 700; padding: 0px; margin: 0; font-size: 16px; color: rgb(0, 46, 106)">Corrective Action Report</h1>
+            </th>
+            <th width="20%" style="border: 0">
+                <apex:image url="{!URLFOR($Resource.CumminsLogo)}" alt="" width="50px" />    
+            </th>  
+
+        </tr>
+
+
+
+            
+        
+    </table>
+
+    <table width="100%" align="center" border="1" style="border-top: 0" cellpadding="3" cellspacing="0">
+        <tr>
+            <td colspan="4" style="background: rgb(0, 46, 106); color: white">
+                <h2 style="padding: 5px; margin: 0; font-size: 10px;">1. Complaint Information</h2>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="font-size: 8px;"><strong>CAR No.:</strong></td>
+            <td style="font-size: 8px; font-weight: bold;">
+            <apex:outputText value="{!objCase.VA_Complaint_Id__c}"/>
+            </td>
+            <td align="right" style="font-size: 8px;"><strong>Date:</strong></td>
+            <td style="font-size: 8px; font-weight: bold;">
+            <apex:outputText value="{!objCase.CreatedDate}"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="font-size: 8px;"><strong>Complaint Raised by:</strong></td>
+            <td style="font-size: 8px; font-weight: bold;">
+            <apex:outputText value="{!objCase.CreatedBy.Name}"/>
+            </td>
+            <td align="right" style="font-size: 8px;"><strong>Distributor/Retailer/Company Name:</strong></td>
+            <td style="font-size: 8px; font-weight: bold;">
+            <apex:outputText value="{!objCase.Account.Name}"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="font-size: 8px;"><strong>Product Name:</strong></td>
+            <td style="font-size: 8px; font-weight: bold;">
+            <apex:outputText value="{!objCase.VA_Product__r.Name}"/>
+            </td>
+            <td align="right" style="font-size: 8px;"><strong>Pack Size:</strong></td>
+            <td style="font-size: 8px; font-weight: bold;">
+            <apex:outputText value="{!objCase.VA_Pack_Size__c}"/>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="font-size: 8px;"><strong>Batch No.:</strong></td>
+            <td style="font-size: 8px; font-weight: bold;">
+            <apex:outputText value="{!objCase.Batch_No__c}"/>
+            </td>
+            <td align="right" style="font-size: 8px;"><strong>Quantity Affected:</strong></td>
+            <td style="font-size: 8px; font-weight: bold;">
+            <apex:outputText value="{!objCase.VA_Quantity_Affected__c}"/>
+            </td>
+        </tr>
+
+
+
+
+        <tr>
+            <td colspan="4" style="background: rgb(0, 46, 106); color: white">
+                <h2 style="padding: 5px; margin: 0; font-size: 10px;">2. Problem Description</h2>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <h2 style="font-size: 10px; padding: 5px; margin: 0;">
+                <apex:outputText value="{!objCase.Description}"/>
+                </h2>
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan="4" style="background: rgb(0, 46, 106); color: white">
+                <h2 style="padding: 5px; margin: 0; font-size: 10px;">3. Root Cause<br/>
+                    <span style="font-size: 6px;">a) Follow 5 WHY format:  OR  b)Examine "6-M's" MAN; MACHINE; MATERIALS; MEASUREMENT; METHOD; MOTHER NATURE.  </span>
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td><h2 style="color: red; font-size: 10px;">Why 1?</h2></td>
+            <td >
+            <apex:outputText value="{!objCase.VA_Why_1__c}" rendered="{!IF(objCase.VA_Root_Cause__c ='5 Why?',true,false)}"/>
+            </td>
+            <td><h2 style="font-size: 10px;">Man</h2></td>
+            <td >  
+            <apex:outputText value="{!objCase.VA_Man__c}" rendered="{!IF(objCase.VA_Root_Cause__c ='6-Ms',true,false)}"/>  
+            </td>
+        </tr>
+        <tr>
+            <td><h2 style="color: red; font-size: 10px;">Why 2?</h2></td>
+            <td >
+            <apex:outputText value="{!objCase.VA_Why_2__c}" rendered="{!IF(objCase.VA_Root_Cause__c ='5 Why?',true,false)}"/>
+            </td>
+            <td><h2 style="font-size: 10px;">Machine</h2></td>
+            <td>
+            <apex:outputText value="{!objCase.VA_Machine__c}"  rendered="{!IF(objCase.VA_Root_Cause__c ='6-Ms',true,false)}"/>
+            </td>
+        </tr>
+        <tr>
+            <td><h2 style="color: red; font-size: 10px;">Why 3?</h2></td>
+            <td>
+            <apex:outputText value="{!objCase.VA_Why_3__c}" rendered="{!IF(objCase.VA_Root_Cause__c ='5 Why?',true,false)}"/>
+            </td>
+            <td><h2 style="font-size: 10px;">Material</h2></td>
+            <td>
+            <apex:outputText value="{!objCase.VA_Material__c}"  rendered="{!IF(objCase.VA_Root_Cause__c ='6-Ms',true,false)}"/>
+            </td>
+        </tr>
+        <tr>
+            <td><h2 style="color: red; font-size: 10px;">Why 4?</h2></td>
+            <td>
+            <apex:outputText value="{!objCase.VA_Why_4__c}"  rendered="{!IF(objCase.VA_Root_Cause__c ='5 Why?',true,false)}"/>
+            </td>
+            <td><h2 style="font-size: 10px;">Measurement</h2></td>
+            <td >
+            <apex:outputText value="{!objCase.VA_Measurement__c}" rendered="{!IF(objCase.VA_Root_Cause__c ='6-Ms',true,false)}"/>
+            </td>
+        </tr>
+        <tr>
+            <td><h2 style="color: red; font-size: 10px;">Why 5?</h2></td>
+            <td>
+            <apex:outputText value="{!objCase.VA_Why_5__c}"  rendered="{!IF(objCase.VA_Root_Cause__c ='5 Why?',true,false)}"/>
+            </td>
+            <td><h2 style="font-size: 10px;">Method</h2></td>
+            <td >
+            <apex:outputText value="{!objCase.VA_Method__c}" rendered="{!IF(objCase.VA_Root_Cause__c ='6-Ms',true,false)}"/>            
+            </td>
+        </tr>
+        <tr>
+            <td><h2 style="color: red; font-size: 10px;"></h2></td>
+            <td>
+            </td>
+            <td><h2 style="font-size: 10px;">Mother Nature</h2></td>
+            <td >      
+            <apex:outputText value="{!objCase.VA_Mother_Nature__c}" rendered="{!IF(objCase.VA_Root_Cause__c ='6-Ms',true,false)}"/>  
+            </td>   
+        </tr>
+        <tr>
+            <td colspan="4" style="background: rgb(0, 46, 106); color: white">
+                <h2 style="padding: 5px; margin: 0; font-size: 10px;">4. Correction<br/>
+                    <span style="font-size: 6px;">List of immediate ACTIONS TAKEN to address the problem</span>
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <h2 style="font-size: 10px; padding: 5px; margin: 0;">
+                <apex:outputText value="{!objCase.VA_Correction__c}"/>
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="background: rgb(0, 46, 106); color: white">
+                <h2 style="padding: 5px; margin: 0; font-size: 10px;">5. Corrective Action<br/>
+                    <span style="font-size: 6px;">List of actions to prevent recurrence</span>
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <h2 style="font-size: 10px; padding: 5px; margin: 0;">
+                <apex:outputText value="{!objCase.VA_Corrective_Action__c}"/>        
+                </h2>
+            </td>
+        </tr>
+        
+        <tr>
+            <th rowspan="7" valign="top">
+                <strong style="font-size: 10px">Document Review</strong><br/>
+                <span style="font-size: 6px">(Tick which is applicable)</span>
+            </th>
+            <th><strong style="font-size: 10px">Document Reviewed</strong></th>
+            <th><strong style="font-size: 10px">Modification required</strong></th>
+            <th><strong style="font-size: 10px">Document No (if modified)</strong></th>
+        </tr>
+        <apex:repeat value="{!objCase.Document_Reviews__r}" var="docReviewObj">
+                            <tr>
+                                <td style="text-align:center;padding:0px;font-size:10px;">        
+                                    <apex:outputText value="{!docReviewObj.VA_Document_Reviewed__c}"/> 
+                                </td>
+                                <td style="text-align:center;padding:0px;font-size:10px;">
+                                    <apex:outputText value="{!docReviewObj.VA_Doc_Updated__c}"/>       
+                                </td>
+                                <td style="text-align:center;padding:0px;font-size:10px;">    
+                                    <apex:outputText value="{!docReviewObj.VA_Doc_Version__c}"/>          
+                                </td>
+                            </tr>
+                        </apex:repeat>  
+        
+
+    </table>
+</div>
+</body>
+</html>
+</apex:page>

@@ -1,0 +1,110 @@
+<aura:component controller="VA_createOrderPageController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+
+    <aura:attribute name="showTestPage" type="boolean" default="false" />
+    <aura:attribute name="selectedLookUpRecord" type="Account" default="{}" description="For storing Account" />
+    <aura:attribute name="orderObj" type="Order" default="{'sobjectType': 'Order'}" description="" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Initialization Handler" />
+    <aura:attribute name="RequiredField" type="boolean" default="false" />
+    <aura:attribute name="errormsg" type="String" default="" />
+    <aura:attribute name="title" type="String" default="" />
+    <aura:attribute name="type" type="String" default="" />
+    <aura:attribute name="icon" type="String" default="" />
+    <aura:attribute name="passedChildAccId" type="String" />
+
+    <div aura:id="ORDER_PAGE" id="ORDER_PAGE" style="display:none;">
+        <lightning:spinner variant="brand" size="large" />
+    </div>
+
+    <aura:renderIf isTrue="{!v.errormsg != ''}">
+        <style>
+            .slds-notify_container {
+                top: 0%;
+            }
+            
+            .slds-text-heading_small {
+                color: white;
+            }
+        </style>
+        <!-- start Error POPup-->
+        <div class="slds-notify_container">
+            <div class="{!'slds-notify slds-notify_toast ' + v.type}" role="alert">
+                <span class="slds-assistive-text">{!v.title}</span>
+                <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close" onclick="{!c.closeToast}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse" variant="inverse"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <lightning:icon iconName="{!v.icon}" size="small" class="slds-m-right--small slds-col slds-no-flex" variant="inverse" />
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{!v.title}!</h2>
+                    <p class="pclass">{!v.errormsg}</p>
+                    <h2 class="slds-text-heading_small "></h2>
+                </div>
+            </div>
+        </div>
+        <!-- End Error POPup-->
+    </aura:renderIf>
+
+    <div class="demo-only" aura:id="mainDiv" style="height: 640px;">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.cancel}">
+                        X
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        New Order
+                    </h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="container">
+                        <fieldset class="slds-form--compound">
+                            <div class="slds-m-bottom--medium"></div>
+                            <div class="slds-form-element__group">
+                                <div class="slds-m-bottom--medium"></div>
+                                <div class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+                                    <legend class="slds-form-element__label slds-text-title--caps">Order Information</legend>
+                                </div>
+                                <div class="slds-m-bottom--medium"></div>
+                                 <div class="slds-form-element__row">
+                                 	<div class="slds-form-element slds-size--1-of-2">
+                                 		<ui:inputDate aura:id="poDate" class="slds-input" labelClass="slds-form-element__label" value="{!v.orderObj.PoDate}" label="PO Date" displayDatePicker="true"  format="dd/MM/yyyy"/>
+                                 	</div>
+                                 	<div class="slds-form-element slds-size--1-of-2">
+                                 		<ui:inputText aura:id="poNumber" class="slds-input" labelClass="slds-form-element__label" value="{!v.orderObj.PoNumber}" label="PO Number" />
+                                 	</div>
+                                 </div>
+                                 <div class="slds-form-element__row">
+                                 	<div class="slds-form-element slds-size--1-of-2">
+                                 		<ui:inputDate aura:id="orderStartDate" class="slds-input" labelClass="slds-form-element__label" value="{!v.orderObj.EffectiveDate}" label="Order Start Date" required="true" displayDatePicker="true"  format="dd/MM/yyyy"/>
+                                 	</div>
+                                 	<div class="slds-form-element slds-size--1-of-2">
+                                 		<c:VA_CustomLookupParent aura:id = "lookupComp" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.selectedLookUpRecord}" label="Account" />
+                                 	</div>
+                                 </div>
+                                 <div class="slds-form-element__row">
+                                 	
+                                 	<div class="slds-form-element slds-size--1-of-2">
+                                 		<ui:inputText aura:id="deliveryAddress" class="slds-input" labelClass="slds-form-element__label" value="{!v.orderObj.VA_Delivery_Address__c}" label="Delivery Address" />
+                                 	</div>
+                                 	<div class="slds-form-element slds-size--1-of-2">
+                                 		
+                                 	</div>
+                                 </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick="{!c.controllerSaveOrderDetails}" href="javascript:void(0);">
+                        Save
+                    </button>
+                    <button class="slds-button slds-button--neutral" onclick="{!c.cancel}" href="javascript:void(0);">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </section>
+         <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</aura:component>

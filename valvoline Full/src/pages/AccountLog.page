@@ -1,0 +1,391 @@
+<apex:page lightningStylesheets="true" Controller="Accountlogcontroller" showHeader="FALSE" sidebar="false" renderAs="{!if($CurrentPage.parameters.isPdf == null, null, 'pdf')}">
+    <style>
+        .blueColor{
+        background-color: #9dd5e6;
+        }
+    </style>
+    <style>
+    .myTable {
+        counter-reset: rowCounter;
+    }
+    .myTable .row {
+        counter-increment: rowCounter;
+    }
+    .myTable .row .counter::before {
+        content: counter(rowCounter);
+    }
+    </style>
+    
+    <style>
+        html{
+        padding:5px !important;
+        }
+        #spinner{
+        display: none;
+        width:200px;
+        height: 50px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        text-align:center;
+        padding:10px;
+        font:normal 16px Tahoma, Geneva, sans-serif;
+        margin-left: -100px;
+        margin-top: -100px;
+        z-index:2;
+        overflow: auto;
+        border:1px solid #CCC;
+        background-color:white;
+        z-index:100;
+        padding:5px;
+        line-height:20px;
+        }
+        #opaque {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        display: none;
+        background-color: gray;
+        filter: alpha(opacity=30);
+        opacity: 0.3;
+        -moz-opacity:0.3;
+        -khtml-opacity:0.3
+        }
+        * html #opaque {
+        position: absolute;
+        }
+        
+        input[type="text"] {
+        min-width: 5rem !important;
+        }
+        .mybtncss:hover{
+        background-color:#005fb2 !important;
+        border-color: #005fb2 !important;
+        }
+        
+        .mybtncss2:hover{
+        background-color:#870500 !important;
+        border-color: #870500 !important;
+        }
+        
+        .myaddbtncss:hover{
+        background-color:#006400 !important;
+        border-color: #006400 !important;
+        }
+        
+        .myheadercss{
+        padding-top: -30px;
+        }
+        
+        #wstatus {
+        
+        }
+        
+        .textstyle {
+        
+        font-size:100%;
+        text-align: center;
+        border-style: Solid;
+        border-width: 0.2px;
+        background-color:#9DD5E6;
+        
+        font-weight: thick;
+        
+        }
+        
+        .select-style {
+        border: 1px solid #ccc;
+        width: 120px;
+        border-radius: 3px;
+        overflow: hidden;
+        background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+        }
+        
+        .select-style select {
+        padding: 5px 8px;
+        width: 130%;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+        background-image: none;
+        -webkit-appearance: none;
+        }
+        
+        .select-style select:focus {
+        outline: none;
+        }
+        
+        .mybtn1:hover
+        {
+        background-image:none !important;
+        background-color:green !important;
+        border-color:green !important;
+        }
+        .mybtn:hover
+        {
+        background-image:none !important;
+        background-color:#ff0a37 !important;
+        border-color:#ff0a37 !important;
+        }
+        
+        .pbHeader {
+        color:#000;
+        border: 1px solid #F8F8F8;
+        background-color:#F8F8F8 !important;
+        align: center !important;
+        padding: 5px;
+        }
+    </style>
+    
+    <script type="text/javascript">
+    
+    function ChangeGP()
+    {
+        alert('hi');
+        return false; 
+    }
+    
+    function fix(var1,var2){
+        alert(var1+"****"+var2);
+        document.getElementById('{!$Component.gp}').value = var1 * var2;
+        
+    }
+    
+    </script>
+    
+    <apex:form id="myfrm">
+        <script type="text/javascript">
+        function fun1()
+            {
+                //  alert('Hi');
+                window.open('/apex/AccountLog_PDF?accountId={!accountId}&seltype={!selectedtype}', '_blank');
+                return true;
+            }
+        </script>
+        <apex:slds />
+        <center>
+            <div class="slds-align_absolute-center" style ="font:20px/1.5 Arial;">
+                <h1>Account Logs</h1>
+            </div>
+        </center> <br/>   
+        <apex:pageBlock >           
+            <apex:pageBlockSection >                
+                <apex:outputText value="{!accountname}" label="Account Name"  style="font-weight:bold"/>
+                <apex:outputText value="{!accountcode}" label="Account Code" style="font-weight:bold"/>
+                <apex:outputText value="{!currentUserName}" label="Account Owner" style="font-weight:bold"/>
+                <apex:outputText value="{!accountcity}" label="Account City" style="font-weight:bold"/>                 
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock >
+            <center><apex:outputLabel > <b>Select Period</b> : </apex:outputLabel>
+                <apex:selectList size="1" value="{!selectedtype}">
+                    <apex:selectOptions value="{!dynamiclist}"/>
+                    <apex:actionSupport event="onchange" action="{!AllTaskList}" status="wstatus" reRender="myfrm"/>
+                </apex:selectList></center>
+            
+            <input type="button" value="Download as PDF" class="slds-button slds-button_brand" style="float:right;margin-top:-30px;" onclick="fun1();"/>  
+            
+            <apex:actionStatus id="waitStatus">
+                
+                <apex:facet name="start">
+                    <div >
+                        &nbsp;
+                    </div>
+                    <div >
+                        <div style="background-color: #fff;">
+                            <img src="/img/loading.gif" style="float: left; margin: 8px;" /> 
+                            <span>Please Wait...</span>
+                        </div>
+                    </div>
+                </apex:facet>
+                
+            </apex:actionStatus>
+          
+        </apex:pageBlock>
+        
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col">
+                        <div class="slds-truncate" title="Sr No.">Sr No.</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Date">Date</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Subject">Subject</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Details">Details</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Activity Type">Activity Type</div>
+                    </th>                    
+                    <th scope="col">
+                        <div class="slds-truncate" title="Activity Created By">Activity Created By</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Stage">Opportunity Name</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Stage">Opportunity stage</div>
+                    </th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!opplist}" var="opp" >
+                    <apex:variable value="{!1}" var="srNo"/>
+                    <apex:repeat value="{!opp.tasks}" var="t" >
+                        
+                        <tr>
+                            <td data-label="Sr No.">
+                                <div class="slds-truncate">{!srNo}</div>
+                            </td>
+                            <td data-label="Date">
+                                <div class="slds-truncate" title="Cloudhub">
+                                    <apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}">
+                                        <apex:param value="{!t.createddate}" /> 
+                                    </apex:outputText>
+                                </div>
+                            </td>
+                            <td data-label="Subject">
+                                <div class="slds-truncate">{!t.subject}</div>
+                            </td>
+                            <td data-label="Details">
+                                <div class="slds-truncate" title="Prospecting">{!t.Description}</div>
+                            </td>
+                            <td data-label="Activity Type">
+                                <div class="slds-truncate" title="20%">{!t.TaskSubtype}</div>
+                            </td>
+                            <td data-label="Activity CreatedBy">
+                                <div class="slds-truncate" title="$25k">{!t.CreatedBy.name}</div>
+                            </td>
+                            <td data-label="Stage">
+                                <div class="slds-truncate" >{!opp.Name}</div>
+                            </td>
+                            
+                            <td data-label="Stage">
+                                <div class="slds-truncate" >{!opp.StageName}</div>
+                            </td>
+                        </tr>
+                        <apex:variable var="srNo" value="{!srNo+1}"/>
+                    </apex:repeat>
+                <!--/apex:repeat>
+            
+                <apex:repeat value="{!opplist}" var="opp" -->
+                    <apex:repeat value="{!opp.Events}" var="t" >
+                        
+                        <tr>
+                            <td data-label="Sr No.">
+                                <div class="slds-truncate">{!srNo}</div>
+                            </td>
+                            <td data-label="Date">
+                                <div class="slds-truncate" title="Cloudhub">
+                                    <apex:outputText value="{0,date,dd' 'MMMMM' 'yyyy}">
+                                        <apex:param value="{!t.createddate}" /> 
+                                    </apex:outputText>
+                                </div>
+                            </td>
+                            <td data-label="Subject">
+                                <div class="slds-truncate">{!t.subject}</div>
+                            </td>
+                            <td data-label="Details">
+                                <div class="slds-truncate" title="Prospecting">{!t.Description}</div>
+                            </td>
+                            <td data-label="Activity Type">
+                                <div class="slds-truncate" title="20%">{!t.EventSubtype}</div>
+                            </td>
+                            <td data-label="Activity CreatedBy">
+                                <div class="slds-truncate" title="$25k">{!t.CreatedBy.name}</div>
+                            </td>
+                            <td data-label="Stage">
+                                <div class="slds-truncate" >{!opp.Name}</div>
+                            </td>
+                            
+                            <td data-label="Stage">
+                                <div class="slds-truncate" >{!opp.StageName}</div>
+                            </td>
+                        </tr>
+                        <apex:variable var="srNo" value="{!srNo+1}"/>
+                    </apex:repeat>
+                </apex:repeat>
+            </tbody>
+        </table>
+
+        
+        
+        
+    </apex:form>
+    <apex:outputPanel id="callalert">
+        <apex:outPutPanel rendered="{!IF(OR(alertrender,alertrender2), true, false)}">
+            <script type="text/javascript">
+            
+            function myalertfun()
+            {
+                alert('Latest estimate has been saved successfully.'); 
+            }
+            myalertfun();
+            </script>
+        </apex:outPutPanel>
+    </apex:outputPanel>
+    
+    <div id="opaque"/>
+    <div id="spinner">
+        <p align="center" style='{font-family:"Arial", Helvetica, sans-serif; font-size:20px;}; padding-top:5px;'><apex:image value="/img/loading.gif"/>&nbsp;Please wait</p>
+    </div>
+    
+    <apex:outputpanel id="mstatus">
+        <apex:actionstatus id="wstatus">
+            <apex:facet name="start">
+                <div class="waitingSearchDiv" id="el_loading" style="width:100%;height:100%;background-color: #ECEBEA;opacity:0.65; ">
+                    <div class="waitingHolder">
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">Please wait...</span>
+                    </div>
+                </div>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:outputpanel>
+   <!-- <apex:pageBlock>
+    <apex:pageBlockTable value="{!records}" var="record" styleClass="myTable" rowClasses="row">
+            <apex:column>
+                <span class="counter"></span>
+            </apex:column>
+            <apex:column value="{!record.Name}" />
+        </apex:pageBlockTable>
+     </apex:pageBlock>-->   
+    <script type="text/javascript">
+    
+    function closeSpinner()
+    {
+        document.getElementById('opaque').style.display='none';
+        var popUp = document.getElementById('spinner');
+        
+        popUp.style.display = 'none';
+    }
+    function showSpinner()
+    {
+        document.getElementById('opaque').style.display='block';
+        var popUp = document.getElementById('spinner');
+        
+        popUp.style.display = 'block';
+        
+        setTimeout(function () {
+            closeSpinner()
+        }, 3000);
+        
+    }
+    function closeWin()
+    {
+        if(confirm('Are you sure want to close this page?'))
+        {
+            window.close();
+        }
+    }    
+    </script>   
+    
+</apex:page>

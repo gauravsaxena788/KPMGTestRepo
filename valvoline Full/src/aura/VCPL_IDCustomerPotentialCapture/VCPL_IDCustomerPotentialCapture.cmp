@@ -1,0 +1,213 @@
+<aura:component implements="force:lightningQuickActionwithoutheader,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" controller="VCPL_IDCustomerPotentialController">
+    
+    <aura:attribute name="DetailsWrapper" type="VCPL_IDCustomerPotentialController.detailsWrapper" description="for Storing Iteration Value" />
+    <aura:attribute name="basicDetails" type="VCPL_IDCustomerPotentialController.getDetailsWrapper" description="for Storing Basic Details" />
+    
+    <div aura:id="CUSTOMER_SALES_ID_POTENTIAL" id="CUSTOMER_SALES_ID_POTENTIAL" style="display:none;">
+        <lightning:spinner variant="brand" size="large" />
+    </div>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Initialization Handler" />
+    
+    <aura:attribute name="recordId" type="string" default="{!v.RecordId}" />
+    
+    <aura:method name="callDoinit" action="{!c.doInit}" />
+    
+    
+    <aura:attribute name="errormsg" type="String" default="" />
+    <aura:attribute name="title" type="String" default="" />
+    <aura:attribute name="type" type="String" default="" />
+    <aura:attribute name="icon" type="String" default="" />
+    
+    <aura:renderIf isTrue="{!v.errormsg != ''}">
+        <!--<style>
+            .slds-notify_container {
+            top: 0%;
+            }
+            
+            .slds-text-heading_small {
+            color: white;
+            }
+        </style>-->
+        <!-- start Error POPup-->
+        <div class="slds-notify_container">
+            <div class="{!'slds-notify slds-notify_toast ' + v.type}" role="alert">
+                <span class="slds-assistive-text">{!v.title}</span>
+                <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close" onclick="{!c.closeToast}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse" variant="inverse"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <lightning:icon iconName="{!v.icon}" size="small" class="slds-m-right--small slds-col slds-no-flex" variant="inverse" />
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{!v.title}!</h2>
+                    <p class="pclass">{!v.errormsg}</p>
+                    <h2 class="slds-text-heading_small "></h2>
+                </div>
+            </div>
+        </div>
+        <!-- End Error POPup-->
+    </aura:renderIf>
+    
+    
+    <table style="background-color: white;" class="slds-table">
+        <tr>
+            <td colspan="2">
+                <div class="slds-align_absolute-center" style="height: 3rem;">
+                    <div class="slds-page-header">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-has-flexi-truncate">
+                                <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate" title="Monthly Sales Capture"><b>Potential Capture</b></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div class="slds-align_absolute-center" style="height: 0rem;">
+                    <div class="slds-page-header">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-has-flexi-truncate">
+                                <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-small-text" title="User Name">User: {!v.basicDetails.strUsersName}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="slds-align_absolute-center" style="height: 4rem;">
+                    <div class="slds-page-header">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-has-flexi-truncate">
+                                <h3 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate slds-small-text" title="Financial Year">Financial Year: {!v.basicDetails.strFinancialYear}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="slds_blanktd"></td>
+        </tr>
+    </table>
+    
+    <div class="slds-coach__keys slds-size--1-of-1  slds-large-size--1-of-1 slds-box slds-theme_shade slds-theme_alert-texture slds-nomargin">
+        <div class="slds slds-resizable slds-scrollable">
+            <table class="slds-table slds-table--bordered slds-table_col-bordered slds-table_cell-buffer slds-table_striped">
+                <thead>
+                    <tr class="slds-text-heading--label">
+                        <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" width="50%">
+                            <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                <span class="slds-assistive-text">Sort</span>
+                                <label class="labelclass">
+                                    <b>PH6</b>
+                                </label>
+                            </a>
+                        </th>
+                        <th class="slds-is-sortable slds-text-title--caps" scope="col" onclick="" width="50%">
+                            <a href="javascript:void(0);" class="slds-th__action slds-text-link--reset">
+                                <span class="slds-assistive-text">Sort</span>
+                                <label class="labelclass">
+                                    <b>POTENTIAL</b>
+                                </label>
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="slds-text-heading--label">
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <label class="labelclass">
+                                <b>Engine Oil (In ltr)</b>
+                            </label>
+                        </td>
+                        <td>
+                            <ui:inputNumber value="{!v.DetailsWrapper.samplePH6Potentialvalue1}" format="0.0" class="slds-input" />
+                        </td>
+                    </tr>
+                    <tr class="slds-text-heading--label">
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <label class="labelclass">
+                                <b>Industrial Oil (In ltr)</b>
+                            </label>
+                        </td>
+                        <td>
+                            <ui:inputNumber value="{!v.DetailsWrapper.samplePH6Potentialvalue2}" format="0.0" class="slds-input" />
+                        </td>
+                    </tr>
+                    <tr class="slds-text-heading--label">
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <label class="labelclass">
+                                <b>Gear Oil (In ltr)</b>
+                            </label>
+                        </td>
+                        <td>
+                            <ui:inputNumber value="{!v.DetailsWrapper.samplePH6Potentialvalue3}" format="0.0" class="slds-input" />
+                        </td>
+                    </tr>
+                    <tr class="slds-text-heading--label">
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <label class="labelclass">
+                                <b>Anti-Freeze (In ltr)</b>
+                            </label>
+                        </td>
+                        <td>
+                            <ui:inputNumber value="{!v.DetailsWrapper.samplePH6Potentialvalue4}" format="0.0" class="slds-input" />
+                        </td>
+                    </tr>
+                    <tr class="slds-text-heading--label">
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <label class="labelclass">
+                                <b>Grease (In ltr)</b>
+                            </label>
+                        </td>
+                        <td>
+                            <ui:inputNumber value="{!v.DetailsWrapper.samplePH6Potentialvalue5}" format="0.0" class="slds-input" />
+                        </td>
+                    </tr>
+                    <tr class="slds-text-heading--label">
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <label class="labelclass">
+                                <b>AUS 32 (In ltr)</b>
+                            </label>
+                        </td>
+                        <td>
+                            <ui:inputNumber value="{!v.DetailsWrapper.samplePH6Potentialvalue6}" format="0.0" class="slds-input" />
+                        </td>
+                    </tr>
+                    <tr class="slds-text-heading--label">
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <label class="labelclass">
+                                <b>Others (In ltr)</b>
+                            </label>
+                        </td>
+                        <td>
+                            <ui:inputNumber value="{!v.DetailsWrapper.samplePH6Potentialvalue7}" format="0.0" class="slds-input" />
+                        </td>
+                    </tr>
+                    <tr class="slds-text-heading--label">
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <label class="labelclass">
+                                <b>Total (In ltr)</b>
+                            </label>
+                        </td>
+                        <td>
+                            <ui:inputNumber value="{!add(add(add(v.DetailsWrapper.samplePH6Potentialvalue1 != NULL?v.DetailsWrapper.samplePH6Potentialvalue1:0,v.DetailsWrapper.samplePH6Potentialvalue2 != NULL?v.DetailsWrapper.samplePH6Potentialvalue2:0),add(v.DetailsWrapper.samplePH6Potentialvalue3 != NULL?v.DetailsWrapper.samplePH6Potentialvalue3:0,v.DetailsWrapper.samplePH6Potentialvalue4 != NULL?v.DetailsWrapper.samplePH6Potentialvalue4:0)),add(add(v.DetailsWrapper.samplePH6Potentialvalue5 != NULL?v.DetailsWrapper.samplePH6Potentialvalue5:0,v.DetailsWrapper.samplePH6Potentialvalue6 != NULL?v.DetailsWrapper.samplePH6Potentialvalue6:0),add(v.DetailsWrapper.samplePH6Potentialvalue7 !=NULL?v.DetailsWrapper.samplePH6Potentialvalue7:0,0)))}" format="0.0" class="slds-input" disabled="true"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-p-top_small"></div>
+        <div class="slds-align_absolute-center">
+            <button class="slds-button slds-button_brand" onclick="{!c.onSaveButtonClick}" href="javascript:void(0);">
+                Save
+            </button>
+            <button class="slds-button slds-button_brand" onclick="{!c.onCloseButtonClick}" href="javascript:void(0);">
+                Close
+            </button>
+        </div>
+    </div>
+</aura:component>

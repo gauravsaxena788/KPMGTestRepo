@@ -1,0 +1,46 @@
+<aura:component 
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" 
+                access="global"  controller="VCPL_DiffrentialPricingController">
+     <aura:attribute name="isOpen" type="boolean" default="false" />
+    <!--<style>
+    .forceListViewManagerHeader .test-lvmForceActionsContainer{
+	display:none;
+	}
+    </style>-->
+    <aura:handler 	name="init" 
+                  value="{!this}" 
+                  action="{!c.doInit}" />
+    <aura:attribute name ="showTestPage"
+                    type = "boolean"
+                    default = "false"/>
+    <aura:attribute name ="buttondisabled"
+                    type = "boolean"
+                    default = "true"/>
+    <aura:if isTrue="{!v.buttondisabled}">
+    <div style="border: 1px solid white;">
+        <button style="float:right;" class="slds-button slds-button_neutral slds-align_absolute-Right" onclick="{!c.openModel}" >New</button> 
+    </div>
+     </aura:if> 
+    <div role="dialog" tabindex="-1" aria-labelledby="header43" aura:id="Modalbox" class="slds-modal">
+        <div class="slds-modal__container">
+           
+            <div class="slds-modal__header" >
+                <button class="slds-button slds-modal__close slds-button--icon-inverse"  title="Close" onclick="{!c.closeModal}" >
+                    X<span class="slds-assistive-text">Close</span>
+                </button>
+                
+            </div>
+                
+            <div class="slds-modal__content slds-p-around--medium">
+                <div style="width:100%;">
+                    <aura:if isTrue="{!v.isOpen}">
+                        <c:VCPL_Diffrential_PricingCmp showTestPage="{!v.isOpen}" />
+                    </aura:if>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop " aura:id="Modalbackdrop"></div>
+</aura:component>

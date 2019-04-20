@@ -1,0 +1,87 @@
+<!-- fileUpload2.cmp is identical -->
+<aura:component controller="FileController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+    
+    <aura:attribute name="parentId" type="Id"/>
+    
+    <!--<aura:handler event="aura:waiting" action="{!c.showSpinner}"/>-->
+    <!--<aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>-->
+    <!--<aura:handler event="force:refreshView" action="{!c.isRefreshed}" />-->
+    <aura:attribute name="Spinner"
+                    type="boolean"
+                    default="false"
+                    Description="Used to show wating spinner"/>
+    
+    <aura:attribute name="showLoadingSpinner" 
+                    type="boolean" 
+                    default="false" 
+                    Description="Show/hide the uploading image and message."/>
+    
+    <aura:attribute name="fileName" 
+                    type="String" 
+                    default="No File Selected.." 
+                    Description="Display the selected file name." />
+    
+    <aura:attribute name="errorMessage" type="String"></aura:attribute>
+     <!-- PAGE HEADER -->
+    <a onclick="{!c.goBack}" href="javascript:void(0);">Back</a>
+    <div class="slds-page-header">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-media slds-no-space slds-grow">
+                    <!--<div class="slds-media__figure">
+                        <lightning:icon iconName="utility:signpost" alternativeText="Upload Files"/>
+                    </div>-->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / PAGE HEADER -->
+    
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <aura:if isTrue="{!v.showLoadingSpinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+      <!-- Loading spinner end-->
+    <div class="slds-box slds-theme_shade slds-theme_alert-texture slds-m-top_xxx-small" >
+        <div class="{!if(v.showInModal,'slds-modal__content slds-p-around_medium','slds-form-element__control')}" 
+             id="modal-content-id-1">
+           
+            <aura:if isTrue="{!!empty(v.errorMessage)}">  
+                <ui:message title="Error" severity="error">
+                    {!v.errorMessage}
+                    <br/>
+                </ui:message>
+            </aura:if>
+            <div style="width:100%;display:inline-flex !important;" class="slds-box">
+                <fieldset class="myFieldset slds-form slds-form_stacked slds-box slds-theme_default" style="width:100%;">
+                    <legend class="myLegend">&nbsp;Upload File: &nbsp;</legend>
+                    <div class="uploadfile">
+                        
+                        <lightning:input aura:id="fileId" 
+                                         onchange="{!c.handleFilesChange}"                                  
+                                         type="file" 
+                                         label=""
+                                         name="file"
+                                         class="slds-float--left"
+                                         multiple="false"/>
+                        
+                        
+                    </div>
+                     
+                    
+                </fieldset>
+               
+            </div>
+            <div class="slds-text-body_small slds-text-color_error lblval"  style="margin-left:20px;">
+                            {!v.fileName}
+                        </div>
+        </div>
+    </div>
+    </aura:component>

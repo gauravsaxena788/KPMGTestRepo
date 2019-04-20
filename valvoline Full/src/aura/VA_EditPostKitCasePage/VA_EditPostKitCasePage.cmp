@@ -1,0 +1,155 @@
+<aura:component controller = "VA_editPostCasePageController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" 
+                    type="String" 
+                    description="This Attribute is storing case record Id"/>
+    <aura:attribute name="selectedLookUpRecord" type="Account" default="{}"/>
+    <aura:attribute name="selectedProjectrecord" type="VA_Project__c" default="{}"/>
+    <aura:attribute name="selectedLookUpContact" type="Contact" default="{}"/>
+    <aura:attribute name="recTypeId" type="String"/>
+    <aura:attribute name="isAdditionalOtherReason" type="boolean" default = "false"/>
+    <aura:attribute name="isProject" type="boolean" default = "false"/>
+    <aura:attribute name="isComplaint" type="boolean" default = "false"/>
+    <aura:attribute name = "totalBottlesAlreadyRequested" type = "String" />
+    <aura:attribute name = "bottleBalanceWithCustomer" type = "String" />
+    <aura:attribute name = "totalTestsAlreadyRequested" type = "String"/>
+    <aura:attribute name = "kitPrice" type = "String"/>
+    <aura:attribute name = "errormsg" type = "String"/>
+    <aura:attribute name = "isDesktop" type = "boolean" default = "false"/>
+    <aura:attribute name ="ifAccIdExist" type="String" default=""/>
+
+    <aura:registerEvent name = "ClosePostKitEvent" type = "c:ClosePostKitEvent"/>
+    <div aura:id="EDIT_CASE_PAGE" id="EDIT_CASE_PAGE" style="display:none;" > 
+        <lightning:spinner variant="brand" size="large"/> 
+    </div>
+    <aura:attribute name="caseObj" 
+                    type="Case" 
+                    default="{'sobjectType': 'Case'}"
+                    description = ""
+                    access="global"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.selectedLookUpRecord}" action="{!c.getBottlesDataFromCustomer}"/>
+    a<force:inputField value = "{!v.caseObj.VA_Project__c}"/>b
+    <div class="demo-only" aura:id = "mainDiv" style="height: 640px;">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New: Post Kit Request</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    <div class="container">
+                        <fieldset class="slds-form--compound">
+                            <div class="slds-m-bottom--medium"></div>
+                            <div class="slds-form-element__group">
+                                
+                                <div class="slds-page-header slds-text-heading--label">
+                                    <legend class="slds-form-element__label slds-text-title--caps">Case Information</legend>
+                                </div>
+                               
+                                <div class="slds-form-element__row">
+                                    <div class = "slds-form-element slds-size--1-of-2">
+                                        <c:VA_CustomLookupParent aura:id = "lookupComp" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.selectedLookUpRecord}" label="Account" />
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <c:VA_CustomLookupParent aura:id = "lookupContact" objectAPIName="contact" IconName="standard:contact" selectedRecord="{!v.selectedLookUpContact}" label="Contact"/>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputSelect class="slds-input" aura:id = "reqPurpose" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Request_Purpose__c}" label="Request Purpose" change = "{!c.setReqPurpose}" required = "true">
+                                            <!--Picklist Component -->
+                                        </ui:inputSelect>
+                                    </div>
+                                    
+                                    <div aura:id = "projectdiv" class="slds-form-element slds-size--1-of-2">
+                                        <c:VA_CustomLookupParent aura:id = "lookupCompProject" objectAPIName="VA_Project__c" IconName="standard:channel_program_levels" recordId = "{!v.selectedLookUpRecord.Id}" selectedRecord="{!v.selectedProjectrecord}" label="Project"/>
+                                        
+                                    </div>
+                                </div>      
+                                
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputSelect class="slds-input" aura:id = "lab" labelClass="slds-form-element__label" value="{!v.caseObj.VA1_Lab__c}" label="Lab" required = "true" disabled = "true">
+                                            <!--Picklist Component -->
+                                        </ui:inputSelect>
+                                    </div>
+                                    <div aura:id = "NumberKitDiv" class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputNumber  aura:id = "numberKit" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_No_Of_Bottles_Requested__c}" label="No. Of Kit Requested" required = "true" updateOn="keyup" format="0.00" keyup = "{!c.showHideReason}"/>
+                                    </div>
+                                    
+                                </div> 
+                                
+                                <div class="slds-form-element__row">
+                                    
+                                    <div aura:id = "reasonAdditionalDiv" class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputSelect class="slds-input" aura:id = "reasonAdditional" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Reason__c}" label="Reason For Additional Bottles" required = "true" change = "{!c.showHideOtherReason}">
+                                        </ui:inputSelect>
+                                    </div>
+                                    
+                                    <div class="slds-form-element slds-size--1-of-2" aura:id = "otherReasonDiv">
+                                        <ui:inputText aura:id = "otherReason" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Additional_Bottle_Other_Reason__c}" required = "true" label="Additional Bottle Other Reason" updateOn = "keyup" keyup = "{!c.removeAdditionalError}"/>
+                                    </div>
+                                </div>
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2" aura:id = "AdditionalCommentsDiv">
+                                        <ui:inputText aura:id = "AdditionalComments" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Additional_Comments__c}" label="Additional Comments" required = "true" updateOn = "keyup" keyup = "{!c.removeAdditionalCommentError}"/>
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2" aura:id = "complaintDiv">
+                                        <ui:inputText aura:id = "complaint" class="slds-input" required = "true" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Complaint_Number__c}" label="Complaint Number" updateOn = "keyup" keyup = "{!c.removeComplaintError}"/>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="slds-page-header slds-text-heading--label">
+                                    <legend class="slds-form-element__label slds-text-title--caps">Kit Details</legend>
+                                </div>
+                                
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputText class="slds-input" labelClass="slds-form-element__label" value="{!v.totalTestsAlreadyRequested}" label="Total Tests Already Requested" disabled = "true"/>
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputText class="slds-input" labelClass="slds-form-element__label" value="{!v.bottleBalanceWithCustomer}" label="Bottle Balance With Customer" disabled = "true"/>
+                                    </div>
+                                </div>
+                                
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputText class="slds-input" labelClass="slds-form-element__label" value="{!v.totalBottlesAlreadyRequested}" label="Total Bottles Already Requested" disabled = "true"/>
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <!--<ui:inputText class="slds-input" labelClass="slds-form-element__label" value="{!v.kitPrice}" label = "Kit Price" disabled = "true"/> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div aura:id = "modelFooter" class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick="{!c.saveData}" href="javascript:void(0);">
+                        Save
+                    </button>
+                    <button class="slds-button slds-button--neutral" onclick="{!c.hidePopup}" href="javascript:void(0);">
+                        Cancel
+                    </button>
+                </div>
+                <div aura:id = "modelFooterMobile" class="slds-modal__footer">
+                     <button class="slds-button slds-button_brand" onclick="{!c.saveData}" href="javascript:void(0);">
+                        Save
+                    </button>
+                    <button class="slds-button slds-button--neutral" onclick="{!c.navigateToPreviousPage}" href="javascript:void(0);">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </section>
+        <aura:if isTrue="{!v.isDesktop}">
+        	<div class="slds-backdrop slds-backdrop_open"></div>
+		</aura:if>
+    </div>
+</aura:component>

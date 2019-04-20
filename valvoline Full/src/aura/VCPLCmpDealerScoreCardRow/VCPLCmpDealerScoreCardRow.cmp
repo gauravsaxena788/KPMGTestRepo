@@ -1,0 +1,78 @@
+<aura:component controller="VCPLCmpServiceDealerScoreCard"
+                extends="c:VCPLBaseUtility">
+    
+    <aura:attribute name="scoreCardRecordLineItem"
+                    type="Object"
+                    access="public"/>
+    
+    <aura:attribute name="recordIndex"
+                    type="Integer"
+                    access="public"/>
+    
+    <aura:attribute name="dealerScoreCardRecord"
+                    type="Object"
+                    access="public"/>
+    
+    
+    <aura:attribute name="scoreCardParameterLookupFilterCondition" 
+                    type="String" 
+                    default="VCPL_Active__c=true" 
+                    description="The filter criteria for Score Card Parameter."/>
+    
+    
+    <tr class="slds-text-title_caps">
+        <td scope="col" class="action">
+            <div class="slds-truncate" title="{!v.recordIndex}">{!v.recordIndex + 1}</div>
+        </td>
+        <td scope="col" class="action">
+            <ui:inputTextArea value="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.Name}"
+                            disabled ="true"/> 
+            <!--c:LookupComponent sObjectAPIName="VCPL_Score_Card_Parameters__c"
+                               pluralLabel="Score Card Parameter" 
+                               label="scoreCardParameter" 
+                               aura:id="scoreCardParameterLookup"
+                               SelectedItemId="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__c}" 
+                               SelectedItemText="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.Name}"
+                               externalParameter="{!recordIndex}"
+                               updateLookupIdEvent="{!c.scoreCardChangeHandler}"
+                               clearLookupIdEvent="{!c.clearScoreCard}"
+                               FilterCondition="{!v.scoreCardParameterLookupFilterCondition}"
+                               IsClickOnSearch="true"
+                               LookupDisabled="true"/-->
+        </td>
+        <td scope="col" class="action">
+            <ui:inputNumber value="{!v.scoreCardRecordLineItem.VCPL_Value__c}"
+                            disabled ="{!and(or(v.dealerScoreCardRecord.VCPL_Score_Card_Status__c == 'Rejected',v.dealerScoreCardRecord.VCPL_Score_Card_Status__c == 'Draft'),v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.VCPL_Value_Type__c != 'Manual')}"/> 
+        </td>
+        <td scope="col" class="action">
+            <div class="slds-truncate" title="{!v.scoreCardRecordLineItem.VCPL_Dealer_Score__c}">
+                <ui:inputNumber value="{!v.scoreCardRecordLineItem.VCPL_Dealer_Score__c}"
+                                disabled = "{!if(or(v.dealerScoreCardRecord.VCPL_Score_Card_Status__c == 'Rejected',v.dealerScoreCardRecord.VCPL_Score_Card_Status__c == 'Draft'),'false','true')}"/></div>
+        </td>
+        <td scope="col" class="action">
+            <div class="slds-truncate" title="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.VCPL_Max_Score__c}">
+                <ui:inputNumber value="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.VCPL_Max_Score__c}"
+                                disabled = "true"/></div>
+        </td>
+        <td scope="col" class="action">
+            <div class="slds-truncate" title="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.VCPL_Score_Scale__c}">
+                <ui:inputTextArea disabled="true"
+                                  value="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.VCPL_Score_Scale__c}" />
+            </div>
+        </td>
+        <td scope="col" class="action">
+            <div class="slds-truncate" title="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.VCPL_Description__c}">
+                <ui:inputTextArea disabled="true"
+                                  value="{!v.scoreCardRecordLineItem.VCPL_Score_Card_Parameter__r.VCPL_Description__c}" /></div>
+        </td>
+        <td scope="col" class="action">
+            <div class="slds-truncate" title="{!v.scoreCardRecordLineItem.VCPL_Comments__c}">
+                <ui:inputTextArea placeholder="Evaluator Comments"
+                                  value="{!v.scoreCardRecordLineItem.VCPL_Comments__c}" 
+                                   maxlength="255"
+                                  disabled = "{!if(or(v.dealerScoreCardRecord.VCPL_Score_Card_Status__c == 'Rejected',v.dealerScoreCardRecord.VCPL_Score_Card_Status__c == 'Draft'),'false','true')}"/>
+            </div>
+        </td>
+    </tr>
+    
+</aura:component>

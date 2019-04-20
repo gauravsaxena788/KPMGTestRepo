@@ -1,0 +1,36 @@
+.THIS .profile {
+    width : auto;
+}
+
+.THIS .addZIndex{
+    z-index: 2;
+    position: relative;
+}
+.THIS .searchAlignRight{
+    
+    float: right;
+    padding: 16px;   
+}
+.THIS .help{
+    line-height: 30px;
+    margin-right: 25px;
+}
+.THIS .notification{
+    position: relative;
+    top: 5px;
+}
+.THIS .notification .slds-global-header__button--icon,
+.THIS .notification .slds-global-header__button--icon:hover,
+.THIS .notification .slds-global-header__button--icon:focus{
+    color: #fff;
+}
+.THIS .slds-icon,
+.THIS .slds-icon:hover{
+    fill: #fff !important;
+}
+.THIS.pageHeader{
+    background-image: url('../resource/Valvoline/images/cummins.png');
+    background-repeat: no-repeat;
+    background-position: 98% 24px;
+    background-size: 38px;
+}

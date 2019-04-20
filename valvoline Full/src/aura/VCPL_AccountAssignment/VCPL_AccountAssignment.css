@@ -1,0 +1,18 @@
+.THIS .slds-search-user,
+.THIS .slds-Classify{
+    width: 50%;
+}
+
+.THIS .slds-spinner_container {
+    position: fixed;
+}
+
+@media only screen 
+and (min-device-width : 375px) 
+and (max-device-width : 812px)
+and (-webkit-device-pixel-ratio : 3) {
+    .THIS .sWrapTest {
+        overflow:scroll;
+        max-width:350px;
+    }
+}

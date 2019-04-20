@@ -1,0 +1,19 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="res" type="String" />
+    
+    {!v.body}
+    <b>Selected Year:</b>
+    <aura:attribute name="years" type="String[]" default="Current Year,Next Year"/>
+    <aura:iteration items="{!v.years}" var="year">
+     <ui:inputRadio label="{!year}" change="{!c.onRadio}" name="asd" />
+    </aura:iteration>
+   
+   <b>Selected Item:</b>
+   <p><ui:outputText class="result" aura:id="radioResult" value="" /></p>
+
+   
+
+</aura:component>

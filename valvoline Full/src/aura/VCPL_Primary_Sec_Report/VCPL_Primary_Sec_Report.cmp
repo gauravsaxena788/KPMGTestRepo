@@ -1,0 +1,26 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VCPL_Primary_Sec_ReportController" >
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:attribute name="dealerSales" type="object" />
+    <aura:attribute name="columns" type="LIST" />
+    
+    <div style="width:100%; margin-top:10px;">
+    <table style="background-color:lightgray; border:3px;" border="2px;">
+        <tr>
+            <td colspan="2"><center>Volume in KL</center></td>
+        </tr>    
+        <aura:iteration items="{!v.dealerSales}" var="mnData" indexVar="key">
+    	<tr>
+            <td style="min-width: 100px;padding: 10px;font-weight: bold;">{!mnData.key}</td>
+        	<td>
+                <lightning:datatable
+                    keyField="id"
+                    data="{!mnData.value}"
+                    columns="{!v.columns}"
+                    hideCheckboxColumn="true"/>
+            </td>
+        </tr>
+        </aura:iteration>
+    </table>
+    </div>
+</aura:component>

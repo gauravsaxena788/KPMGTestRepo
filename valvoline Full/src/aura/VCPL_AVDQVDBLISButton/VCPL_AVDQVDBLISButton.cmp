@@ -1,0 +1,18 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                access="global" 
+                controller="VCPL_AVDQVDBLISButtonController">
+    <aura:attribute name="show" type="boolean" default="false" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <aura:if isTrue="{!v.show == true}">
+        <div class=" floatright" role="group" style="float:right;">
+            <!--&nbsp;<button class="slds-button slds-button_brand" onclick="{!c.navigatetoAVDQVD}" href="javascript:void(0);">
+                AVD-QVD
+            </button>-->
+            <button class="slds-button slds-button_brand" onclick="{!c.navigatetoBLIS}" href="javascript:void(0);">
+                BLIS
+            </button>
+        </div>
+    </aura:if>
+</aura:component>

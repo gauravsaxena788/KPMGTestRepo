@@ -1,0 +1,49 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+      
+    <aura:attribute name="profileMenu" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="search" type="Aura.Component[]"/>
+    <!--<aura:attribute name="cssStyle" type="String"  />-->
+    <!--<aura:handler name="init" value="{!this}" action="{!c.onInit}"/>-->
+    <!-- <style>{!v.cssStyle}</style> -->
+    <header class="pageHeader">
+        <div class="slds-container_large container_align_center">
+            <div class=" navLinks slds-text-align_right">
+                <a href="#" class=" profile ">{!v.profileMenu}</a>
+                <div class="profile notification"><forceCommunity:notifications/></div>
+                <!--<lightning:icon
+                iconName="utility:notification"
+                size="small"
+                class="profile notification"
+                variant="inverse"
+                title="Notification" />-->
+                
+                <a target="_blank" href="https://help.salesforce.com/home" class="profile help">Help</a>     
+                
+                <!--<a href="https://partialcpy-vcpl.cs95.force.com/Customer/secur/logout.jsp" class="profile">Logout</a>   -->          
+            </div>
+            
+            <div class="slds-grid--pull-padded slds-large-size--6-of-9">
+            <div class="searchAlignRight slds-col  slds-container_small container_align_left" style="margin-top:-12px;">
+                {!v.search}
+            </div>
+            </div>
+            <h1 class="slds-text-heading_large">Welcome to DASH</h1>
+            <!--<div class="navLinks slds-text-align_right">  
+    <a href="#">swift_icon</a>
+    <a href="#">(0 ITEMS) $0.00</a>  
+   </div>-->
+        </div>
+        
+        
+    </header>
+    <div class=" filter_section">
+        
+        <c:VCPL_ShowData/>     
+        <!-- <select>
+    <option value="">All Locations</option>
+   </select>      -->
+    </div>
+    
+    
+ 
+</aura:component>

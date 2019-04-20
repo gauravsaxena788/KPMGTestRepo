@@ -1,0 +1,1472 @@
+<apex:page lightningStylesheets="true" controller="PMTreport" sidebar="false" showHeader="false" doctype="html-5.0" readOnly="true">
+
+<style>
+.blueColor{
+background-color: #9dd5e6;
+}
+</style>
+
+<style>
+html{
+padding:5px !important;
+}
+#spinner{
+    display: none;
+    width:200px;
+    height: 50px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    text-align:center;
+    padding:10px;
+    font:normal 16px Tahoma, Geneva, sans-serif;
+    margin-left: -100px;
+    margin-top: -100px;
+    z-index:2;
+    overflow: auto;
+    border:1px solid #CCC;
+    background-color:white;
+    z-index:100;
+    padding:5px;
+    line-height:20px;
+ }
+ #opaque {
+     position: fixed;
+     top: 0px;
+     left: 0px;
+     width: 100%;
+     height: 100%;
+     z-index: 1;
+     display: none;
+     background-color: gray;
+     filter: alpha(opacity=30);
+     opacity: 0.3;
+     -moz-opacity:0.3;
+     -khtml-opacity:0.3
+ }
+ * html #opaque {
+     position: absolute;
+ }
+
+input[type="text"] {
+    min-width: 5rem !important;
+}
+.mybtncss:hover{
+background-color:#005fb2 !important;
+border-color: #005fb2 !important;
+}
+
+.mybtncss2:hover{
+background-color:#870500 !important;
+border-color: #870500 !important;
+}
+
+.myaddbtncss:hover{
+background-color:#006400 !important;
+border-color: #006400 !important;
+}
+
+.myheadercss{
+ padding-top: -30px;
+}
+
+#wstatus {
+     
+ }
+
+.textstyle {
+   
+    font-size:100%;
+    text-align: center;
+     border-style: Solid;
+     border-width: 0.2px;
+    background-color:#9DD5E6;
+    
+    font-weight: thick;
+    
+}
+
+.select-style {
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}
+
+.mybtn1:hover
+{
+    background-image:none !important;
+    background-color:green !important;
+    border-color:green !important;
+}
+.mybtn:hover
+{
+    background-image:none !important;
+    background-color:#ff0a37 !important;
+    border-color:#ff0a37 !important;
+}
+
+.pbHeader {
+  color:#000;
+  border: 1px solid #F8F8F8;
+  background-color:#F8F8F8 !important;
+  align: center !important;
+  padding: 5px;
+}
+</style>
+
+<script type="text/javascript">
+
+function ChangeGP()
+{
+alert('hi');
+return false; 
+}
+
+function fix(var1,var2){
+alert(var1+"****"+var2);
+document.getElementById('{!$Component.gp}').value = var1 * var2;
+
+}
+       
+</script>
+
+
+  <apex:form id="myfrm">
+  
+ <apex:slds >
+     
+     <apex:pageMessages id="showmsg"></apex:pageMessages>
+     
+     <!--<apex:actionFunction action="{!getOpportunityList}" name="callOpportunityList" reRender="myfrm" status="wstatus"/>-->
+        
+     
+      <div class="frame">
+          
+          <center>
+            <div class="slds-align_absolute-center" style ="font:  20px/1.5 Arial;">
+                <h1>PMT Report</h1>
+            </div>
+            <div class="slds-align_absolute-center" style ="font:  20px/1.5 Arial;">
+              <h3 style="color:blue">{!currentUserName} </h3>
+           </div>
+           <div class="slds-align_absolute-center" style ="font:  20px/1.5 Arial;">
+          <h3>Financial Year: {!fysYear}</h3> </div>
+          
+          <hr style="margin-top:10px;margin-bottom:10px;"/>
+          
+          <div class="slds-align_absolute-center" style ="font:  14px/1.5 Arial;">
+          
+              <label><b>Select Type:</b></label>&nbsp;                
+              <apex:selectList value="{!periodtype}" size="1" id="mytype" styleclass="select-style" style="height:30px;">
+                  <apex:selectOptions value="{!periodtypelist}"/>
+                  <apex:actionSupport event="onchange" action="{!checkPeriodType}" status="wstatus" reRender="myfrm"/>
+              </apex:selectList>
+              
+              
+          </div>
+          </center>
+          
+          <hr style="margin-top:10px;margin-bottom:10px;"/>  
+  
+  
+           
+<apex:actionStatus id="waitStatus">
+
+    <apex:facet name="start">
+    <div >
+        &nbsp;
+    </div>
+    <div >
+        <div style="background-color: #fff;">
+           <img src="/img/loading.gif" style="float: left; margin: 8px;" /> 
+            <span>Please Wait...</span>
+        </div>
+    </div>
+    </apex:facet>
+    
+</apex:actionStatus>
+
+  <apex:pageBlock id="isLubes" title="> PMT Report">
+
+         <apex:outputPanel id="tableid" > 
+        
+         <apex:outputPanel >
+         
+         <apex:variable var="lylubesvol" value="{!0.00}"/>
+         <apex:variable var="lylubesgpltr" value="{!0.00}"/>
+         <apex:variable var="accpot" value="{!0.00}"/>
+         
+         <apex:variable var="latestlubesvol" value="{!0.00}"/>
+         <apex:variable var="latestlubesgpltr" value="{!0.00}"/>
+         
+         <apex:variable var="mtdlubesvol" value="{!0.00}"/>
+         <apex:variable var="mtdlubesgpltr" value="{!0.00}"/>
+         
+         <apex:variable var="lubevolaverage" value="{!0.00}"/>
+         <apex:variable var="lubenspaverage" value="{!0.00}"/>
+         <apex:variable var="lubesmonthaverage" value="{!0}"/>
+         
+         <apex:variable var="lubestotalnspltrlm" value="{!0.00}"/>
+         <apex:variable var="lubestotalnspltrle" value="{!0.00}"/>
+         <apex:variable var="lubestotalnspltrcy" value="{!0.00}"/>
+         <apex:variable var="lubestotalnspltrly" value="{!0.00}"/>
+         
+         <apex:variable value="{!1}" var="srNo"/>
+          
+         <table class="table table-striped table-bordered" border="1" id="example">
+            <thead>       
+                  <tr>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Segment</b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>Lubes Volume </b></span></center></td>
+                    <apex:repeat value="{!monthList}" var="a">                
+                         <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;">
+                            <b><apex:outputText value="{!a}"/>   </b>   
+                         </span></center></td>                 
+                    </apex:repeat>
+                    
+                    
+                  </tr>             
+          </thead> 
+          
+           <tbody> 
+                 <tr>
+               <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value=""/>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="AOP"/>      
+                  </div></td>
+                   <apex:repeat value="{!aopWrapperList}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.count}"/>      
+                  </div></td>                 
+                  </apex:repeat> 
+               </tr>
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                     <b><apex:outputText value="{!cumminSegment}"/></b> 
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                             
+                  <apex:repeat value="{!lubesCumminsWrapListMTD}" var="a">                
+                      <td style="text-align: center;"><div class="slds-truncate " >
+                         <apex:outputText value="{!a.mtdcount}"/>      
+                      </div></td>                 
+                  </apex:repeat>
+              </tr>
+              <tr>   
+                 <!--   <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="{!cumminSegment}"/>      
+                  </div></td> -->
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesCumminsWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                   <!--  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value=""/>      
+                  </div></td>-->
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>             
+              <apex:repeat value="{!lubesCumminsWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  END OF CUMMIN-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!industrialSegment}"/> </b>     
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesIndustrialWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesIndustrialWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndustrialWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  END OF Industrial-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                     <b> <apex:outputText value="{!infraSegment}"/>  </b>    
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesInfraWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesInfraWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--  END OF Infra-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!powergenSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesPowergenWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesPowergenWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesPowergenWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--  END OF Powergun-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!IndusDirSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesIndusDirWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesIndusDirWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndusDirWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--  END OF Industrial Direct -->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!InfraDirSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesInfraDirWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesInfraDirWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndusDirWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--  END OF Industrial Direct -->
+              
+              <!--  Start Of GP -->
+              
+             <tr>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b></b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>GP Lubes </b></span></center></td>
+                    <td class="textstyle" colspan="{!monthList.size}"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b></b></span></center></td>
+                    
+             </tr>  
+             <tr>
+               <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value=""/>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="AOP"/>      
+                  </div></td>
+                   <apex:repeat value="{!aopGpWrapperList}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.count}"/>      
+                  </div></td>                 
+                  </apex:repeat> 
+               </tr>
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!cumminSegment}"/>  </b>    
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                             
+                  <apex:repeat value="{!lubesCumminsGPWrapListMTD}" var="a">                
+                      <td style="text-align: center;"><div class="slds-truncate " >
+                         <apex:outputText value="{!a.mtdcount}"/>      
+                      </div></td>                 
+                  </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesCumminsGPWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesCumminsGPWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  END OF CUMMIN-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!industrialSegment}"/> </b>     
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesIndustrialGPWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesIndustrialGPWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndustrialGPWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  END OF Industrial-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!infraSegment}"/> </b>     
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesInfraGPWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesInfraGPWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                 
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraGPWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--  END OF Infra-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!powergenSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesPowergenGPWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesPowergenGPWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesPowergenGPWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr> 
+              <!--   End of power  -->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!IndusDirSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesIndusDirGPWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesIndusDirGPWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndusDirGPWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr> 
+              
+              <!--   End of Industrial Direct  -->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!InfraDirSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesInfraDirGPWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesInfraDirGPWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraDirGPWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr> 
+              
+              <!--   End of Infra Direct  -->
+              
+             <!--  Start Of GP/L  --> 
+              <tr>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b></b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>GP/L Lubes</b></span></center></td>
+                    <td class="textstyle" colspan="{!monthList.size}"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b></b></span></center></td>
+                    
+             </tr>  
+             <tr>
+               <td style="text-align: center;" ><div class="slds-truncate " >
+                      <apex:outputText value=""/>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="AOP"/>      
+                  </div></td>
+                   <apex:repeat value="{!aopGpPerLWrapperList}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.count}"/>      
+                  </div></td>                 
+                  </apex:repeat> 
+               </tr>
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!cumminSegment}"/> </b>     
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                             
+                  <apex:repeat value="{!lubesCumminsGPperLWrapListMTD}" var="a">                
+                      <td style="text-align: center;"><div class="slds-truncate " >
+                         <apex:outputText value="{!a.mtdcount}"/>      
+                      </div></td>                 
+                  </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesCumminsGPperLWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesCumminsGPperLWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  END OF CUMMIN-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!industrialSegment}"/> </b>     
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesIndustrialGPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesIndustrialGPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndustrialGPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  END OF Industrial-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!infraSegment}"/>  </b>    
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesInfraGPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesInfraGPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraGPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--  END OF Infra-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!powergenSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesPowergenGPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesPowergenGPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                   
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesPowergenGPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--   End Of Power -->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!IndusDirSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesIndusDirGPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesIndusDirGPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                   
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndusDirGPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--   End Of Power -->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="3"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!InfraDirSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesInfraDirGPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesInfraDirGPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                   
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraDirGPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--   End Of Power -->
+              
+              <!--  Start Of NSP/L -->  
+              
+             <tr>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b></b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>NSP/L Lubes</b></span></center></td>
+                    <td class="textstyle" colspan="{!monthList.size}"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b></b></span></center></td>
+                    
+             </tr> 
+             
+              <tr>
+               <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value=""/>      
+                  </div></td>
+                 <!-- <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="AOP"/>      
+                  </div></td>
+                   <apex:repeat value="{!aopWrapperList}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.count}"/>      
+                  </div></td>                 
+                  </apex:repeat> -->
+               </tr>
+              <tr>   
+                  <td style="text-align: center;" rowspan="4"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!cumminSegment}"/> </b>     
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                             
+                  <apex:repeat value="{!lubesCumminsNSPperLWrapListMTD}" var="a">                
+                      <td style="text-align: center;"><div class="slds-truncate " >
+                         <apex:outputText value="{!a.mtdcount}"/>      
+                      </div></td>                 
+                  </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesCumminsNSPperLWrapListLY}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesCumminsNSPperLWrapListEst}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                 
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="Price Change"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesCumminsNSPperLWrapListPrice}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.pricecount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  END OF CUMMIN-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="4"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!industrialSegment}"/> </b>     
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesIndustrialNSPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesIndustrialNSPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndustrialNSPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="Price Change"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndustrialNSPperLWrapListPrice}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.pricecount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  END OF Industrial-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="4"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!infraSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesInfraNSPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesInfraNSPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraNSPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="Price Change"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraNSPperLWrapListPrice}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.pricecount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <!--  END OF Infra-->
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="4"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!powergenSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesPowergenNSPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesPowergenNSPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesPowergenNSPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="Price Change"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesPowergenNSPperLWrapListPrice}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.pricecount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  End Of Power--> 
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="4"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!IndusDirSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesIndusDirNSPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesIndusDirNSPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndusDirNSPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="Price Change"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesIndusDirNSPperLWrapListPrice}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.pricecount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  End Of Ind ustrial Direct--> 
+              
+              <tr>   
+                  <td style="text-align: center;" rowspan="4"><div class="slds-truncate " >
+                      <b><apex:outputText value="{!InfraDirSegment}"/></b>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="CY"/>      
+                  </div></td>     
+                               
+              <apex:repeat value="{!lubesInfraDirNSPperLWrapListMTD}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.mtdcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LY"/>      
+                  </div></td> 
+                              
+              <apex:repeat value="{!lubesInfraDirNSPperLWrapListly}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.lycount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="LE"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraDirNSPperLWrapListest}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.estcount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              <tr>   
+                  
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="Price Change"/>      
+                  </div></td>              
+              <apex:repeat value="{!lubesInfraDirNSPperLWrapListPrice}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.pricecount}"/>      
+                  </div></td>                 
+              </apex:repeat>
+              </tr>
+              
+              <!--  End Of Infra Direct--> 
+             
+             
+             <!--  Start Of COGS Movement --> 
+              <tr>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b></b></span></center></td>
+                    <td class="textstyle"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b>COGS MOVEMENT</b></span></center></td>
+                    <td class="textstyle" colspan="{!monthList.size}"><center><span style="color:rgb(107, 109, 112);font-size:12px;"><b></b></span></center></td>
+                    
+             </tr>   
+             <tr>
+                   <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value=""/>      
+                  </div></td>
+                  <!--<td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="AOP"/>      
+                  </div></td>
+                   <apex:repeat value="{!aopWrapperList}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.count}"/>      
+                  </div></td>                 
+                  </apex:repeat> -->
+               </tr>
+               <tr>
+                   <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value=""/>      
+                  </div></td>
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                      <apex:outputText value="Base Oil"/>      
+                  </div></td>
+                   <apex:repeat value="{!cogMovementWrapperList}" var="a">                
+                  <td style="text-align: center;"><div class="slds-truncate " >
+                     <apex:outputText value="{!a.cogsCount}"/>      
+                  </div></td>                 
+                  </apex:repeat> 
+               </tr>   
+          </tbody>    
+                           
+      </table> 
+     
+      
+              
+              </apex:outputPanel>
+              
+            <!--  <apex:outputPanel rendered="{!IF(wrapoptyList.size>0,false,true)}">
+                  <center>No record found</center>
+              </apex:outputPanel>  -->
+            </apex:outputPanel>                    
+       
+           <br/>
+           
+         <apex:outputPanel id="mybuttons">
+        <!--    <apex:outputPanel rendered="{!IF(wrapoptyList.size>0,true,false)}">
+             <center>
+             <apex:commandButton value="Save" action="{!updateopp}" status="wstatus" reRender="callalert" styleClass="mybtncss" style="background-color:#0070d2;border:1px solid #0070d2;color:white;"/> &nbsp;&nbsp;
+             <apex:commandButton value="Cancel" action="{!cancel}" onClick="closeWin();return false;" styleClass="mybtncss2" style="background-color:#c23934;border:1px solid #c23934;color:white;"/>
+             </center>
+         </apex:outputPanel>  -->
+         </apex:outputPanel>     
+         
+                 
+       </apex:pageBlock> 
+       
+                              
+ </div>     
+
+   </apex:slds>
+   
+
+
+  </apex:form>
+<!-- <apex:outputPanel id="callalert">
+    <apex:outPutPanel rendered="{!IF(OR(alertrender,alertrender2), true, false)}">
+        <script type="text/javascript">
+        function myalertfun()
+        {
+          alert('Latest estimate has been saved successfully.'); 
+        }
+        myalertfun();
+        </script>
+    </apex:outPutPanel>
+    </apex:outputPanel>   -->
+
+<div id="opaque"/>
+<div id="spinner">
+    <p align="center" style='{font-family:"Arial", Helvetica, sans-serif; font-size:20px;}; padding-top:5px;'><apex:image value="/img/loading.gif"/>&nbsp;Please wait</p>
+</div>
+
+<apex:outputpanel id="mstatus">
+<apex:actionstatus id="wstatus">
+    <apex:facet name="start">
+        <div class="waitingSearchDiv" id="el_loading" style="width:100%;height:100%;background-color: #ECEBEA;opacity:0.65; ">
+            <div class="waitingHolder">
+                <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                <span class="waitingDescription">Please wait...</span>
+            </div>
+        </div>
+    </apex:facet>
+</apex:actionstatus>
+</apex:outputpanel>
+
+<script type="text/javascript">
+
+function closeSpinner()
+{
+    document.getElementById('opaque').style.display='none';
+    var popUp = document.getElementById('spinner');
+       
+    popUp.style.display = 'none';
+}
+function showSpinner()
+{
+   document.getElementById('opaque').style.display='block';
+   var popUp = document.getElementById('spinner');
+  
+   popUp.style.display = 'block';
+   
+   setTimeout(function () {
+      closeSpinner()
+    }, 3000);
+   
+}
+function closeWin()
+{
+    if(confirm('Are you sure want to close this page?'))
+    {
+        window.close();
+    }
+}    
+ </script>   
+    
+</apex:page>

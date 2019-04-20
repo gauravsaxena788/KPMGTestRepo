@@ -1,0 +1,64 @@
+<aura:component controller = "DynamicObjectDetail" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+
+    <aura:attribute name="sobj" type="sobject"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />    
+    <aura:attribute name="objOrder" type="Order" />  
+    
+  <a onclick="{!c.goBack}" href="javascript:void(0);">Back</a>
+    <div class="slds-m-bottom--medium"></div>
+                            
+    <!--Detail panel--> 
+    
+    <lightning:card variant="base" iconName="standard:orders">
+        <aura:set attribute="title">
+			Order
+    	</aura:set>
+        
+         <div class="container">
+             <fieldset class="slds-form--compound">
+                 <div class="slds-m-bottom--medium">
+                     <div class="slds-form-element__row">
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Account Name </label>
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Order Start Date </label>
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<label class="slds-form-element__label"> Status </label>
+                             </div>
+                         </div>
+                      </div>
+                     
+                     <div class="slds-form-element__row">
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.objOrder.Account.Name}" />
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.objOrder.EffectiveDate}" />
+                             </div>
+                         </div>
+                         
+                         <div class="slds-form-element slds-size--1-of-3">
+                            <div class="slds-form-element slds-hint-parent slds-has-divider--bottom slds-p-around--x-small hasDiv">
+                             	<ui:outputText class="slds-output" value="{!v.objOrder.Status}" />
+                             </div>
+                         </div>
+                      </div>
+                 </div>
+             </fieldset>
+        </div>   
+    </lightning:card>
+    	
+</aura:component>

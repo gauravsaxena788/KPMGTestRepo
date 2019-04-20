@@ -1,0 +1,23 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	
+    <aura:attribute name="show" type="boolean" default="false"/>
+    <aura:attribute name="passAccId" type="String"/>
+    <aura:attribute name="cmpContext" type="String" />
+    <aura:handler name="ModalCloseEvent" event="c:CloseCaseBox" action="{!c.closeAction}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <div aura:id = "desktopDiv">
+    <ui:button  class="slds-button slds-button_nutral" aura:id="Compalint" label="New Complaint" press="{!c.navigateToLightningComponent}"/>
+    
+    <aura:if isTrue="{!v.show}">
+    	<c:VA_CCMSCase passedAccId="{! v.passAccId }" compContext ="{! v.cmpContext }"/>
+    </aura:if>
+    </div>
+    
+     <div aura:id = "phoneDiv">
+        <div class="slds-button-group" role="group">
+            <ui:button  class="slds-button slds-button_neutral" aura:id="Compalint" label="New Complaint" press="{!c.navigateToPhonePage}"/>&nbsp;
+        </div>
+    </div>
+    
+</aura:component>

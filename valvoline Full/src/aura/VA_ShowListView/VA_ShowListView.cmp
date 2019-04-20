@@ -1,0 +1,87 @@
+<aura:component controller="VA_ShowListViewController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,force:hasSObjectName" access="global" >
+    <aura:attribute name="objectName" type="string" default="Case"/>
+    <aura:attribute name="filterName" type="string" default=""/>
+    <aura:attribute name="fieldNames" type="String" default = "Id,CaseNumber,Contact.Name,VA_Complaint_Category__c,Status,CreatedDate,Owner.Name"/>    
+    
+
+    <!--<aura:attribute name="accountId" type="String" default="0012900000JKwOr" />  -->
+    <aura:attribute name="accountId" type="String" default="" /> 
+    <aura:attribute name="newAccountId" type="String"  />  
+    <aura:attribute name="cases" type="Case[]"/>           
+    <aura:attribute type="Boolean" name="sortAsc" />     
+    <aura:attribute type="String" name="sortField" />
+    <aura:attribute name="PageNumber" type="integer" default="1"/>
+    <aura:attribute name="TotalPages" type="integer" default="0"/>
+    <aura:attribute name="TotalRecords" type="integer" default="0"/>
+    <aura:attribute name="RecordStart" type="integer" default="0"/>
+    <aura:attribute name="RecordEnd" type="integer" default="0"/>
+    <aura:attribute name="url" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:attribute name="caseType" type="String" />
+    <aura:attribute name="compContext" type="String" /> 
+    <aura:handler name="change" value="{!v.url}" action="{!c.onUrlChange}" />
+    <aura:attribute name="spinnerSwitch" type="Boolean" default="false"/>
+    <aura:handler event="forceCommunity:routeChange" action="{!c.handleRouteChange}"/>
+    <aura:handler event="aura:locationChange" action="{!c.locationChange}" /> 
+	  {!v.body}
+ 
+        <div class="slds-p-top_xx-large" >
+    		<c:VA_TestKitCreationPage passAccRecordId="{!v.newAccountId}" passCaseType="{!v.caseType}" ></c:VA_TestKitCreationPage>
+        </div>
+
+        
+        <aura:if isTrue="{! v.spinnerSwitch }">
+            <lightning:spinner alternativeText="Loading Tab Content!" size="small" />
+        </aura:if>
+        
+        
+        
+        
+        <div class="slds-float_right">
+            <ui:inputSelect aura:id="pageSize" label="Display Records Per Page: " change="{!c.onSelectChange}">
+                <ui:inputSelectOption text="10" label="10" value="true"/>
+                <ui:inputSelectOption text="15" label="15"/>
+                <ui:inputSelectOption text="20" label="20"/>
+            </ui:inputSelect>
+            <br/>
+        </div>
+    
+    <div class="slds-scrollable">
+    <table class="slds-table slds-table--bordered slds-max-medium-table--stacked-horizontal" sortdir="asc">
+        <thead>
+            <tr class="slds-text-heading--label ">
+                <th onclick="{!c.sortByCaseNumber}"><center>Case Number</center></th>
+                <th onclick="{!c.sortByContactName}"><center>Contact Name</center></th>
+                <!--<th onclick="{!c.sortByComplaintcategory}">Complaint category</th>
+                --><th onclick="{!c.sortByStatus}"><center>Status</center></th>
+                <th onclick="{!c.sortByCreatedDate}"><center>Date/Time Opened</center></th>  
+                <th onclick="{!c.sortByCaseOwner}"><center>Case Owner</center></th>        
+            </tr>  
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.cases}" var="caseObj"><!--Dynamic Listing of Vehicles-->
+                <tr class="slds-hint-parent">
+                   <td class="" data-label="CaseNumber" >  
+                        <a id="{!caseObj.Id}" onclick="{!c.openRecord}" href="javascript:void(0);" ><center>{!caseObj.CaseNumber}</center></a>  
+                    </td>    
+                    <td data-label="Contact Name" style="padding-left:0;"><center>{!caseObj.Contact.Name}</center></td>    
+                    <!--<td data-label="Complaint category" style="padding-left:0;">{!caseObj.VA_Complaint_Category__c}</td>
+                    --><td data-label="Status" style="padding-left:0;"><center>{!caseObj.Status}</center></td>
+                    <td data-label="Date/Time Opened" style="padding-left:0;"><center><ui:outputDate value="{!caseObj.CreatedDate}"/></center></td>   
+                    <td data-label="Case Owner" style="padding-left:0;"><center>{!caseObj.Owner.Name}</center></td>  
+                </tr> 
+            </aura:iteration>   
+        </tbody>  
+    </table> 
+        </div>
+        <div class="slds-clearfix">
+            <div class="slds-page-header" role="banner">
+                <div class="slds-float_right">            
+                    <lightning:button disabled="{!v.PageNumber == 1}" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.handlePrev}" />            
+                    <lightning:button disabled="{!(v.PageNumber == v.TotalPages || v.TotalPages == 0)}" aura:id="nextPage" variant="brand" label="Next" onclick="{!c.handleNext}"/>
+                </div>
+                <p class="slds-page-header__title">{!v.RecordStart}-{!v.RecordEnd} of {!v.TotalRecords} | Page {!v.PageNumber} of {!v.TotalPages}</p>
+            </div>
+        </div>
+
+</aura:component>

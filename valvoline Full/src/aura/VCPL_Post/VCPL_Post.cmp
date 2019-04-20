@@ -1,0 +1,51 @@
+<aura:component Controller="VA_POSTController" implements="flexipage:availableForAllPageTypes,force:appHostable,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"
+                            access="Global">
+ 
+ <aura:attribute name="recordId" type = "string"/>
+ <aura:attribute name="isVisible" type="boolean" default="false"/>
+ <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+ <aura:attribute name="wrapperList" type="object"/>
+    
+   <ltng:require styles="/resource/SLDS/styles/salesforce-lightning-design-system.min.css"/>   
+    <div class="slds-button-group" role="group">
+      <aura:iteration items="{!v.wrapperList.lstCase}" var="caseObj">
+          <aura:if isTrue="{!and(v.wrapperList.isrendered == false,caseObj.Status =='Final Report Released')}" > 
+    <ui:button press="{!c.visibleModel}" label="Post Test Report"/>
+     </aura:if> 
+  	 <aura:if isTrue="{!and(and(v.wrapperList.isrendered ==true,caseObj.Status =='Final Report Released'),caseObj.VA_Request_Purpose__c != 'Complaints')}" > 
+                  <ui:button press="{!c.visibleModel}" label="Post Test Report"/>
+     </aura:if> 
+        </aura:iteration>  
+        
+  <!--Use aura:if tag to display Model Box, on the bese of conditions. [isVisible boolean attribute] -->   
+    <aura:if isTrue="{!v.isVisible}">
+      
+   <!--###### MODAL BOX Start From Here ######--> 
+      <div role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+        <div class="slds-modal__container">
+          <!-- ###### MODAL BOX HEADER Part Start From Here ######-->
+          <div class="slds-modal__header">
+            <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+            X
+            <span class="slds-assistive-text">Close</span>
+            </button>
+            
+          </div>
+          <!--###### MODAL BOX BODY Part Start From Here ######-->
+          <div class="slds-modal__content slds-p-around--medium">
+            <c:POSTTestReportTemplate recordId="{!v.recordId}"/>   
+          </div>
+          <!--###### MODAL BOX FOOTER Part Start From Here ######-->     
+          <div class="slds-modal__footer">  
+            <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}" >Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-backdrop slds-backdrop--open"></div>
+      <!--###### MODAL BOX Part END Here ######-->  
+    
+ </aura:if>
+      
+  </div>
+    
+</aura:component>

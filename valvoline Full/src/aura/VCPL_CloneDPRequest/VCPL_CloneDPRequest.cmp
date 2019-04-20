@@ -1,0 +1,29 @@
+<aura:component implements="force:appHostable,force:lightningQuickActionWithoutHeader,forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride"
+                access="global"
+                controller="VCPL_DiffrentialPricingController">
+    
+    <aura:handler name="init" 
+                  value="{!this}" 
+                  action="{!c.cloneDPRequest}" />
+    
+    <aura:attribute name="objdiffPric" 
+                    type="VCPL_Differential_Pricing__c" 
+                    description="for Storeing Diffrential Pricing Details"/>
+    
+    <aura:attribute name="isOpen" 
+                    type="Boolean" 
+                    default="false" />
+    
+    <aura:attribute name="previousDP" 
+                    type="String" 
+                    default="" />
+    
+    <aura:if isTrue="{!v.isOpen}">
+        <div style="width:100%;">
+            
+            <c:VCPL_Diffrential_PricingCmp showTestPage="{!v.isOpen}" previousDP="{!v.previousDP}" IsCloneRequestresponse="true" aura:id="cloneDPRequestcmp"/>
+            
+        </div>
+    </aura:if>
+    
+</aura:component>

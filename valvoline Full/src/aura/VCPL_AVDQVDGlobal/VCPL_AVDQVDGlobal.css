@@ -1,0 +1,22 @@
+.THIS .slds-table_bordered thead>tr+tr>th, 
+.THIS .slds-table--bordered thead>tr+tr>th,
+.THIS .slds-table--bordered tbody td {
+	border-left: 1px solid rgb(221, 219, 218);
+	border-bottom: 1px solid rgb(221, 219, 218);
+}
+
+.THIS .slds-Configs,
+.THIS .slds-account{
+    width:50%;
+    background-color: transparent;
+    border: none;
+}
+
+.THIS .slds-q1 {
+	position: relative; 
+    right: -17px;
+}
+
+.THIS .slds-spinner_container {
+    position: fixed;
+}

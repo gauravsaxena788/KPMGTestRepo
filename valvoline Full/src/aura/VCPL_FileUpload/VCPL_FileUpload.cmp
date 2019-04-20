@@ -1,0 +1,82 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="VCPL_FilesListViewController">
+    
+    <aura:attribute name="sobj" type="sobject" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <aura:attribute name="FileList" type="ContentVersion[]" />
+    
+    <aura:attribute name="downloadpopup" type="boolean" default="false"/>
+    
+    <aura:attribute name="hrefAtt" type="String"/>
+    
+     <aura:attribute name="download" type="String"/>
+     
+    <lightning:card variant="base" iconName="standard:file">
+        <aura:set attribute="title">
+            Files
+        </aura:set>
+         <aura:if isTrue="{!v.FileList.length > 0}">
+        <table class="slds-table slds-table--bordered slds-table_col-bordered">
+            <thead>
+                <tr class="slds-text-heading--label">
+                    <th class="slds-is-sortable slds-is-resizable slds-is-sorted  slds-cell-shrink" scope="col" aria-sort="descending">
+                        <div class="slds-truncate" title="Attachment Name">File Name</div>
+                    </th>
+                    <th class="slds-is-sortable slds-is-resizable slds-is-sorted  slds-cell-shrink" scope="col" aria-sort="descending">
+                        <div class="slds-truncate" title="Action">Action</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.FileList}" var="objFile">
+                    <tr class="">
+                        <td class="" style="white-space: inherit;">
+                            {!objFile.Title}
+                        </td>
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <a onclick ="{!c.onclickopenSingleFile}" id="{!objFile.Id}" >Download</a>                                   
+                        </td> 
+                    </tr>
+                </aura:iteration>
+                
+            </tbody>
+        </table>
+        </aura:if>
+        <aura:if isTrue="{!v.FileList.length == 0}">
+                    <tr class="slds-truncate slds-resizable" >
+                        <td class="slds-truncate slds-cell-shrink slds-cell-shrink">
+                            <span class="slds-pill__label"> <b>No Record Found.</b></span>
+                        </td>
+                    </tr>
+                </aura:if>
+        <aura:if isTrue="{!v.downloadpopup}">
+            <div class="demo-only" style="height: 640px;">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                                <a href="javascript:void(0);"  title="close" onclick="{!c.onClickClosewindow}">
+                                    <lightning:icon iconName="utility:close" size="small" alternativeText="Close"  />
+                                </a>
+                            </button>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            
+                            <div class="slds-align_absolute-center ">
+                                <!--<ui:button class="buttonclass" press="{!c.onClickClosewindow}">-->
+                                    <a href="{!v.hrefAtt}" download="{!v.download}" title="Download" onclick="{!c.onClickClosewindow}" class="slds-button slds-button_outline-brand" >
+                                        <p style="color:black;">Download</p>                    
+                                    </a>
+                                <!--</ui:button>-->
+                            </div>
+                            
+                        </div> 
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </aura:if>
+    </lightning:card>
+    
+</aura:component>

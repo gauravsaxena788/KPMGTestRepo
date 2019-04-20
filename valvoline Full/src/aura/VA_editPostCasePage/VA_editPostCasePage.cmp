@@ -1,0 +1,185 @@
+<aura:component controller="VA_editPostCasePageController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="showTestPage" type="boolean" default="false" />
+    <aura:attribute name="recordId" type="String" description="This Attribute is storing case record Id" />
+    <aura:attribute name="selectedLookUpRecord" type="Account" default="{}" description="For storing Account" />
+    <aura:attribute name="selectedLookUpContact" type="Contact" default="{}"/>
+    <aura:attribute name="selectedProjectrecord" type="VA_Project__c" description="For Storing Project Record" />
+    <aura:attribute name="selectedProductrecord" type="Product2" description="For Storing Product Record" />
+    <aura:attribute name="selectedProductCategoryRecord" type="VA_Product_Category__c" description="For Storing Product Category Record" />
+    <aura:attribute name="caseObj" 
+                    type="Case" 
+                    default="{'sobjectType': 'Case'}"
+                    description = ""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" description="Initialization Handler" />
+    <aura:attribute name="isComplaint" type="boolean" default="false" />
+    <aura:attribute name="isOtherType" type="boolean" default="false" />
+    <aura:attribute name="isOnHold" type="boolean" default="false" />
+    <aura:attribute name="isCancelled" type="boolean" default="false" />
+    <aura:attribute name="RequiredField" type="boolean" default="false" />
+    <aura:attribute name="errormsg" type="String" default="" />
+    <aura:attribute name="title" type="String" default="" />
+    <aura:attribute name="type" type="String" default="" />
+    <aura:attribute name="icon" type="String" default="" />
+    <!--Below attribute For checking child account-->
+    <aura:attribute name ="ifAccIdExist" type="String" default=""/>
+    
+    
+    <div aura:id="EDIT_CASE_PAGE" id="EDIT_CASE_PAGE" style="display:none;" >
+        <lightning:spinner variant="brand" size="large"/>
+    </div>
+    <aura:renderIf isTrue="{!v.errormsg != ''}">
+        <style>
+            .slds-notify_container {
+            top: 0%;
+            }
+            
+            .slds-text-heading_small {
+            color: white;
+            }
+        </style>
+        <!-- start Error POPup-->
+        <div class="slds-notify_container">
+            <div class="{!'slds-notify slds-notify_toast ' + v.type}" role="alert">
+                <span class="slds-assistive-text">{!v.title}</span>
+                <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close" onclick="{!c.closeToast}">
+                    <lightning:icon iconName="utility:close" size="small" class="slds-button--icon-inverse" variant="inverse"/>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <lightning:icon iconName="{!v.icon}" size="small" class="slds-m-right--small slds-col slds-no-flex" variant="inverse" />
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{!v.title}!</h2>
+                    <p class="pclass">{!v.errormsg}</p>
+                    <h2 class="slds-text-heading_small "></h2>
+                </div>
+            </div>
+        </div>
+        <!-- End Error POPup-->
+    </aura:renderIf>
+    <div class="demo-only" aura:id="mainDiv" style="height: 640px;">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.cancel}">
+                        X
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        New: Post Test Request
+                    </h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="container">
+                        <fieldset class="slds-form--compound">
+                            <div class="slds-m-bottom--medium"></div>
+                            <div class="slds-form-element__group">
+                                <div class="slds-m-bottom--medium"></div>
+                                <div class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+                                    <legend class="slds-form-element__label slds-text-title--caps">Case Information</legend>
+                                </div>
+                                <div class="slds-m-bottom--medium"></div>
+                                <div class="slds-form-element__row">
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputSelect class="slds-input" aura:id = "lab" labelClass="slds-form-element__label" value="{!v.caseObj.VA1_Lab__c}" label="Lab" required = "true" disabled = "true" />
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <ui:inputSelect class="slds-input" aura:id = "reqPurpose" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Request_Purpose__c}" label="Request Purpose" change = "{!c.onReqPurposeChange}" required = "true" />
+                                    </div>
+                                </div>
+                                <div class="slds-form-element__row">
+                                    <div class = "slds-form-element slds-size--1-of-2">
+                                        <div aura:ID="accountDiv">
+                                        	<c:VA_CustomLookupParent aura:id = "lookupComp" objectAPIName="account" IconName="standard:account" selectedRecord="{!v.selectedLookUpRecord}" label="Account" />
+                                        </div>
+                                        <!--<ui:inputText aura:id="accountName" value="{!v.selectedLookUpRecord.Name}" label="Account" disabled="true"/>-->
+                                    </div>
+                                    <div class="slds-form-element slds-size--1-of-2">
+                                        <div aura:ID="contactDiv">
+                                        <c:VA_CustomLookupParent aura:id = "lookupContact" objectAPIName="contact" IconName="standard:contact" selectedRecord="{!v.selectedLookUpContact}" label="Contact"/> 
+                                        </div>
+										<!--<ui:inputText aura:id="contactName" value="{! v.selectedLookUpContact.FirstName +' '+v.selectedLookUpContact.LastName}" label="Contact" disabled="true"/>-->
+                                    </div>  
+                                </div>
+                                <div class="slds-form-element__row">
+                                    <div class = "slds-form-element slds-size--1-of-2">
+                                        <ui:inputSelect aura:id="sampleType" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Type_Of_Sample__c}" label="Type Of Sample" required="true" change="{!c.onSampleTypeChange}"/>
+                                    </div>
+                                    <div  class="slds-form-element slds-size--1-of-2">
+                                    	<ui:inputCheckBox class="" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Additive_Elements_Testing_Required__c}" label="Additive Elements Testing Required"/>    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element__row">
+                                <div aura:id="additionalCommentsDiv" class="slds-form-element slds-size--1-of-2">
+                                	<ui:inputText aura:id="additionalComments" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Additional_Comments__c}" label="Additional comments" required="true" />
+                                </div>
+                                <div aura:id="projectdiv" class="slds-form-element slds-size--1-of-2">
+                                    <c:VA_CustomLookupParent aura:id="lookupCompProject" objectAPIName="VA_Project__c" IconName="standard:channel_program_levels" recordId="{!v.selectedLookUpRecord.Id}" selectedRecord="{!v.selectedProjectrecord}" label="Project" />
+                                </div>
+                            </div>
+                            <div class="slds-form-element__row">
+								<div aura:id="complaintNoDiv" class="slds-form-element slds-size--1-of-2">
+									<ui:inputText aura:id="complaintNumber" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Complaint_Number__c}" label="Complaint Number" required="true"/>
+								</div>
+                                <div aua:id="otherSampleDiv" class="slds-form-element slds-size--1-of-2" aura:id="otherSampleDiv" >
+                                    <ui:inputText aura:id="otherSampleType" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Other_Sample__c}" label="Other Sample" required="true"/>
+                                </div>
+                            </div>
+                            <div class="slds-m-bottom--medium"></div>
+                            <div class="slds-page-header slds-text-heading--label" style="background-color: #f3f2f2;">
+                                <legend class="slds-form-element__label slds-text-title--caps">Sample Details</legend>
+                            </div>
+                            <div class="slds-m-bottom--medium"></div>
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size--1-of-2">
+                                    <c:VA_CustomLookupParent aura:id="lookupCompProduct" objectAPIName="Product2" IconName="standard:product" selectedRecord="{!v.selectedProductrecord}" label="Product" />
+                                </div>
+                                <div class="slds-form-element slds-size--1-of-2">
+                                    <ui:inputText aura:id="engineMakeModelNo" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Engine_Make_Model__c}" label="Engine Make/Model" required="true"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size--1-of-2">
+                                    <c:VA_CustomLookupParent aura:id="lookupCompProductCategory" objectAPIName="VA_Product_Category__c" IconName="standard:product_item" selectedRecord="{!v.selectedProductCategoryRecord}" label="Product Category" />
+                                </div>
+                                <div class="slds-form-element slds-size--1-of-2">
+                                    <ui:inputText aura:id="vehRegNo" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Veh_Reg_No__c}" label="Veh. Reg. No." required="true"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size--1-of-2">
+                                    <ui:inputText aura:id="engineSerialNo" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.Va_Engine_Serial_No__c}" label="Engine Serial No." required="true"/>
+                                </div>
+                                <div class="slds-form-element slds-size--1-of-2">
+                                    <ui:inputDate aura:id="dateofSampleDrawn" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Date_of_Sample_Drawn__c}" label="Date of Sample Drawn" displayDatePicker="true" required="true" format="dd/MM/yyyy"/>
+                                </div>
+                            </div>
+                            <div class="slds-form-element__row">
+                            <div class="slds-form-element slds-size--1-of-2">
+                                    <ui:inputSelect aura:id="totalEquipmentLife" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Total_Engine_Hours__c}" label="Total Equipment Life" required="true"/>
+                                </div>
+                                <div class="slds-form-element slds-size--1-of-2">
+									<ui:inputNumber aura:id="hoursKMSeenByOil" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Hours_Km_seen_by_Oil__c}"  label="Hours/Km seen by Oil" required="true" format="0.00"/>
+                                </div>
+                                
+                            </div>
+                            <div class="slds-form-element__row">
+                                <div class="slds-form-element slds-size--1-of-2">
+                                    <ui:inputText aura:id="equipmentID" class="slds-input" labelClass="slds-form-element__label" value="{!v.caseObj.VA_Equipment_ID__c}" label="Equipment ID" required="true"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick="{!c.controllerSaveCaseDetails}" href="javascript:void(0);">
+                        Save
+                    </button>
+                    <button class="slds-button slds-button--neutral" onclick="{!c.cancel}" href="javascript:void(0);">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</aura:component>

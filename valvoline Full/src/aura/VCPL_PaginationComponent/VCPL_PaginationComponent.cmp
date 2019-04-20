@@ -1,0 +1,25 @@
+<aura:component >
+    <aura:attribute name="currentPageNumber" type="Integer" required="true" />
+    <aura:attribute name="maxPageNumber" type="integer" required="true" />
+    <aura:attribute name="disableFirst" type="Boolean" default="false" />
+    <aura:attribute name="disablePrev" type="Boolean" default="false" />
+    <aura:attribute name="disableNext" type="Boolean" default="false" />
+    <aura:attribute name="disableLast" type="Boolean" default="false" />
+    <div class="slds-button-group" role="group">
+    	<button onclick="{!c.firstPage}" class="slds-button slds-button--neutral" disabled="{!v.disableFirst}">
+            First
+        </button>
+        <button onclick="{!c.prevPage}" class="slds-button slds-button--neutral" disabled="{!v.disablePrev}">
+            Prev
+        </button>
+        <button class="slds-button slds-button--neutral" disabled="true">
+            {!v.currentPageNumber} / {!v.maxPageNumber}
+        </button> 
+        <button onclick="{!c.nextPage}" class="slds-button slds-button--neutral" disabled="{!v.disableNext}">
+            Next
+        </button>
+        <button onclick="{!c.lastPage}" class="slds-button slds-button--neutral"  disabled="{!v.disableLast}">
+            Last
+        </button>
+    </div>
+</aura:component>

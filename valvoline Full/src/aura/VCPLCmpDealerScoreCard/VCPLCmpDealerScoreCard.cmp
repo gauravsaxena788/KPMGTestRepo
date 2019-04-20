@@ -1,0 +1,108 @@
+<aura:component controller="VCPLCmpServiceDealerScoreCard"
+                implements="lightning:actionOverride,flexipage:availableForAllPageTypes,force:hasRecordId,lightning:actionOverride,force:lightningQuickActionWithoutHeader"
+                extends="c:VCPLBaseUtility"
+                description="Component for viewing dealer scorecard.">
+    
+    <!-- private Attributes   -->
+    <aura:attribute name="listOfDealerScoreCardLineItems"
+                    type="Object[]"
+                    access="public"/>
+
+    <aura:attribute name="dealerScoreCardRecord"
+                    type="Object"
+                    access="public"/>
+
+    <aura:attribute name="target"
+                    type="Object"
+                    access="private"/>
+    
+    <aura:attribute name="dealerScoreCardError"
+                    type="Object"
+                    access="private"/>
+
+    <force:recordData aura:id="scoreCardLoader"
+                      recordId="{!v.recordId}"
+                      fields="Id,Name,VCPL_Account__c,VCPL_As_of__c,VCPL_Financial_Year__c,VCPL_Score_Card_Status__c"
+                      targetRecord="{!v.target}"
+                      targetFields="{!v.dealerScoreCardRecord}"
+                      targetError="{!v.dealerScoreCardError}"/>
+    
+    <!-- Handler -->
+    <aura:handler name="init"
+                  value="{!this}"
+                  action="{!c.doInit}"
+                  description="Event handler during component initialization."/>
+
+    <div class="slds-grid row slds-scrollable" style="padding-bottom: 100px">
+        <table class="slds-table slds-table_bordered slds-table_striped slds-no-row-hover slds-max-medium-table_stacked-horizontal">
+            <thead>
+                <th scope="col">
+                    <div class="slds-truncate" title="S.No">
+                        S.No 
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Parameters">
+                        Parameters
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Value">
+                        Value 
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Dealer Score">
+                        Dealer Score*
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Max Score">
+                        Max Score*
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Score Scale">
+                        Score Scale
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Description">
+                        Description
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Evaluator Comments">
+                        Evaluator Comments
+                    </div>
+                </th>
+            </thead>
+            <tbody>
+                 <aura:iteration items="{!v.listOfDealerScoreCardLineItems}" 
+                                 var="scoreCardRecordLineItem"
+                                 indexVar="recordIndex">
+                    <c:VCPLCmpDealerScoreCardRow scoreCardRecordLineItem = "{!scoreCardRecordLineItem}"
+                                                 recordIndex = "{!recordIndex}"
+                                                 dealerScoreCardRecord = "{!v.dealerScoreCardRecord}"/>
+                </aura:iteration>
+            </tbody>
+        </table>
+        
+        </div>
+        <div style="position: relative;top: -71px;">
+        <lightning:buttonGroup class="{!if(or(v.dealerScoreCardRecord.VCPL_Score_Card_Status__c == 'Rejected',v.dealerScoreCardRecord.VCPL_Score_Card_Status__c == 'Draft'),'slds-float--right','slds-hide')}" >
+            <!--lightning:button label="Add"
+                              variant="neutral"
+                              iconPosition="left"
+                              onclick="{!c.addScoreCardLineItemRow}"
+                              class="slds-button slds-button-/-neutral cstm-btn"/-->
+             <lightning:button label="Save"
+                              variant="brand"
+                              iconPosition="left"
+                              onclick="{!c.saveScoreCardLineItems}"
+                              class="slds-button slds-button--neutral cstm-btn"/>
+                        
+        </lightning:buttonGroup>
+    </div>
+    
+</aura:component>

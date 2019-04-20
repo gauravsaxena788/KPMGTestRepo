@@ -1,0 +1,19 @@
+.THIS.textClass{
+    color: Red;
+}
+
+.THIS .slds-button_brand, 
+.THIS .slds-button--brand {
+	color: aliceblue;
+}
+
+.THIS .slds-text-heading_label, 
+.THIS .slds-text-heading--label {
+    border-radius: 0.5rem;
+}
+
+.THIS .slds-text-title_caps, 
+.THIS .slds-text-title--caps {
+    line-height: 0.25;
+    font-weight: bold;
+}

@@ -1,0 +1,66 @@
+<aura:component controller="OrderCloneHelper" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,lightning:actionOverride" access="global" >
+    
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="message" type="String" default="" />
+    
+    <aura:attribute name="ponumber" type="String" />
+    <aura:attribute name="posdate" type="Date" />
+    <aura:attribute name="effectivedate" type="Date" />
+    <aura:attribute name="deliveryaddress" type="String" />
+    <aura:attribute name="profilename" type="String" />
+                   
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--small slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if> 
+    
+    <div class="slds-modal_medium" style="height:80%;" id="msgdiv">            
+        <center><ui:outputText value="{!v.message}" class="slds-text-color_error" /></center>
+    </div>
+    <div class="slds-modal_medium" style="height:100px;max-height:100px;" id="orderclone">            
+        <center> <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+            <b>Order Information</b>
+                    </h2></center>
+        <lightning:layout multipleRows="true">                
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <center><label>PO Date </label></center>
+                <ui:inputDate aura:id="posdate" value="{!v.posdate}" displayDatePicker="true" format="dd/M/yyyy" />
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <label>PO Number </label>
+                <ui:inputText aura:id="ponumber" value="{!v.ponumber}"/>
+            </lightning:layoutItem>                    
+        </lightning:layout>
+        
+        <lightning:layout multipleRows="true">                
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <center><label>Order Start Date </label></center>
+                <ui:inputDate aura:id="effectivedate" value="{!v.effectivedate}" displayDatePicker="true" format="dd/M/yyyy" />
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-large" size="6" smallDeviceSize="12" mediumDeviceSize="6">
+                <label>Delivery Address </label>
+                <ui:inputText aura:id="deliveryaddress" value="{!v.deliveryaddress}"/>
+            </lightning:layoutItem>                    
+        </lightning:layout>
+        <lightning:input aura:id="orderhiddenid" name="profilename" label="Profilename" value="{!v.profilename}" class="slds-hidden" />
+
+        <Center>
+            <lightning:button variant="brand" label="Continue" title="Continue" onclick="{!c.myAction}"/>
+            <lightning:button variant="destructive" label="Cancel" title="Cancel" onclick="{!c.closeModal}"/>
+        </Center>  
+
+        </div>  
+        
+</aura:component>

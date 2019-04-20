@@ -1,0 +1,17 @@
+<aura:component Controller="VA_CustomerConsentController" implements="flexipage:availableForAllPageTypes,force:appHostable,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+    <aura:attribute name="caseObj" type="Case" default="{ 'sobjectType': 'Case' }" /> <!-- default to empty record -->  
+
+    <!-- Display the content details -->             
+    
+<lightning:select aura:id="caseField" name="customerClosureConsent" label="Customer Closure Consent"  value="{!v.caseObj.VA_Customer_Closure_Consent__c}" >  
+    <option>Yes</option>  
+    <option>No</option>  
+  </lightning:select>              
+
+    <aura:if isTrue="{!v.caseObj.VA_Customer_Closure_Consent__c =='No'}">           
+    <lightning:input aura:id="caseField" name="consentComment" label="Consent Comment" value="{!v.caseObj.Consent_Comment__c}" required="true"/>     
+    </aura:if>      
+    
+    <div class="slds-align_absolute-center"><lightning:button aura:id="btn" label="Save" onclick="{!c.handleSaveCase}" iconName="utility:approval" iconPosition="centre" variant="destructive"/></div>  
+
+</aura:component>

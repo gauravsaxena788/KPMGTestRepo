@@ -1,0 +1,6 @@
+<apex:page controller="AuthorizationController">
+   <apex:form >
+   <apex:commandButton id="commButton" action="{!getAuthorizationCode}" value="Authorize"/>
+   {!authCode}
+   </apex:form>
+</apex:page>

@@ -1,0 +1,560 @@
+<apex:page showHeader="false" controller="QuotePDFController" sidebar="false" standardStylesheets="false" renderAs="PDF" applyHtmlTag="false">
+<head>
+<title>Quote PDF</title>    
+<style type="text/css">
+table {
+    border-collapse: collapse;
+}
+
+body {font-family: 'Arial';font-size:12pt;}
+
+.headings{
+    color: black;
+    font-size:14pt;
+    font-weight:bold!important;
+    }
+.texts{
+    color: #999999;
+    }
+    
+    .headerRow td{
+                   background-color: #F0F8E2;
+                   font-size: 16px;
+                    /*font-weight: bold;*/
+          }
+          .myCol{
+              border:solid 1px #000;
+              text-align:center;
+              
+          }
+.myunderlinecss{
+text-decoration: underline !important;
+font-size:14px !important;
+color:#020202 !important;
+font-family: Arial Unicode MS;
+}
+          
+</style>
+<style type="text/css" media="print">
+   @page {
+             @top-center {
+                   content: element(header);
+           }
+           @bottom-left {
+                 content: element(footer);
+           }
+           
+           padding-top: 70px;
+           
+           <apex:outputPanel layout="none" rendered="{!IF(quotestatus!='Approved',true,false)}">
+                background: url("{!$Resource.DraftImage}") no-repeat center center;
+           </apex:outputPanel>
+        }
+                 div.header {
+                  padding: 10px;
+                  position: running(header);
+       }
+   div.footer {
+    display: block;
+    margin-bottom: 80px !important;
+    color: gray;
+    font-size: 12px;
+    position: running(footer);
+  }
+  
+ .pagenumber:before {
+     content: counter(page);
+   }
+ .pagecount:before {
+     content: counter(pages);
+   }
+   .mylist{
+       padding-bottom:20px;
+   } 
+   
+   
+    
+</style>
+
+</head>
+
+<body class="watermark">
+
+ <div class="header">
+     <img src="{!URLFOR($Resource.images,'images/Header.png')}" style="margin-left:-70px;" alt="Truck Oil" href="#" />
+ </div>
+ <div class="footer">
+     <center>Valvoline Cummins Private Limited <br/> 
+     3rd floor, Vipul Plaza, Suncity, Sector 54, Gurgaon – 122003, Haryana  <br/>
+     Visit us at www.valvolinecummins.com<br/>&nbsp;<br/>&nbsp;</center>
+ </div>
+<apex:form id="formid">
+    
+    <div style="font-style:italic;">
+        Ref – {!quotenumber}<br/> 
+        Date: {!DAY(TODAY())}/{!MONTH(TODAY())}/{!YEAR(TODAY())} 
+    </div><br/>
+    
+    <img src="{!URLFOR($Resource.images,'images/truckandoil.png')}" alt="Truck Oil" href="#" />
+    
+    <div style="text-align:center;padding:10px;border:5px solid black;">
+        <h3>Valvoline Cummins Private Limited</h3>
+        <h3>{!quotename}</h3>
+        <h3>For</h3>
+        <apex:outputPanel rendered="{!IF(attId!='', true, false)}">
+            <apex:image value="/servlet/servlet.FileDownload?file={!attId}" height="60px" width="70px"/>
+        </apex:outputPanel>
+        <h3>{!accountname}</h3>
+    </div>
+    <br/>
+    <p style="font-style:bold;">
+    
+    To, <br/>
+      <p style="margin-left:10px; border:1px solid gray;width:400px;padding:5px;">
+        {!customername} <br/>
+        {!customerdesignation} <br/>
+        {!accountname}<br/>
+        {!customeraddress} <br/>
+        {!customeremail}, Phone - {!customerphone}            
+      </p>  
+    
+    From, <br/>
+      <table border="0" width="100%">
+        <tr>
+           <td width="50%">
+              <p style="margin-left:10px; border:1px solid gray;width:300px;padding:5px;font-size:12px;">
+                {!tbmname} <br/>
+                {!tbmdesignation} <br/>
+                Valvoline Cummins Private Limited <br/>
+                {!tbmemail}, Phone - {!tbmphone}
+              </p>
+           </td>
+           <td width="50%">
+              <p style="margin-left:10px; border:1px solid gray;width:300px;padding:5px;font-size:12px;">
+                {!managername} <br/>
+                {!managerdesignation} <br/>
+                Valvoline Cummins Private Limited <br/>
+                {!manageremail}, Phone - {!managerphone}
+              </p>
+           </td>
+        </tr>  
+      </table>   
+    </p>
+    
+    
+    <div style="page-break-before:always;">
+    
+        Respected Sir <br/><br/>Greetings from VALVOLINE CUMMINS PRIVATE LIMITED !!!<br/><br/> 
+        <p>We thank your goodself for courtesies extended to us during our previous meetings and rounds of discussions. 
+        With reference to the discussions, we are looking forward to work with your esteemed organization, offering the best 
+        prices for the requirement of High Quality Lubricants for the afore mentioned project site.
+        </p>   
+        <p>Whatever your lubricants solutions need is, from engines to transmission, we assure you of the highest standards 
+        of performance and quality. Your expensive production assets need to work in harsh conditions. 
+        Our priority is to work with you in order to protect and improve the performance of your assets, 
+        under the most severe conditions.
+        </p>  
+        <p>Our technology edge is reinforced by our patrons as well as by the partnership with major the leading engine 
+        manufacturer in the world – Cummins Inc. Indeed since many OEM’s field Cummins engines, it gives us a unique opportunity 
+        to provide solutions to your most vital needs.
+        </p>  
+        <p>Our endeavor will not only sell the lubricants to you but also enhance your “peace of mind” by establishing us as a 
+        competent Lube solution provider. It can only be possible with cooperation and guidance from you and your team at the 
+        site and the office.
+        </p>  
+        <p>Herewith the document, are the best and competitive pricing for lubricants offered from Valvoline Cummins, for kind 
+        perusal and needful action.
+        </p> 
+        
+        <p style="font-style:underline;">
+        <h3>{!industrysegmentheading}</h3>
+        {!industrysegmentcontent}
+        <!--<h3>Mining &amp; Construction Product Range</h3>
+        Products and Support you can depend on to minimize downtime and help reduce operating costs-->
+        </p>
+        
+        <apex:variable var="imageVar" value="{!industrysegment}"/> 
+        ​<apex:image url="{!URLFOR($Resource.images, imageVar)}" alt="{!industrysegment}" height="350px" width="650px" style="padding-top:5px;" />
+        
+        <!--<img src="{!URLFOR($Resource.images,'images/Industrial.jpg')}" alt="{!industrysegment}" href="#" height="300px" width="700px" style="padding-top:5px;" />-->
+        <!---- image will be place here ---->
+        
+        <p style="page-break-before:always;">
+        <h3 style="text-decoration:underline;">Commercial Offer</h3> 
+        </p>
+        <br/>
+        
+        <apex:outputPanel rendered="{!NOT(skucode)}">
+            <table style="border:collapsible" cellpadding="4" cellspacing="0" width="100%">
+              <tr class="headerRow">
+                  <td class="myCol" width="5%">SL. No</td>
+                  <td class="myCol" width="20%">Type of Oil</td>
+                  <td class="myCol" width="20%">Product Name</td>                  
+                  <td class="myCol" width="10%">Pack Size</td>
+                  <td class="myCol" width="35%">Unit Price <!--(Including Freight, Excluding GST)--></td>
+              </tr>
+              <apex:variable value="{!1}" var="srNo"/>
+              <apex:repeat value="{!quoteLineItemList}" var="item">
+              <tr>
+                  <td class="myCol" width="5%">{!srNo}</td>
+                  <td class="myCol" width="10%">{!item.Product2.PH6_Qlikview__c}</td>
+                  <td class="myCol" width="40%">{!item.Product2.Name}</td>
+                  <td class="myCol" width="10%">{!item.Pack_Size__c}</td>
+                  <td class="myCol" width="30%">{!item.UnitPrice}</td>
+              </tr>
+              <apex:variable var="srNo" value="{!srNo+1}"/>
+              </apex:repeat>              
+            </table>        
+        </apex:outputPanel>
+        
+        <apex:outputPanel rendered="{!skucode}">
+            <table style="border:collapsible" cellpadding="4" cellspacing="0" width="100%">
+              <tr class="headerRow">
+                  <td class="myCol" width="5%">SL. No</td>
+                  <td class="myCol" width="20%">Type of Oil</td>
+                  <td class="myCol" width="20%">Product Name</td>                  
+                  <td class="myCol" width="10%">Code</td>
+                  <td class="myCol" width="10%">Pack Size</td>
+                  <td class="myCol" width="35%">Unit Price <!--(Including Freight, Excluding GST)--></td>
+              </tr>
+              <apex:variable value="{!1}" var="srNo"/>
+              <apex:repeat value="{!quoteLineItemList}" var="item">
+              <tr>
+                  <td class="myCol" width="5%">{!srNo}</td>
+                  <td class="myCol" width="10%">{!item.Product2.PH6_Qlikview__c}</td>
+                  <td class="myCol" width="40%">{!item.Product2.Name}</td>
+                  <td class="myCol" width="5%">{!item.Product2.SKU_Id__c}</td>
+                  <td class="myCol" width="10%">{!item.Pack_Size__c}</td>
+                  <td class="myCol" width="30%">{!item.UnitPrice}</td>
+              </tr>
+              <apex:variable var="srNo" value="{!srNo+1}"/>
+              </apex:repeat>              
+            </table>        
+        </apex:outputPanel>
+        
+        
+        
+        <div style="page-break-before:always;">
+        <h3 style="text-decoration:underline;">Commercial Terms &amp; Conditions</h3>        
+        <p>
+        This document identifies the Terms and Conditions under which Valvoline Cummins Private 
+        Limited makes this service available to you.
+        </p>
+        <ul>
+            <li class="mylist">
+                Confidentially: This proposal reveals very specific and highly preferred prices &amp; pricing strategy, especially offered for 
+                your organization. All the elements in this document are extremely confidential and require that the customer keeps 
+                the proposal in confidence in regard to third parties.
+            </li>
+            <li class="mylist">
+                Taxes : The prices quoted above are exclusive of GST and any other taxes like Entry tax, Octroi , LBDT etc.
+            </li>
+            <li class="mylist">
+                Material will be supplied directly from Valvoline Depot or Plant to your site. 
+            </li>
+            <li class="mylist">
+                Freight : 
+                <apex:outputPanel rendered="{!IF(deliveryterm=='Conditional MOQ based FOC', true, false)}">
+                  The freight charges, against the delivery of material,  will be waived off if the order size is for more than&nbsp; 
+                </apex:outputPanel>
+                <apex:outputPanel styleClass="myunderlinecss" rendered="{!IF(deliveryterm=='Conditional MOQ based FOC', true, false)}">
+                  <apex:outputText styleClass="myunderlinecss" value="{!moqvalue}"><!--1200 L or 900 KG or equivalent-->
+                      
+                  </apex:outputText>                  
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!IF(deliveryterm=='Conditional MOQ based FOC', true, false)}">
+                  Else the delivery freight charges are applicable at actuals.
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!IF(deliveryterm=='Conditional MOQ based FOC', false, true)}">
+                  <apex:outputText >The above quoted prices do not include freight charges. Freight will be charged extra, at actuals.</apex:outputText>
+                </apex:outputPanel>
+                <!--1200 L or 900 KG or equivalent--> 
+                
+            </li>
+            <li class="mylist">
+                Delivery Time : Delivery of order shall take upto&nbsp;
+                <apex:outputText value="{!deliverytime}" styleClass="myunderlinecss"/>
+                <!--{!deliverytime}--> 
+                following placement of order and its acceptance. Order acceptance is subject to clearance of credit outstanding or receipt of advance payment whichever is applicable. 
+            </li>
+            <li class="mylist">
+                Payment: We agree to offer to your esteemed organization a credit period&nbsp; 
+                <apex:outputText value="{!paymentterm}" styleClass="myunderlinecss"/>
+                <!--{!paymentterm}--> 
+                for processing the payments from the date of invoicing. 
+            </li>
+            <li class="mylist">
+                Quote Validity : The prices quoted above are valid for acceptance on or before&nbsp;
+                <apex:outputtext value="{0, date, dd'.'MMM'.'yyyy}" styleClass="myunderlinecss">
+                    <apex:param value="{!quotevalidtill}"></apex:param>
+                </apex:outputtext>.
+                <!--30 Days--> 
+                <!--from the date of quotation.-->
+            </li>    
+            <li class="mylist">
+                Contract Validity:  Once agreed upon, the prices quoted above will remain unchanged towards the supplies from 
+                
+                <apex:outputtext value="{0, date, dd'.'MMM'.'yyyy}" styleClass="myunderlinecss">
+                    <apex:param value="{!contractvalidfrom}"></apex:param>
+                </apex:outputtext> to 
+                <apex:outputtext value="{0, date, dd'.'MMM'.'yyyy}" styleClass="myunderlinecss">
+                    <apex:param value="{!contractvalidto}"></apex:param>
+                </apex:outputtext>
+                
+            </li>
+            <apex:outputPanel rendered="{!IF(pvclauseapplicable==true, true, false)}">
+            <li class="mylist" style="margin-top:-25px;">
+                Price Variation Clause : Prices quoted above are based on the current International crude prices, supplier’s current prices, other raw component base prices, international and local freight charges, policies , levies &amp; guidelines by Government of India, in calculating and ascertaining the rate of duty or other Government taxes. In the event of a change or fluctuation in any of such prices or rates, the above quoted prices shall be subject to revision.
+            </li>
+            </apex:outputPanel>
+        </ul>
+        <apex:outputPanel rendered="{!IF(othertermandcondition!='', true, false)}">
+            <h3 style="text-decoration:underline;">Other Terms &amp; Conditions</h3>        
+            <p>{!othertermandcondition}</p>
+        </apex:outputPanel>
+        </div>
+        
+        <!------ new condition when cash discount policy is N/A -------->
+        <apex:outputPanel rendered="{!IF((cashdiscountpolicy=='N/A'), false, true)}">
+        
+                
+        <apex:outputPanel rendered="{!IF((cashdiscountpolicy!='' || volumetricdiscount==true), true, false)}">
+        <div style="page-break-before:always;">
+            <h3 style="text-decoration:underline;">Special Commercial Discount Offer</h3>
+            <apex:variable value="{!0}" var="index"/>
+            <apex:outputPanel rendered="{!IF(cashdiscountpolicy=='Discount Rates - For all Distributors (Non-Cummins)', true, false)}">
+            
+            <h4> <apex:variable value="{!index+1}" var="index"/> {!index}) {!cashdiscountpolicy}</h4><br/>
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+                <tr class="headerRow">
+                    <td width="50%" align="center">&nbsp;</td>
+                    <td width="50%" colspan="2" align="center">Mode of Payment</td>
+                </tr>
+                <tr class="headerRow">
+                    <td width="50%" align="center">Description</td>
+                    <td width="20%" align="center">Cheque</td>
+                    <td width="30%" align="center">Demand Draft / RTGS / Credit Note </td>
+                </tr>
+                <tr>
+                    <td> &nbsp; Advance Payment</td>
+                    <td align="center"> 2.00%</td>
+                    <td align="center"> 2.50%</td>
+                </tr>
+                <tr>
+                    <td>&nbsp; Payment with 7 days *</td>
+                    <td align="center"> 1.25%</td>
+                    <td align="center"> 1.50%</td>
+                </tr>
+                <tr>
+                    <td>&nbsp; Payment beyond 7 days and within 14 days *</td>
+                    <td align="center"> 0.50%</td>
+                    <td align="center"> 0.75%</td>
+                </tr>
+                <tr>
+                    <td>&nbsp; Payment Beyond 14 Days *</td>
+                    <td align="center"> NIL</td>
+                    <td align="center"> NIL</td>
+                </tr>
+                <tr>
+                    <td colspan="3"> 
+                        &nbsp; * Days to be counted from the billing date 
+                        <ul>
+                            <li>
+                                Instruments should be deposited on or before the due date of Credit so as to avail the Cash Discount.
+                            </li>
+                            <li>
+                                For the purpose of calculating on invoice CD, SAP entry date will be considered as the payment receipt date.
+                            </li>
+                            <li>
+                                However the final CD will be calculated on the basis of the actual credit date by bank, increased by grace period of “in-transit instrument” ranging from 1-3 working days subject to approval by respective BU heads.
+                            </li>
+                            <li>
+                                Further, if the last date of the CD slab is a bank holiday the same will be extended to the next working date.
+                            </li>
+                        </ul>                        
+                    </td>
+                </tr>
+            </table>
+            </apex:outputPanel>
+            
+            <!---------------------------------------------->
+            <apex:outputPanel rendered="{!IF(cashdiscountpolicy=='Discount Rates - For CIL Dealers', true, false)}">
+            
+            <h4> <apex:variable value="{!index+1}" var="index"/> {!index}) {!cashdiscountpolicy}</h4><br/>
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+                <tr class="headerRow">
+                    <td width="50%" align="center">&nbsp;</td>
+                    <td width="50%" colspan="2" align="center">Mode of Payment</td>
+                </tr>
+                <tr class="headerRow">
+                    <td width="50%" align="center">Payment Days</td>
+                    <td width="50%" align="center">Demand Draft / RTGS / Credit Note </td>
+                </tr>
+                <tr>
+                    <td align="center"> 0 - 3 Days</td>
+                    <td align="center"> 2.00%</td>
+                </tr>
+                <tr>
+                    <td align="center"> 4 - 7 Days</td>
+                    <td align="center"> 1.25%</td>
+                </tr>
+                <tr>
+                    <td align="center"> 8 - 14 Days</td>
+                    <td align="center"> 1.00%</td>
+                </tr>               
+            </table>
+            <p>* Cheque realization date in bank will be considered as payment date for CD.</p>
+            </apex:outputPanel>
+            <!---------------------------->
+            <apex:outputPanel rendered="{!IF(cashdiscountpolicy=='Discount Rates - For all direct customers (Excluding OEM)', true, false)}">
+            
+            <h4> <apex:variable value="{!index+1}" var="index"/> {!index}) {!cashdiscountpolicy}</h4><br/>
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+                <tr class="headerRow">
+                    <td width="50%" align="center">&nbsp;</td>
+                    <td width="50%" colspan="2" align="center">Mode of Payment</td>
+                </tr>
+                <tr class="headerRow">
+                    <td width="40%" align="center">Description</td>
+                    <td widht="20%" align="center">Cheque</td>
+                    <td width="40%" align="center">Demand Draft / RTGS / Credit Note </td>
+                </tr>
+                <tr>
+                    <td align="center">Advance Payment</td>
+                    <td align="center"> 2.00%</td>
+                    <td align="center"> 2.50%</td>
+                </tr>                               
+            </table>
+            <p>* Cheque realization date in bank will be considered as payment date for CD.</p>
+            </apex:outputPanel>
+            
+            <apex:outputPanel rendered="{!IF(volumetricdiscount==true, true, false)}">
+           
+            <h4> <apex:variable value="{!index+1}" var="index"/> {!index}) Volumetric Discount</h4>
+            <p>With the company of your repute and scale, we are obliged and eager to offer a special volume discount scheme based on the total volume takeoff in the span of defined Contract period of the business.</p>
+            
+            <!------ AVD Information------->
+            <apex:outputPanel rendered="{!IF(avdlineitemList.size>0, true, false)}">
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+              <tr class="headerRow">
+                  <td width="10%" align="center">Sr No</td>
+                  <td width="60%" align="center">Volume Purchase In {!contractperiod} Months Period</td>
+                  <td width="30%" align="center">Cash Back (Per Litre)</td>
+              </tr>
+              <apex:variable value="{!1}" var="slNo"/>
+              <apex:repeat value="{!avdlineitemList}" var="items">
+              <tr>
+                  <td class="myCol" width="10%" align="center">{!slNo}</td>
+                  <td class="myCol" width="60%" align="center">{!items.Volume_From__c}KL To {!items.Volume_To__c}KL</td>
+                  <td class="myCol" width="30%" align="center">RS {!items.Slab_Discount__c}</td>
+              </tr>
+              <apex:variable var="slNo" value="{!slNo+1}"/>
+              </apex:repeat>
+            </table>
+            <br/>
+            </apex:outputPanel>
+            
+            <!------ QVD Information------->
+            <apex:outputPanel rendered="{!IF(qvdlineitemList.size>0, true, false)}">
+            
+            <table border="1" cellpadding="0" cellspacing="10" width="100%" align="center">
+              <tr class="headerRow">
+                  <td width="10%" align="center">Sr No</td>
+                  <td width="60%" align="center">Volume Purchase In {!contractperiod} Months Period</td>
+                  <td width="30%" align="center">Cash Back (Per Litre)</td>
+              </tr>
+              <apex:variable value="{!1}" var="srlNo"/>
+              <apex:repeat value="{!qvdlineitemList}" var="qitems">
+              <tr>
+                  <td class="myCol" width="10%" align="center">{!srlNo}</td>
+                  <td class="myCol" width="60%" align="center">{!qitems.Volume_From__c}KL To {!qitems.Volume_To__c}KL</td>
+                  <td class="myCol" width="30%" align="center">RS {!qitems.Slab_Discount__c}</td>
+              </tr>
+              <apex:variable var="srlNo" value="{!srlNo+1}"/>
+              </apex:repeat>
+            </table>
+            </apex:outputPanel>
+            
+            <p>* The remittance will be through a credit note, which will be assessed after the closure of the contract period, subject to condition that the party has no outstanding dues</p>
+            <!--<p>* The discount net payment will be done through a credit note at the end of the year on clearance of all payment/tax etc liabilities</p>-->
+            </apex:outputPanel>            
+            
+        </div>
+        </apex:outputPanel>
+        
+        <!--------- end of new condition of cash discount policy is N/A --------------->
+        </apex:outputPanel>
+        
+        <div style="page-break-before:always;">
+            <p>
+                For more details about our company, products and services, please visit http://www.Valvolinecummins.com 
+            </p>
+            <p>
+                Hope we have done best to be in line with your requirements &amp; requesting your goodself to favor us with your valued Rate Contract at the earliest.
+            </p>
+            <p>
+                Thanking you once again and assuring our best services at all the times.
+            </p>
+        </div>
+        <br/><br/>
+        <table border="0" width="100%">
+            <tr>
+                <td width="50%">For</td>
+                <td width="50%">For</td>
+            </tr>
+            <tr>
+                <td><br/></td>
+                <td><br/></td>
+            </tr>
+            <tr>
+                <td width="50%">Valvoline Cummins Pvt Ltd</td>
+                <td width="50%"> {!accountname} </td>
+            </tr>
+            <tr>
+                <td width="50%">&nbsp;</td>
+                <td width="50%">{!customername}</td>
+            </tr>
+            
+            <tr>
+                <td>{!regionalhead}</td>
+                <td>{!customerdesignation}<!--{!tbmdesignation}--></td>
+            </tr>
+                        
+        </table>
+                                    
+        </div>
+         
+       <!--------- Annexures Contents ---------->  
+        
+        <apex:repeat value="{!annexureSettingList}" var="annexure">
+            
+            <div style="page-break-before:always;">
+                <center><h1 style="text-decoration:underline;">{!annexure.Annexure_Heading__c}</h1></center>
+                
+                <p style="margin-left:-70px;margin-top:-20px;">    
+                   <apex:variable var="imageVar1" value="{!annexure.Image_URL__c}"/>
+                   <apex:outputPanel rendered="{!IF(annexure.Folder_Name__c=='AnnexuresCI', true, false)}">
+                       <apex:image url="{!URLFOR($Resource.AnnexuresCI, imageVar1)}" height="750px" width="800px" />
+                   </apex:outputPanel>
+                   <apex:outputPanel rendered="{!IF(annexure.Folder_Name__c=='AnnexuresFLEET', true, false)}">
+                       <apex:image url="{!URLFOR($Resource.AnnexuresFLEET, imageVar1)}" height="750px" width="800px" />
+                   </apex:outputPanel>
+                   <apex:outputPanel rendered="{!IF(annexure.Folder_Name__c=='AnnexuresOEM', true, false)}">
+                       <apex:image url="{!URLFOR($Resource.AnnexuresOEM, imageVar1)}" height="750px" width="800px" />
+                   </apex:outputPanel>
+                </p>
+            </div>
+            
+        </apex:repeat>         
+       <br/>
+       <!--{!attachmentid}
+       <apex:image url="/sfc/servlet.shepherd/version/download/0692C000000LY5MQAW" height="240" width="320"/>-->
+               
+</apex:form>
+
+</body>  
+</apex:page>

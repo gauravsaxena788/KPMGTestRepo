@@ -1,0 +1,183 @@
+<aura:component controller="VCPLCmpServiceSegmentManagerView"
+                implements="force:appHostable,lightning:actionOverride,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction"
+                extends="c:VCPLBaseUtility"
+                description="Component for segment Manager DP View.">
+    
+    <aura:attribute name="lstOfMonths"
+                    type="String[]"
+                    access="public"
+                    default="['None','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+                             'October', 'November', 'December']"/>
+    
+    <aura:attribute name="selectedMonth"
+                    type="String"
+                    access="public"/>
+    
+    <aura:attribute name="lstOfYear"
+                    type="String[]"
+                    access="public"
+                    default="['2017','2018','2016']"/>
+    
+    <aura:attribute name="selectedYear"
+                    type="String"
+                    access="public"/>
+    
+    <aura:attribute name="mapOfDealerIdVsPrimaryConsolidatedAmount"
+                    type="Object"
+                    access="public"/>
+    
+    <aura:attribute name="mapOfDealerIdVsSecodaryVolumeSum"
+                    type="Object"
+                    access="public"/>
+    
+    <aura:attribute name="mapOfDealer"
+                    type="Object"
+                    access="public"/>
+    
+    <aura:attribute name="mapOfDealerIdVsPrevMonthClosingSales"
+                    type="Object"
+                    access="public"/>
+    
+      <aura:attribute name="mapOfDealerVsBalanceAmount"
+                    type="Object"
+                    access="public"/>
+        
+    <aura:attribute name="lstOfDealerWiseSegmentView"
+                    type="Object[]"
+                    access="public"/>
+    
+    <!-- Handler -->
+    <aura:handler name="init"
+                  value="{!this}"
+                  action="{!c.doInit}"
+                  description="Event handler during component initialization."/>
+    
+    <div class = "modal-header slds-modal__header">
+        <h2 class = "title slds-text-heading--medium">
+            Differential Pricing Monitoring with SPRC
+        </h2>
+    </div>
+    
+    <lightning:layout horizontalAlign="center" 
+                      verticalAlign="start"
+                      pullToBoundary="small">
+        
+        <lightning:layoutItem flexibility="auto" 
+                              padding="horizontal-medium"
+                              size="12"
+                              largeDeviceSize="4"
+                              mediumDeviceSize="4"
+                              smallDeviceSize="12">
+            <div class = "slds-col customLookup">
+                <label class = "label inputLabel uiLabel-left form-element__label uiLabel">
+                    <span>
+                        Month
+                    </span>
+                </label>
+                <lightning:select aura:id="month"
+                                  name="Month:" 
+                                  label=""
+                                  class="hidelabel"
+                                  variant="label-hidden"
+                                  value="{!v.selectedMonth}">
+                    <aura:iteration items="{!v.lstOfMonths}" 
+                                    var="month">
+                        <option text = "{!month}"
+                                label = "{!month}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </lightning:layoutItem>
+        
+        <lightning:layoutItem flexibility="auto" 
+                              padding="horizontal-medium"
+                              size="12"
+                              largeDeviceSize="2"
+                              mediumDeviceSize="4"
+                              smallDeviceSize="12">
+            <div class = "slds-col block-input">
+                <label class = "label inputLabel uiLabel-left form-element__label uiLabel">
+                    <span>
+                        Year
+                    </span>
+                </label>
+                <lightning:select aura:id="Year"
+                                  name="Year:" 
+                                  label=""
+                                  class="hidelabel"
+                                  variant="label-hidden"
+                                  value="{!v.selectedYear}">
+                    <aura:iteration items="{!v.lstOfYear}" 
+                                    var="year">
+                        <option text = "{!year}"
+                                label = "{!year}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+        </lightning:layoutItem>
+        
+        <lightning:layoutItem flexibility="auto"
+                              padding="horizontal-medium"
+                              size="1"
+                              largeDeviceSize="3"
+                              mediumDeviceSize="12"
+                              smallDeviceSize="12">
+            <br/>
+            <ui:button label="Fetch Data"
+                       press="{!c.getSegmentManagerView}"
+                       class="slds-button slds-button--brand slds-fetchData"/>
+              
+        </lightning:layoutItem>
+        
+    </lightning:layout>
+    <br/>
+    <br/>
+    <aura:if isTrue="{!and(v.lstOfDealerWiseSegmentView, v.lstOfDealerWiseSegmentView.length > 0)}">
+        <div class="slds-align_absolute-center" style="height: 1rem;">
+            <table class="slds-table slds-table_bordered slds-table_striped slds-no-row-hover slds-max-medium-table_stacked-horizontal">
+                <thead>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Dealer Name">
+                            Dealer Name 
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Discount Eligible">
+                            Discount Eligible
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Discount Passed">
+                            Discount Passed 
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Balance Discount">
+                            Balance Discount
+                        </div>
+                    </th>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.lstOfDealerWiseSegmentView}" 
+                                    var="dealerWiseSegmentView"
+                                    indexVar="recordIndex">
+                        <tr class="slds-text-title_caps">
+                            <td scope="col" class="action">
+                                {!dealerWiseSegmentView.dealerName}
+                            </td>
+                            <td scope="col" class="action">
+                                {!dealerWiseSegmentView.discountEligible}
+                            </td>
+                            <td scope="col" class="action">
+                                {!dealerWiseSegmentView.discountPassed}
+                            </td>
+                            <td scope="col" class="action">
+                                {!dealerWiseSegmentView.balanceAmount}
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>            
+        </div>
+    </aura:if>
+</aura:component>

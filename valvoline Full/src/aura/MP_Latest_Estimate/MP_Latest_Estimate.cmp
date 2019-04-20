@@ -1,0 +1,23 @@
+<aura:component controller="OpportunityHelper" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global" >
+    
+    <aura:attribute name="recordId" type="Id" />
+    
+    <aura:attribute name="message" type="String" default="" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+   <div class="slds-modal_large">
+    <div><ui:outputText value="{!v.message}" class="slds-text-color_error" /></div>
+    
+    <div class="slds-align_absolute-center"><lightning:button aura:id="btn" label="Continue" onclick="{!c.myAction}" iconName="utility:approval" iconPosition="centre" variant="destructive"/></div>
+    <!--<td>
+         <form class="contact-form" onsubmit="{!c.deleteAccount}">
+             <input type="hidden" value="{!contact.Name}" class="contact-name"></input>
+                <lightning:button label="Delete"
+                                  iconName="utility:delete"
+                                  iconPosition="left"
+                                  variant="destructive"/>
+            </form>
+        </td>-->
+    </div>
+</aura:component>

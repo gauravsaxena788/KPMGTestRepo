@@ -1,0 +1,14 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader" controller="VA_CaseAssignmentController" >
+    <aura:attribute name="recordId" type="String" />   
+    <aura:attribute name="strName" type="string" />
+    <aura:attribute name="message" type="String" default="Do you want to accept this case?" />            
+  	
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+  <aura:attribute name="isVisible" type="boolean" default="false"/>
+  <aura:attribute name="isAvailable" type="boolean" default="false"/>
+    
+  <div class="slds-modal_small">                 
+    <div class="slds-align_absolute-center"><lightning:button aura:id="btn" label="Continue" onclick="{!c.acceptCaseJS}" iconName="utility:approval" iconPosition="centre" variant="destructive"/></div>
+    
+    </div>   
+</aura:component>
