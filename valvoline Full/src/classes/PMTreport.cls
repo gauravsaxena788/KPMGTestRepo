@@ -16,60 +16,62 @@ Global with sharing class PMTreport{
 
 ////////////////////////////////////////////////////////Lubes Volume //////////////////////////////////////////////////////////
     
-    public Transient list<WrapperCumminsMTD> lubesCumminsWrapListMTD{get;set;}
-    public Transient list<WrapperCumminsLY> lubesCumminsWrapListLY{get;set;}
-    public Transient list<WrapperCumminsEst> lubesCumminsWrapListEst{get;set;}
+    public list<WrapperCumminsMTD> lubesCumminsWrapListMTD{get;set;}
+    public list<WrapperCumminsLY> lubesCumminsWrapListLY{get;set;}
+    public list<WrapperCumminsEst> lubesCumminsWrapListEst{get;set;}
     
-    public Transient list<WrapperIndustrialMTD> lubesIndustrialWrapListMTD{get;set;}
-    public Transient list<WrapperIndustrialLY> lubesIndustrialWrapListLY{get;set;}
-    public Transient list<WrapperIndustrialEst> lubesIndustrialWrapListEst{get;set;}
+    public list<WrapperIndustrialMTD> lubesIndustrialWrapListMTD{get;set;}
+    public list<WrapperIndustrialLY> lubesIndustrialWrapListLY{get;set;}
+    public list<WrapperIndustrialEst> lubesIndustrialWrapListEst{get;set;}
     
     public  list<aopWrapper> aopWrapperList{get;set;}
     public  list<aopWrapperGp> aopGpWrapperList{get;set;}
     public  list<aopWrapperGpPerL> aopGpPerLWrapperList{get;set;}
     public  list<cogWrapper> cogMovementWrapperList{get;set;}
     
-    public Transient list<WrapperInfraMTD> lubesInfraWrapListMTD{get;set;}
-    public Transient list<WrapperInfraLY> lubesInfraWrapListLY{get;set;}
-    public Transient list<WrapperInfraEst> lubesInfraWrapListEst{get;set;}
+    public list<WrapperInfraMTD> lubesInfraWrapListMTD{get;set;}
+    public list<WrapperInfraLY> lubesInfraWrapListLY{get;set;}
+    public list<WrapperInfraEst> lubesInfraWrapListEst{get;set;}
     
-    public Transient list<WrapperPowergenMTD> lubesPowergenWrapListMTD{get;set;}
-    public Transient list<WrapperPowergenLY> lubesPowergenWrapListLY{get;set;}
-    public Transient list<WrapperPowergenEst> lubesPowergenWrapListEst{get;set;} 
+    public list<WrapperPowergenMTD> lubesPowergenWrapListMTD{get;set;}
+    public list<WrapperPowergenLY> lubesPowergenWrapListLY{get;set;}
+    public list<WrapperPowergenEst> lubesPowergenWrapListEst{get;set;} 
     
-    public Transient list<WrapperIndusDirMTD> lubesIndusDirWrapListMTD{get;set;}
-    public Transient list<WrapperIndusDirLY> lubesIndusDirWrapListLY{get;set;}
-    public Transient list<WrapperIndusDirEst> lubesIndusDirWrapListEst{get;set;}
+    public list<WrapperIndusDirMTD> lubesIndusDirWrapListMTD{get;set;}
+    public list<WrapperIndusDirLY> lubesIndusDirWrapListLY{get;set;}
+    public list<WrapperIndusDirEst> lubesIndusDirWrapListEst{get;set;}
     
-    public Transient list<WrapperInfraDirMTD> lubesInfraDirWrapListMTD{get;set;}
-    public Transient list<WrapperInfraDirLY> lubesInfraDirWrapListLY{get;set;}
-    public Transient list<WrapperInfraDirEst> lubesInfraDirWrapListEst{get;set;}
+    public list<WrapperInfraDirMTD> lubesInfraDirWrapListMTD{get;set;}
+    public list<WrapperInfraDirLY> lubesInfraDirWrapListLY{get;set;}
+    public list<WrapperInfraDirEst> lubesInfraDirWrapListEst{get;set;}
 
 //////////////////////////////////////////////////////////End Of Lubes Volume/////////////////////////////////////////////////
 
-    public Transient list<WrapperCumminsGPMTD> lubesCumminsGPWrapListMTD{get;set;}
-    public Transient list<WrapperCumminsGPLY> lubesCumminsGPWrapListLY {get;set;}
-    public Transient list<WrapperCumminsGPEst> lubesCumminsGPWrapListEst {get;set;}
+    public list<WrapperCumminsGPMTD> lubesCumminsGPWrapListMTD{get;set;}
+    public list<WrapperCumminsGPLY> lubesCumminsGPWrapListLY {get;set;}
+    public list<WrapperCumminsGPEst> lubesCumminsGPWrapListEst {get;set;}
     
-    public Transient list<WrapperIndustrialGPMTD> lubesIndustrialGPWrapListMTD  {get;set;}
-    public Transient list<WrapperIndustrialGPLY> lubesIndustrialGPWrapListLY  {get;set;}
-    public Transient list<WrapperIndustrialGPEst> lubesIndustrialGPWrapListEst  {get;set;}
+    public list<WrapperIndustrialGPMTD> lubesIndustrialGPWrapListMTD  {get;set;}
+    public list<WrapperIndustrialGPLY> lubesIndustrialGPWrapListLY  {get;set;}
+    public list<WrapperIndustrialGPEst> lubesIndustrialGPWrapListEst  {get;set;}
     
-    public Transient list<WrapperInfraGPMTD> lubesInfraGPWrapListMTD  {get;set;}
-    public Transient list<WrapperInfraGPLY> lubesInfraGPWrapListLY  {get;set;}
-    public Transient list<WrapperInfraGPEst> lubesInfraGPWrapListEst  {get;set;}
+    public list<WrapperInfraGPMTD> lubesInfraGPWrapListMTD  {get;set;}
+    public list<WrapperInfraGPLY> lubesInfraGPWrapListLY  {get;set;}
+    public list<WrapperInfraGPEst> lubesInfraGPWrapListEst  {get;set;}
     
-    public Transient list<WrapperPowergenGPMTD> lubesPowergenGPWrapListMTD  {get;set;}
-    public Transient list<WrapperPowergenGPLY> lubesPowergenGPWrapListLY  {get;set;}
-    public Transient list<WrapperPowergenGPEst> lubesPowergenGPWrapListEst  {get;set;}
+    public list<WrapperPowergenGPMTD> lubesPowergenGPWrapListMTD  {get;set;}
+    public list<WrapperPowergenGPLY> lubesPowergenGPWrapListLY  {get;set;}
+    public list<WrapperPowergenGPEst> lubesPowergenGPWrapListEst  {get;set;}
     
-    public Transient list<WrapperIndusDirGPMTD> lubesIndusDirGPWrapListMTD  {get;set;}
-    public Transient list<WrapperIndusDirGPLY> lubesIndusDirGPWrapListLY  {get;set;}
-    public Transient list<WrapperIndusDirGPEst> lubesIndusDirGPWrapListEst  {get;set;}
+    public list<WrapperIndusDirGPMTD> lubesIndusDirGPWrapListMTD  {get;set;}
+    public list<WrapperIndusDirGPLY> lubesIndusDirGPWrapListLY  {get;set;}
+    public list<WrapperIndusDirGPEst> lubesIndusDirGPWrapListEst  {get;set;}
     
-    public Transient list<WrapperInfraDirGPMTD> lubesInfraDirGPWrapListMTD  {get;set;}
-    public Transient list<WrapperInfraDirGPLY> lubesInfraDirGPWrapListLY  {get;set;}
-    public Transient list<WrapperInfraDirGPEst> lubesInfraDirGPWrapListEst  {get;set;}
+    public list<WrapperInfraDirGPMTD> lubesInfraDirGPWrapListMTD  {get;set;}
+    public list<WrapperInfraDirGPLY> lubesInfraDirGPWrapListLY  {get;set;}
+    public list<WrapperInfraDirGPEst> lubesInfraDirGPWrapListEst  {get;set;}
+    
+    
     
     
     
@@ -79,29 +81,29 @@ Global with sharing class PMTreport{
 //////////////////////////////////////////////////////////End Of Gp Lubes Volume/////////////////////////////////////////////////        
    
    
-    public Transient list<WrapperCumminsGPperLMTD> lubesCumminsGPperLWrapListMTD{get;set;}
-    public Transient list<WrapperCumminsGPperLLY> lubesCumminsGPperLWrapListLY {get;set;}
-    public Transient list<WrapperCumminsGPperLEst> lubesCumminsGPperLWrapListEst {get;set;}
+    public list<WrapperCumminsGPperLMTD> lubesCumminsGPperLWrapListMTD{get;set;}
+    public list<WrapperCumminsGPperLLY> lubesCumminsGPperLWrapListLY {get;set;}
+    public list<WrapperCumminsGPperLEst> lubesCumminsGPperLWrapListEst {get;set;}
     
-    public Transient list<WrapperIndustrialGPperLMTD> lubesIndustrialGPperLWrapListMTD  {get;set;}
-    public Transient list<WrapperIndustrialGPperLLY> lubesIndustrialGPperLWrapListLY  {get;set;}
-    public Transient list<WrapperIndustrialGPperLEst> lubesIndustrialGPperLWrapListEst  {get;set;}
+    public list<WrapperIndustrialGPperLMTD> lubesIndustrialGPperLWrapListMTD  {get;set;}
+    public list<WrapperIndustrialGPperLLY> lubesIndustrialGPperLWrapListLY  {get;set;}
+    public list<WrapperIndustrialGPperLEst> lubesIndustrialGPperLWrapListEst  {get;set;}
     
-    public Transient list<WrapperInfraGPperLMTD> lubesInfraGPperLWrapListMTD  {get;set;}
-    public Transient list<WrapperInfraGPperLLY> lubesInfraGPperLWrapListLY  {get;set;}
-    public Transient list<WrapperInfraGPperLEst> lubesInfraGPperLWrapListEst  {get;set;}
+    public list<WrapperInfraGPperLMTD> lubesInfraGPperLWrapListMTD  {get;set;}
+    public list<WrapperInfraGPperLLY> lubesInfraGPperLWrapListLY  {get;set;}
+    public list<WrapperInfraGPperLEst> lubesInfraGPperLWrapListEst  {get;set;}
     
-    public Transient list<WrapperPowergenGPperLMTD> lubesPowergenGPperLWrapListMTD  {get;set;}
-    public Transient list<WrapperPowergenGPperLLY> lubesPowergenGPperLWrapListLY  {get;set;}
-    public Transient list<WrapperPowergenGPperLEst> lubesPowergenGPperLWrapListEst  {get;set;}
+    public list<WrapperPowergenGPperLMTD> lubesPowergenGPperLWrapListMTD  {get;set;}
+    public list<WrapperPowergenGPperLLY> lubesPowergenGPperLWrapListLY  {get;set;}
+    public list<WrapperPowergenGPperLEst> lubesPowergenGPperLWrapListEst  {get;set;}
     
-    public Transient list<WrapperIndusDirGPperLMTD> lubesIndusDirGPperLWrapListMTD  {get;set;}
-    public Transient list<WrapperIndusDirGPperLLY> lubesIndusDirGPperLWrapListLY  {get;set;}
-    public Transient list<WrapperIndusDirGPperLEst> lubesIndusDirGPperLWrapListEst  {get;set;}
+    public list<WrapperIndusDirGPperLMTD> lubesIndusDirGPperLWrapListMTD  {get;set;}
+    public list<WrapperIndusDirGPperLLY> lubesIndusDirGPperLWrapListLY  {get;set;}
+    public list<WrapperIndusDirGPperLEst> lubesIndusDirGPperLWrapListEst  {get;set;}
     
-    public Transient list<WrapperInfraDirGPperLMTD> lubesInfraDirGPperLWrapListMTD  {get;set;}
-    public Transient list<WrapperInfraDirGPperLLY> lubesInfraDirGPperLWrapListLY  {get;set;}
-    public Transient list<WrapperInfraDirGPperLEst> lubesInfraDirGPperLWrapListEst  {get;set;}
+    public list<WrapperInfraDirGPperLMTD> lubesInfraDirGPperLWrapListMTD  {get;set;}
+    public list<WrapperInfraDirGPperLLY> lubesInfraDirGPperLWrapListLY  {get;set;}
+    public list<WrapperInfraDirGPperLEst> lubesInfraDirGPperLWrapListEst  {get;set;}
    
  //////////////////////////////////////////////////////////End Of Gp/L Lubes Volume/////////////////////////////////////////////////  
  
@@ -146,20 +148,21 @@ Global with sharing class PMTreport{
         getBasicDetails();      
         opList = new List<Opportunity>();
         checkPeriodType();
-        monthList = new list<string>{'Oct','Nov','Dec','Jan','Feb','Mar'};
+        monthList = new list<string>{'Jul','Aug','Sep'};
         getOpportunityList(monthList);
     }
      //picklist for period
    public List<selectOption> getperiodtypelist() {
         
         List<selectOption> options = new List<selectOption>(); //new list for holding all of the picklist options
-        
-        options.add(new SelectOption('H1', 'H1'));
-        options.add(new SelectOption('H2','H2'));
-        options.add(new SelectOption('T1', 'T1'));
-        options.add(new SelectOption('T2','T2'));
+        options.add(new SelectOption('T4','T4'));
         options.add(new SelectOption('T3', 'T3'));
-        options.add(new SelectOption('T4','T4    '));
+        options.add(new SelectOption('T1', 'T1'));
+        options.add(new SelectOption('H1', 'H1'));
+        options.add(new SelectOption('H2','H2'));        
+        options.add(new SelectOption('T2','T2'));
+        
+        
         options.add(new SelectOption('Q1', 'Q1'));
         options.add(new SelectOption('Q2','Q2'));
         
@@ -243,6 +246,7 @@ Global with sharing class PMTreport{
             FiscalYearSettings fys = fysLst.get(0);
             fysYear = fys.Name;
         }
+        //system.debug(fysYear);
     }
     
      public PageReference getOpportunityMonthly(list<string> monthString){
@@ -269,7 +273,7 @@ Global with sharing class PMTreport{
             map<string,decimal> mapOfMonthVsTotalLubesGpPerL = new map<string,decimal>();
             map<string,decimal> mapOfMonthVsTotalCOGSValue = new map<string,decimal>();//where AOP_Plan_User__c =: currentUserId
             
-            //list< AOP_Line__c > aopList = [select id, AOP_Plan_User__c, Month__c, AOP_Regional_Vol_in_kL__c, AOP_National_Vol_in_kL__c,Monthly_AOP_Regional_Lubes_GP_Ltr__c, Monthly_AOP_National_Lubes_GP_Ltr__c, AOP_Regional_GP__c, AOP_National_GP__c from AOP_Line__c where AOP__r.Valvoline_Financial_Year__c = :fys.name];  
+           // list< AOP_Line__c > aopList = [select id, AOP_Plan_User__c, Month__c, AOP_Regional_Vol_in_kL__c, AOP_National_Vol_in_kL__c,Monthly_AOP_Regional_Lubes_GP_Ltr__c, Monthly_AOP_National_Lubes_GP_Ltr__c, AOP_Regional_GP__c, AOP_National_GP__c from AOP_Line__c where AOP__r.Valvoline_Financial_Year__c = :fys.name];  
             
             //system.debug(aopList);
             decimal aopcountLubes = 0.0;
@@ -322,7 +326,7 @@ Global with sharing class PMTreport{
                 aopcountLubesGpPerL = 0.0;
                 
             }  
-            system.debug(mapOfMonthVsTotalLubes);
+            //system.debug(mapOfMonthVsTotalLubes);
             //list<COGS_Movement__c> cogsList = [select id, COGS_Value__c, Financial_Yr__c, Monthly_Plan_Mon__c from COGS_Movement__c where Financial_Yr__c = :fys.name];            
             for(COGS_Movement__c cogsObj : [select id, COGS_Value__c, Financial_Yr__c, Monthly_Plan_Mon__c from COGS_Movement__c where Financial_Yr__c = :fys.name]){
                 mapOfMonthVsTotalCOGSValue.put(cogsObj.Monthly_Plan_Mon__c,cogsObj.COGS_Value__c); 
@@ -356,7 +360,7 @@ Global with sharing class PMTreport{
                           }      
                          
                         for(integer i = monthString.indexOf(str)+1; i<monthString.size() ; i++){
-                            system.debug(monthString[i]);
+                            //system.debug(monthString[i]);
                             blankMonthString.add(monthString[i]); 
                            if(!mapOfMonthVsTotalCOGSValue.containsKey(monthString[i])){ 
                                  if(!test.contains(monthString[i])){         
@@ -384,7 +388,7 @@ Global with sharing class PMTreport{
             for(cogWrapper cogObj : cogMovementWrapperList ){
                 mapOfmonthVsUpdatedCogsValue.put(cogObj.monthName , cogObj.cogsCount); 
             }
-            system.debug(mapOfmonthVsUpdatedCogsValue);
+            //system.debug(mapOfmonthVsUpdatedCogsValue);
             if(periodtype =='H2'){
                     monthString.clear();
                     monthString = new list<string>{'Apr','May','Jun','Jul','Aug','Sep'};
@@ -399,7 +403,7 @@ Global with sharing class PMTreport{
                  
             }
             
-            system.debug(cogMovementWrapperList);
+            //system.debug(cogMovementWrapperList);
                
             for(string str : blankMonthString ){
                  mapOfMonthVsTotalCOGSValue.put(str,constanvalue); 
@@ -521,7 +525,7 @@ Global with sharing class PMTreport{
             
             
             //list<opportunity> oppList = [select account.Final_Segment__c, Latest_Est_Lubes_Volume__c, Monthly_Plan_Month__c, LY_Lubes_Vol__c, MTD_NON_AUS_Volume__c from opportunity where recordtype.DeveloperName = 'Monthly_Plan' 
-                    //AND Account.RecordTypeId IN: accountRecordType AND Financial_Year__c= :fys.name AND (account.Final_Segment__c ='Cummins Dealer' OR account.Final_Segment__c =  'Industrial - ID' OR account.Final_Segment__c = 'Infra - ID' OR account.Final_Segment__c ='Powergen' OR account.Final_Segment__c ='Industrial - Direct' OR account.Final_Segment__c ='Infra - Direct')]; 
+                   // AND Account.RecordTypeId IN: accountRecordType AND Financial_Year__c= :fys.name AND (account.Final_Segment__c ='Cummins Dealer' OR account.Final_Segment__c =  'Industrial - ID' OR account.Final_Segment__c = 'Infra - ID' OR account.Final_Segment__c ='Powergen' OR account.Final_Segment__c ='Industrial - Direct' OR account.Final_Segment__c ='Infra - Direct')]; 
             
            
                 decimal mtdCumminCount = 0.00;
@@ -582,27 +586,46 @@ Global with sharing class PMTreport{
                 } 
                     
                 if(opt.account.Final_Segment__c == 'Industrial - ID'){
-                    if(mapOfMonthVsIndusMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
+                    if(mapOfMonthVsIndusMtdCount.containsKey(opt.Monthly_Plan_Month__c))
+                    {
                         mtdIndusCount += opt.MTD_NON_AUS_Volume__c + mapOfMonthVsIndusMtdCount.get(opt.Monthly_Plan_Month__c);
                     }
                     else{
                         mtdIndusCount += opt.MTD_NON_AUS_Volume__c;
                     }
-                    if(mapOfMonthVsInfraLYCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        lyIndusCount += opt.LY_Lubes_Vol__c + mapOfMonthVsInfraLYCount.get(opt.Monthly_Plan_Month__c);
+                    
+                    if(opt.LY_Lubes_Vol__c != null)
+                    {
+                        //change line
+                      if(mapOfMonthVsIndusLYCount.containsKey(opt.Monthly_Plan_Month__c)){
+                            lyIndusCount += opt.LY_Lubes_Vol__c + mapOfMonthVsIndusLYCount.get(opt.Monthly_Plan_Month__c);
+                        }
+                        else{
+                            lyIndusCount += opt.LY_Lubes_Vol__c;
+
+                        }
                     }
-                    else{
-                        lyIndusCount += opt.LY_Lubes_Vol__c;
+                    else
+                    {
+                      if(mapOfMonthVsIndusLYCount.containsKey(opt.Monthly_Plan_Month__c)){
+                           lyIndusCount +=  mapOfMonthVsIndusLYCount.get(opt.Monthly_Plan_Month__c);
+                        }
+                       else{
+                           lyIndusCount += 0.00;
+                       }
                     }
+                    
                     if(mapOfMonthVsIndusESTCount.containsKey(opt.Monthly_Plan_Month__c)){
                         estIndusCount += opt.Latest_Est_Lubes_Volume__c + mapOfMonthVsIndusESTCount.get(opt.Monthly_Plan_Month__c);
                     }
-                    else{
+                    else
+                    {
                         estIndusCount += opt.Latest_Est_Lubes_Volume__c;
                     }
                     
                     mapOfMonthVsIndusMtdCount.put(opt.Monthly_Plan_Month__c,mtdIndusCount);
                     mapOfMonthVsIndusLYCount.put(opt.Monthly_Plan_Month__c,lyIndusCount); 
+                    
                     mapOfMonthVsIndusESTCount.put(opt.Monthly_Plan_Month__c,estIndusCount);
                     mtdIndusCount = 0.0;
                     lyIndusCount = 0.0;
@@ -664,72 +687,74 @@ Global with sharing class PMTreport{
                 }
                 if(opt.account.Final_Segment__c == 'Industrial - Direct'){
                     if(mapOfMonthVsIndusDirMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        mtdIndusDirCount += opt.MTD_NON_AUS_Volume__c + mapOfMonthVsIndusDirMtdCount.get(opt.Monthly_Plan_Month__c);
+                        mtdIndusDirCount += (opt.MTD_NON_AUS_Volume__c==NULL?0:opt.MTD_NON_AUS_Volume__c) + mapOfMonthVsIndusDirMtdCount.get(opt.Monthly_Plan_Month__c);
                     }
                     else{
                         mtdIndusDirCount += opt.MTD_NON_AUS_Volume__c;
                     }
                     if(mapOfMonthVsIndusDirLYCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        lyIndusDirCount += opt.LY_Lubes_Vol__c + mapOfMonthVsIndusDirLYCount.get(opt.Monthly_Plan_Month__c);
+                        lyIndusDirCount += (opt.LY_Lubes_Vol__c==NULL?0:opt.LY_Lubes_Vol__c) + mapOfMonthVsIndusDirLYCount.get(opt.Monthly_Plan_Month__c);
                     }
                     else{
-                        lyIndusDirCount += opt.LY_Lubes_Vol__c;
+                        lyIndusDirCount += (opt.LY_Lubes_Vol__c==NULL?0:opt.LY_Lubes_Vol__c);
                     }
                     if(mapOfMonthVsIndusDirESTCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        if(opt.Latest_Est_Lubes_Volume__c != null){
-                            estIndusDirCount += opt.Latest_Est_Lubes_Volume__c + mapOfMonthVsIndusDirESTCount.get(opt.Monthly_Plan_Month__c);
-                        }
-                        else{
-                            estIndusDirCount += mapOfMonthVsIndusDirESTCount.get(opt.Monthly_Plan_Month__c);
-                        }
+                        //system.debug('LE Volume: '+opt.Latest_Est_Lubes_Volume__c);
+                        //system.debug('Map: '+mapOfMonthVsIndusDirESTCount.get(opt.Monthly_Plan_Month__c));
+                        estIndusDirCount += (opt.Latest_Est_Lubes_Volume__c==NULL?0:opt.Latest_Est_Lubes_Volume__c) + mapOfMonthVsIndusDirESTCount.get(opt.Monthly_Plan_Month__c);
                     }
                     else{
-                        if(opt.Latest_Est_Lubes_Volume__c != null){
-                            estIndusDirCount += opt.Latest_Est_Lubes_Volume__c;
-                        }
-                        else{
-                            estIndusDirCount += 0.00;
-                        }
+                        estIndusDirCount += (opt.Latest_Est_Lubes_Volume__c==NULL?0:opt.Latest_Est_Lubes_Volume__c);
                     }
                     
-                    
-                    mapOfMonthVsIndusDirMtdCount.put(opt.Monthly_Plan_Month__c,mtdPowerCount);
-                    mapOfMonthVsIndusDirLYCount.put(opt.Monthly_Plan_Month__c,lyPowerCount);
-                    mapOfMonthVsIndusDirESTCount.put(opt.Monthly_Plan_Month__c,estPowerCount);
+                    mapOfMonthVsIndusDirMtdCount.put(opt.Monthly_Plan_Month__c,mtdIndusDirCount);
+                    mapOfMonthVsIndusDirLYCount.put(opt.Monthly_Plan_Month__c,lyIndusDirCount);
+                    mapOfMonthVsIndusDirESTCount.put(opt.Monthly_Plan_Month__c,estIndusDirCount);
                     mtdIndusDirCount = 0.0;
                     lyIndusDirCount = 0.0;
                     estIndusDirCount = 0.0;
                 }
-                if(opt.account.Final_Segment__c == 'Infra - Direct'){
+                if(opt.account.Final_Segment__c == 'Infra - Direct')
+                {
                     if(mapOfMonthVsInfraDirMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
                         mtdInfraDirCount += opt.MTD_NON_AUS_Volume__c + mapOfMonthVsInfraDirMtdCount.get(opt.Monthly_Plan_Month__c);
                     }
                     else{
                         mtdInfraDirCount += opt.MTD_NON_AUS_Volume__c;
                     }
-                    if(mapOfMonthVsInfraDirLYCount.containsKey(opt.Monthly_Plan_Month__c)){
+                    if(mapOfMonthVsInfraDirLYCount.containsKey(opt.Monthly_Plan_Month__c))
+                    {
                         lyInfraDirCount += opt.LY_Lubes_Vol__c + mapOfMonthVsInfraDirLYCount.get(opt.Monthly_Plan_Month__c);
                     }
                     else{
                         lyInfraDirCount += opt.LY_Lubes_Vol__c;
                     }
-                    if(mapOfMonthVsInfraDirESTCount.containsKey(opt.Monthly_Plan_Month__c)){
+                    if(mapOfMonthVsInfraDirESTCount.containsKey(opt.Monthly_Plan_Month__c))
+                    {
                         estInfraDirCount += opt.Latest_Est_Lubes_Volume__c + mapOfMonthVsInfraDirESTCount.get(opt.Monthly_Plan_Month__c);
                     }
-                    else{
+                    else
+                    {
                         estInfraDirCount += opt.Latest_Est_Lubes_Volume__c;
                     }
                     
-                    mapOfMonthVsInfraDirMtdCount.put(opt.Monthly_Plan_Month__c,mtdPowerCount);
-                    mapOfMonthVsInfraDirLYCount.put(opt.Monthly_Plan_Month__c,lyPowerCount);
-                    mapOfMonthVsInfraDirESTCount.put(opt.Monthly_Plan_Month__c,estPowerCount);
+                    mapOfMonthVsInfraDirMtdCount.put(opt.Monthly_Plan_Month__c,mtdInfraDirCount);
+                    mapOfMonthVsInfraDirLYCount.put(opt.Monthly_Plan_Month__c,lyInfraDirCount);
+                    mapOfMonthVsInfraDirESTCount.put(opt.Monthly_Plan_Month__c,estInfraDirCount);
                     mtdInfraDirCount = 0.0;
                     lyInfraDirCount = 0.0;
                     estInfraDirCount = 0.0;
                 }
             
             }
-     ////////////////////////////////////////////////////////   End of Lubes Volume (KL)    /////////////////////////////////////////////////////////////////
+           // system.debug(mapOfMonthVsInfraDirESTCount);
+            //system.debug(mapOfMonthVsInfraDirESTCount.get('Apr'));
+     ///////////////
+     //
+     //
+     //
+     //
+     ///////////////////////////////////////////   End of Lubes Volume (KL)    /////////////////////////////////////////////////////////////////
      
      
      ////////////////////////////////////////////////////////   Start of GP Lubes /////////////////////////////////////////////////////////////////OwnerId=:currentUserId and
@@ -813,7 +838,7 @@ Global with sharing class PMTreport{
                 decimal estInfraDirCountGp = 0.0;
              
              for(opportunity opt: [select account.Final_Segment__c, MTD_GP_Lubes__c, Monthly_Plan_Month__c, LY_MTD_GP__c, Last_Month_Gp__c,Last_Month_Opportunity__r.MTD_GP_Ltr_Lubes__c, NSP_change__c, Latest_Est_Lubes_Volume__c from opportunity where recordtype.DeveloperName = 'Monthly_Plan' 
-                    AND Account.RecordTypeId IN: accountRecordType AND Financial_Year__c= :fys.name AND (account.Final_Segment__c ='Cummins Dealer' OR account.Final_Segment__c =  'Industrial - ID' OR account.Final_Segment__c = 'Infra - ID' OR account.Final_Segment__c ='Powergen' OR account.Final_Segment__c ='Industrial - Direct' OR account.Final_Segment__c ='Infra - Direct')] ){
+                    AND Account.RecordTypeId IN: accountRecordType AND Financial_Year__c= :fys.name AND (account.Final_Segment__c ='Cummins Dealer' OR account.Final_Segment__c =  'Industrial - ID' OR account.Final_Segment__c = 'Infra - ID' OR account.Final_Segment__c ='Powergen' OR account.Final_Segment__c ='Industrial - Direct' OR account.Final_Segment__c ='Infra - Direct')]){
                 
                 
                 if(opt.account.Final_Segment__c == 'Cummins Dealer'){
@@ -847,18 +872,17 @@ Global with sharing class PMTreport{
                         cogsValue  = 0.0;
                     }
                     
-                    
-                    if(mapOfMonthVsCumminGPMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        if(opt.MTD_GP_Lubes__c !=null){
+                    if(opt.MTD_GP_Lubes__c != null){
+                        if(mapOfMonthVsCumminGPMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
                             mtdCumminCountGp += opt.MTD_GP_Lubes__c + mapOfMonthVsCumminGPMtdCount.get(opt.Monthly_Plan_Month__c);
                         }
                         else{
-                            mtdCumminCountGp += mapOfMonthVsCumminGPMtdCount.get(opt.Monthly_Plan_Month__c);
+                            mtdCumminCountGp += opt.MTD_GP_Lubes__c;
                         }
                     }
                     else{
-                        if(opt.MTD_GP_Lubes__c !=null){
-                            mtdCumminCountGp += opt.MTD_GP_Lubes__c;
+                        if(mapOfMonthVsCumminGPMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
+                            mtdCumminCountGp += mapOfMonthVsCumminGPMtdCount.get(opt.Monthly_Plan_Month__c);
                         }
                         else{
                             mtdCumminCountGp += 0.00;
@@ -871,7 +895,7 @@ Global with sharing class PMTreport{
                         lyCumminCountGp += opt.LY_MTD_GP__c;
                     }
                     if(mapOfMonthVsCumminGPESTCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        estCumminCountGp += (lastmonthOpp  - cogsValue    + nspChange )* estLubes *1000 + mapOfMonthVsCumminGPESTCount.get(opt.Monthly_Plan_Month__c);
+                        estCumminCountGp += (lastmonthOpp  - cogsValue + nspChange )* estLubes *1000 + mapOfMonthVsCumminGPESTCount.get(opt.Monthly_Plan_Month__c);
                     }
                     else{                    
                         estCumminCountGp += (lastmonthOpp  - cogsValue    + nspChange )* estLubes *1000;
@@ -917,22 +941,23 @@ Global with sharing class PMTreport{
                         cogsValue  = 0.0;
                     }
                     
-                    if(mapOfMonthVsIndusGPMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        if(opt.MTD_GP_Lubes__c != null){
-                            mtdIndusCountGp += opt.MTD_GP_Lubes__c + mapOfMonthVsIndusGPMtdCount.get(opt.Monthly_Plan_Month__c);
+                        if(mapOfMonthVsIndusGPMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
+                            if(opt.MTD_GP_Lubes__c != null){
+                                mtdIndusCountGp += opt.MTD_GP_Lubes__c + mapOfMonthVsIndusGPMtdCount.get(opt.Monthly_Plan_Month__c);
+                            }
+                            else{
+                                mtdIndusCountGp +=  mapOfMonthVsIndusGPMtdCount.get(opt.Monthly_Plan_Month__c);
+                            }
                         }
                         else{
-                            mtdIndusCountGp += mapOfMonthVsIndusGPMtdCount.get(opt.Monthly_Plan_Month__c);
+                            if(opt.MTD_GP_Lubes__c != null){
+                                mtdIndusCountGp += opt.MTD_GP_Lubes__c;
+                            }
+                            else{
+                                mtdIndusCountGp += 0.00;
+                            }
                         }
-                    }
-                    else{
-                        if(opt.MTD_GP_Lubes__c != null){
-                            mtdIndusCountGp += opt.MTD_GP_Lubes__c;
-                        }
-                        else{
-                            mtdIndusCountGp += 0.00;
-                        }
-                    }
+                    
                     if(mapOfMonthVsIndusGPLYCount.containsKey(opt.Monthly_Plan_Month__c)){
                         lyIndusCountGp += opt.LY_MTD_GP__c + mapOfMonthVsIndusGPLYCount.get(opt.Monthly_Plan_Month__c);
                     }
@@ -940,7 +965,9 @@ Global with sharing class PMTreport{
                         lyIndusCountGp += opt.LY_MTD_GP__c;
                     }
                     if(mapOfMonthVsIndusGPESTCount.containsKey(opt.Monthly_Plan_Month__c)){
+                        
                         estIndusCountGp += (lastmonthOpp  - cogsValue      + nspChange )* estLubes *1000 + mapOfMonthVsIndusGPESTCount.get(opt.Monthly_Plan_Month__c);
+                        
                     }
                     else{
                         estIndusCountGp += (lastmonthOpp  - cogsValue      + nspChange )* estLubes *1000; 
@@ -1055,15 +1082,15 @@ Global with sharing class PMTreport{
                         cogsValue  = 0.0;
                     }
                     if(mapOfMonthVsPowerGPMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        if(opt.MTD_GP_Lubes__c !=null ){
+                        if(opt.MTD_GP_Lubes__c != null){
                             mtdPowerCountGp += opt.MTD_GP_Lubes__c + mapOfMonthVsPowerGPMtdCount.get(opt.Monthly_Plan_Month__c);
                         }
                         else{
-                            mtdPowerCountGp += mapOfMonthVsPowerGPMtdCount.get(opt.Monthly_Plan_Month__c);
+                            mtdPowerCountGp +=  mapOfMonthVsPowerGPMtdCount.get(opt.Monthly_Plan_Month__c);
                         }
                     }
                     else{
-                        if(opt.MTD_GP_Lubes__c !=null ){
+                        if(opt.MTD_GP_Lubes__c != null){
                             mtdPowerCountGp += opt.MTD_GP_Lubes__c;
                         }
                         else{
@@ -1123,7 +1150,7 @@ Global with sharing class PMTreport{
                         cogsValue  = 0.0;
                     }
                     if(mapOfMonthVsIndusDirGPMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
-                        if(opt.MTD_GP_Lubes__c != null ) {
+                        if(opt.MTD_GP_Lubes__c != null){
                             mtdIndusDirCountGp += opt.MTD_GP_Lubes__c + mapOfMonthVsIndusDirGPMtdCount.get(opt.Monthly_Plan_Month__c);
                         }
                         else{
@@ -1131,7 +1158,7 @@ Global with sharing class PMTreport{
                         }
                     }
                     else{
-                        if(opt.MTD_GP_Lubes__c != null ) {
+                        if(opt.MTD_GP_Lubes__c != null){
                             mtdIndusDirCountGp += opt.MTD_GP_Lubes__c;
                         }
                         else{
@@ -1841,8 +1868,8 @@ Global with sharing class PMTreport{
                         mtdCumminCountNsp = 0.00;
                     }
                     else{
-                        if(mapOfMonthVsCumminGPperLMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
-                            mtdCumminCountNsp += opt.MTD_NSP_ltr_Lubesformula__c + mapOfMonthVsCumminGPperLMtdCount.get(opt.Monthly_Plan_Month__c);
+                        if(mapOfMonthVsCumminNSPperLMtdCount.containsKey(opt.Monthly_Plan_Month__c)){
+                            mtdCumminCountNsp += opt.MTD_NSP_ltr_Lubesformula__c + mapOfMonthVsCumminNSPperLMtdCount.get(opt.Monthly_Plan_Month__c);
                         }
                         else{
                             mtdCumminCountNsp += opt.MTD_NSP_ltr_Lubesformula__c ;
@@ -1860,7 +1887,7 @@ Global with sharing class PMTreport{
                             lyCumminCountNsp += opt.LY_NSP_Ltr_Lubes__c;
                         }
                     }
-                    if(opt.Latest_Estimated_NSP_ltr__c == null){
+                    if(opt.LE_NSP_Ltr_Lubes__c== null){
                         estCumminCountNsp += 0.0;
                     }
                     else{
@@ -1916,7 +1943,7 @@ Global with sharing class PMTreport{
                             lyIndusCountNsp += opt.LY_NSP_Ltr_Lubes__c ;
                         }
                     }
-                    if(opt.Latest_Estimated_NSP_ltr__c == null){
+                    if(opt.LE_NSP_Ltr_Lubes__c == null){
                         estIndusCountNsp += 0.0;
                     }
                     else{
@@ -1942,7 +1969,7 @@ Global with sharing class PMTreport{
                     mapOfMonthVsIndusNSPperLMtdCount.put(opt.Monthly_Plan_Month__c,mtdIndusCountNsp);
                     mapOfMonthVsIndusNSPperLLYCount.put(opt.Monthly_Plan_Month__c,lyIndusCountNsp); 
                     mapOfMonthVsIndusNSPperLESTCount.put(opt.Monthly_Plan_Month__c,estIndusCountNsp);
-                    mapOfMonthVsIndusNSPperLPriceCount.put(opt.Monthly_Plan_Month__c,priceChgeIndusCountNsp );
+                    mapOfMonthVsIndusNSPperLPriceCount.put(opt.Monthly_Plan_Month__c,priceChgeIndusCountNsp);
                      mtdIndusCountNsp = 0.0;
                     lyIndusCountNsp = 0.0;
                     estIndusCountNsp = 0.0;
@@ -1971,7 +1998,7 @@ Global with sharing class PMTreport{
                             lyInfraCountNsp += opt.LY_NSP_Ltr_Lubes__c ;
                         }
                     }
-                    if(opt.Latest_Estimated_NSP_ltr__c == null){
+                    if(opt.LE_NSP_Ltr_Lubes__c == null){
                         estInfraCountNsp += 0.0;
                     }
                     else{
@@ -2026,7 +2053,7 @@ Global with sharing class PMTreport{
                             lyPowerCountNsp += opt.LY_NSP_Ltr_Lubes__c ;
                         }
                     }
-                    if(opt.Latest_Estimated_NSP_ltr__c == null){
+                    if(opt.LE_NSP_Ltr_Lubes__c == null){
                         estPowerCountNsp += 0.0;
                     }
                     else{
@@ -2083,7 +2110,7 @@ Global with sharing class PMTreport{
                             lyIndusDirCountNsp += opt.LY_NSP_Ltr_Lubes__c ;
                         }
                     }
-                    if(opt.Latest_Estimated_NSP_ltr__c == null){
+                    if(opt.LE_NSP_Ltr_Lubes__c == null){
                         estIndusDirCountNsp += 0.0;
                     }
                     else{
@@ -2140,7 +2167,7 @@ Global with sharing class PMTreport{
                             lyInfraDirCountNsp += opt.LY_NSP_Ltr_Lubes__c ;
                         }
                     }
-                    if(opt.Latest_Estimated_NSP_ltr__c == null){
+                    if(opt.LE_NSP_Ltr_Lubes__c == null){
                         estInfraDirCountNsp += 0.0;
                     }
                     else{
@@ -2168,14 +2195,14 @@ Global with sharing class PMTreport{
                     mapOfMonthVsInfraDirNSPperLLYCount.put(opt.Monthly_Plan_Month__c,lyInfraDirCountNsp);
                     mapOfMonthVsInfraDirNSPperLESTCount.put(opt.Monthly_Plan_Month__c,estInfraDirCountNsp);
                     mapOfMonthVsInfraDirNSPperLPriceCount.put(opt.Monthly_Plan_Month__c,priceChgeInfraDirCountNsp );
-                     mtdInfraDirCountNsp = 0.0;
+                    mtdInfraDirCountNsp = 0.0;
                     lyInfraDirCountNsp = 0.0;
                     estInfraDirCountNsp = 0.0;
                     priceChgeInfraDirCountNsp = 0.0;
                 }
             
             }
-    system.debug(mapOfMonthVsCumminNSPperLMtdCount);
+    //system.debug(mapOfMonthVsCumminNSPperLMtdCount);
     
     ////////////////////////////////////////////////////////   End of NSP/l Lubes  /////////////////////////////////////////////////////////////////     
           
@@ -2486,7 +2513,7 @@ Global with sharing class PMTreport{
                 lubesIndustrialGPperLWrapListMTD.add(indusmtdObjGPperL);    
                 
                 WrapperIndustrialGPperLly induslyObjGPperL = new WrapperIndustrialGPperLly();
-                induslyObjGPperL.lyCount = mapOfMonthVsIndusGPlyCount.get(str); 
+                induslyObjGPperL.lyCount = mapOfMonthVsIndusGPperLlyCount.get(str); 
                 lubesIndustrialGPperLWrapListly.add(induslyObjGPperL); 
                 
                 WrapperIndustrialGPperLest indusestObjGPperL = new WrapperIndustrialGPperLest();
@@ -2606,9 +2633,9 @@ Global with sharing class PMTreport{
                     indusmtdObjNSPperL.mtdCount = 0.00; 
                     lubesIndustrialNSPperLWrapListMTD.add(indusmtdObjNSPperL);
                 } 
-                if(mapOfMonthVsIndusNSPperLESTCount.containsKey(str)){
+                if(mapOfMonthVsIndusNSPperLLYCount.containsKey(str)){
                     WrapperIndustrialNSPperLly induslyObjNSPperL = new WrapperIndustrialNSPperLly();
-                    induslyObjNSPperL.lyCount = mapOfMonthVsIndusNSPperLESTCount.get(str); 
+                    induslyObjNSPperL.lyCount = mapOfMonthVsIndusNSPperLLYCount.get(str); 
                     lubesIndustrialNSPperLWrapListly.add(induslyObjNSPperL); 
                 }
                 else{

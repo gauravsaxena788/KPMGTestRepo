@@ -1,4 +1,4 @@
-<apex:page lightningStylesheets="true" controller="PMTreport" sidebar="false" showHeader="false" doctype="html-5.0" readOnly="true">
+<apex:page lightningStylesheets="true" controller="PMTreport" sidebar="false" showHeader="false" doctype="html-5.0">
 
 <style>
 .blueColor{
@@ -362,11 +362,11 @@ document.getElementById('{!$Component.gp}').value = var1 * var2;
                       <apex:outputText value="LY"/>      
                   </div></td> 
                               
-              <apex:repeat value="{!lubesInfraWrapListLY}" var="a">                
+              <!--<apex:repeat value="{!lubesInfraWrapListLY}" var="a">                
                   <td style="text-align: center;"><div class="slds-truncate " >
                      <apex:outputText value="{!a.lycount}"/>      
                   </div></td>                 
-              </apex:repeat>
+              </apex:repeat>-->
               </tr>
               <tr>   
                   
@@ -490,7 +490,7 @@ document.getElementById('{!$Component.gp}').value = var1 * var2;
                   <td style="text-align: center;"><div class="slds-truncate " >
                       <apex:outputText value="LE"/>      
                   </div></td>              
-              <apex:repeat value="{!lubesIndusDirWrapListEst}" var="a">                
+              <apex:repeat value="{!lubesInfraDirWrapListEst}" var="a">                
                   <td style="text-align: center;"><div class="slds-truncate " >
                      <apex:outputText value="{!a.estcount}"/>      
                   </div></td>                 
